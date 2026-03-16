@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+*.local.*
 *.local
 
 # Editor directories and files
@@ -43,3 +44,7 @@ storybook-static/
 # Misc
 *.tsbuildinfo
 *.eslintcache
+
+# AI / Dev tool config (personal, manage separately)
+.claude/
+.specify/
