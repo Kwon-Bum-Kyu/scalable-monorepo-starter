@@ -44,7 +44,3 @@ storybook-static/
 # Misc
 *.tsbuildinfo
 *.eslintcache
-
-# AI / Dev tool config (personal, manage separately)
-.claude/
-.specify/
