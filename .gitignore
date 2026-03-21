@@ -41,6 +41,10 @@ test-results/
 .nyc_output/
 storybook-static/
 
+# MCP
+.mcp.json
+!.mcp.json.example
+
 # Misc
 *.tsbuildinfo
 *.eslintcache
