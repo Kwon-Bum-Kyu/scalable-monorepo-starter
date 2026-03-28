@@ -35,5 +35,10 @@ export * from "./components/Pagenation/types";
 export * from "./components/SystemIcon/types";
 export * from "./components/Empty/types";
 
+// Navigation
+export { Header, Footer } from "./components/Navigation";
+export * from "./components/Navigation/Header/types";
+export * from "./components/Navigation/Footer/types";
+
 // Utils
 export { cn } from "./components/utils/cn";

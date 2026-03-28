@@ -40,7 +40,7 @@ const Input: React.FC<InputProps> = ({
             ? "cursor-not-allowed border-gray-100 bg-gray-100 text-gray-400"
             : hasError
               ? "border-system-red focus:border-system-red"
-              : "border-gray-200 hover:border-gray-400 focus:border-blue-500",
+              : "border-gray-100 hover:border-gray-400 focus:border-blue-500",
           className,
         )}
         {...props}

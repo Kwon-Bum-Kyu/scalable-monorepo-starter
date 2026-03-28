@@ -12,6 +12,8 @@
   --font-size-2xl: 24px;
   --font-size-3xl: 32px;
   --font-size-4xl: 40px;
+  --font-size-5xl: 48px;
+  --font-size-6xl: 56px;
 
   /* Line heights */
   --line-height-16: 16px;
@@ -24,13 +26,13 @@
 
   /* Blue color palette */
   --color-blue-50: #e1e9ef;
-  --color-blue-100: #b5cbd6;
-  --color-blue-200: #84a3bb;
+  --color-blue-100: #b5c8d6;
+  --color-blue-200: #84a38b;
   --color-blue-300: #527ea0;
-  --color-blue-400: #2d63bb;
+  --color-blue-400: #2d638b;
   --color-blue-500: #084777;
   --color-blue-600: #07406f;
-  --color-blue-700: #663764;
+  --color-blue-700: #063764;
   --color-blue-800: #042f5a;
   --color-blue-900: #022047;
 
@@ -48,7 +50,7 @@
 
   /* System colors */
   --color-system-red: #c2050b;
-  --color-system-green: #07405f;
+  --color-system-green: #07b46f;
   --color-system-white: #ffffff;
 
   /* Spacing */
@@ -60,6 +62,19 @@
   --breakpoint-tablet: 768px;
   --breakpoint-desktop: 1440px;
   --breakpoint-wide: 1920px;
+
+  /* Semantic color aliases */
+  --color-text-primary:        var(--color-gray-900);
+  --color-text-secondary:      var(--color-gray-400);
+  --color-text-placeholder:    var(--color-gray-200);
+  --color-border:              var(--color-gray-100);
+  --color-bg-primary:          var(--color-system-white);
+  --color-bg-secondary:        var(--color-gray-50);
+  --color-interactive-default: var(--color-blue-500);
+  --color-interactive-hover:   var(--color-blue-600);
+  --color-interactive-active:  var(--color-blue-800);
+  --color-state-error:         var(--color-system-red);
+  --color-state-success:       var(--color-system-green);
 }
 
 :root {

@@ -2,12 +2,12 @@ import { TypographyProps } from "./types";
 import React from "react";
 
 const variantStyles: Record<string, string> = {
-  h1: "text-4xl font-normal leading-[72px]",
-  h2: "text-3xl font-normal leading-[64px]",
-  h3: "text-2xl font-normal leading-[48px]",
-  h4: "text-xl font-normal leading-[40px]",
-  h5: "text-lg font-normal leading-[32px]",
-  h6: "text-base font-normal leading-[32px]",
+  h1: "text-6xl font-normal leading-[72px]",
+  h2: "text-5xl font-normal leading-[64px]",
+  h3: "text-4xl font-normal leading-[48px]",
+  h4: "text-3xl font-normal leading-[40px]",
+  h5: "text-2xl font-normal leading-[32px]",
+  h6: "text-xl font-normal leading-[32px]",
   large: "text-[18px] font-normal leading-[24px]",
   paragraph: "text-base font-normal leading-[24px]",
   small: "text-sm font-normal leading-[24px]",

@@ -32,3 +32,14 @@ export const Default: Story = {
     children: "Typography text example",
   } as TypographyProps,
 };
+
+export const H1: Story = { args: { variant: "h1", children: "Heading 1 — 56px / 72px" } as TypographyProps };
+export const H2: Story = { args: { variant: "h2", children: "Heading 2 — 48px / 64px" } as TypographyProps };
+export const H3: Story = { args: { variant: "h3", children: "Heading 3 — 40px / 48px" } as TypographyProps };
+export const H4: Story = { args: { variant: "h4", children: "Heading 4 — 32px / 40px" } as TypographyProps };
+export const H5: Story = { args: { variant: "h5", children: "Heading 5 — 24px / 32px" } as TypographyProps };
+export const H6: Story = { args: { variant: "h6", children: "Heading 6 — 20px / 32px" } as TypographyProps };
+export const Large: Story = { args: { variant: "large", children: "Large — 18px / 24px" } as TypographyProps };
+export const Paragraph: Story = { args: { variant: "paragraph", children: "Paragraph — 16px / 24px" } as TypographyProps };
+export const Small: Story = { args: { variant: "small", children: "Small — 14px / 24px" } as TypographyProps };
+export const XSmall: Story = { args: { variant: "xsmall", children: "XSmall — 12px / 16px" } as TypographyProps };

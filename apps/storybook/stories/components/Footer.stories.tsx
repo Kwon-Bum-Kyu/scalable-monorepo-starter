@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import Footer from "@/components/Footer";
+import { Footer } from "@repo/ui";
 
 import { MemoryRouter } from "react-router-dom";
 

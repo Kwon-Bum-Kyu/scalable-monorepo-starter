@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import Header from "@/components/Header";
+import { Header } from "@repo/ui";
 import { MemoryRouter } from "react-router-dom";
 
 /**
@@ -40,6 +40,15 @@ const meta: Meta<typeof Header> = {
       control: { type: "text" },
       defaultValue: "",
     },
+    onLogout: {
+      description: "로그아웃 버튼 클릭 시 호출되는 콜백입니다. isLoggedIn=true일 때 필수.",
+      action: "logout",
+    },
+    logoText: {
+      description: "헤더 로고 텍스트입니다.",
+      control: { type: "text" },
+      defaultValue: "Logo",
+    },
   },
 };
 
@@ -50,8 +59,10 @@ export const LoggedIn: Story = {
   args: {
     isLoggedIn: true,
     username: "KBK",
+    onLogout: () => {},
   },
   parameters: {
+    viewport: { defaultViewport: "desktop" },
     docs: {
       description: {
         story: "로그인 상태의 헤더 UI입니다. 유저 이름과 메뉴가 표시됩니다.",
@@ -66,10 +77,42 @@ export const LoggedOut: Story = {
     username: "",
   },
   parameters: {
+    viewport: { defaultViewport: "desktop" },
     docs: {
       description: {
         story:
           "로그아웃 상태의 헤더 UI입니다. 로그인/회원가입 버튼이 표시됩니다.",
+      },
+    },
+  },
+};
+
+export const MobileLoggedIn: Story = {
+  args: {
+    isLoggedIn: true,
+    username: "KBK",
+    onLogout: () => {},
+  },
+  parameters: {
+    viewport: { defaultViewport: "mobile" },
+    docs: {
+      description: {
+        story: "모바일 뷰의 로그인 상태 헤더입니다. 햄버거 메뉴가 표시됩니다.",
+      },
+    },
+  },
+};
+
+export const MobileLoggedOut: Story = {
+  args: {
+    isLoggedIn: false,
+    username: "",
+  },
+  parameters: {
+    viewport: { defaultViewport: "mobile" },
+    docs: {
+      description: {
+        story: "모바일 뷰의 로그아웃 상태 헤더입니다. 햄버거 메뉴가 표시됩니다.",
       },
     },
   },

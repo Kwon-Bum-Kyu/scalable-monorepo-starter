@@ -14,8 +14,8 @@ const Button: React.FC<ButtonProps> = ({
 
   const variantStyles = {
     primary: disabled
-      ? "bg-blue-100 text-white cursor-not-allowed"
-      : "bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-600 active:bg-blue-800",
+      ? "bg-blue-100 text-system-white cursor-not-allowed"
+      : "bg-blue-500 text-system-white hover:bg-blue-600 focus:bg-blue-600 active:bg-blue-800",
     secondary: disabled
       ? "bg-gray-50 text-gray-400 cursor-not-allowed"
       : "bg-gray-100 text-gray-800 hover:bg-gray-200 focus:bg-gray-200 active:bg-gray-300",

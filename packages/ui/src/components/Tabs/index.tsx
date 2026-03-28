@@ -19,13 +19,13 @@ const Tabs: React.FC<TabsProps> = ({
             variant === "pill"
               ? cn(
                   tab === activeTab
-                    ? "bg-blue-800 text-white"
+                    ? "bg-blue-500 text-system-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200",
                 )
               : cn(
                   tab === activeTab
-                    ? "border-b-2 border-blue-800 text-blue-800"
-                    : "text-gray-600 hover:text-blue-800",
+                    ? "border-b-2 border-blue-500 text-blue-500"
+                    : "text-gray-600 hover:text-blue-500",
                 ),
           )}
         >
