@@ -1,7 +1,6 @@
 import type { Preview } from "@storybook/react";
 
-// apps/web의 TailwindCSS import
-import "../../web/src/index.css";
+import "@repo/ui/globals.css";
 
 const preview: Preview = {
   parameters: {

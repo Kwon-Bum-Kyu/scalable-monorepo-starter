@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme {
+  --font-family-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* Font sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 32px;
+  --font-size-4xl: 40px;
+
+  /* Line heights */
+  --line-height-16: 16px;
+  --line-height-24: 24px;
+  --line-height-32: 32px;
+  --line-height-40: 40px;
+  --line-height-48: 48px;
+  --line-height-64: 64px;
+  --line-height-72: 72px;
+
+  /* Blue color palette */
+  --color-blue-50: #e1e9ef;
+  --color-blue-100: #b5cbd6;
+  --color-blue-200: #84a3bb;
+  --color-blue-300: #527ea0;
+  --color-blue-400: #2d63bb;
+  --color-blue-500: #084777;
+  --color-blue-600: #07406f;
+  --color-blue-700: #663764;
+  --color-blue-800: #042f5a;
+  --color-blue-900: #022047;
+
+  /* Gray color palette */
+  --color-gray-50: #e7e7e6;
+  --color-gray-100: #c2c2c1;
+  --color-gray-200: #9a9a98;
+  --color-gray-300: #72726f;
+  --color-gray-400: #535350;
+  --color-gray-500: #353531;
+  --color-gray-600: #30302c;
+  --color-gray-700: #282825;
+  --color-gray-800: #22221f;
+  --color-gray-900: #161613;
+
+  /* System colors */
+  --color-system-red: #c2050b;
+  --color-system-green: #07405f;
+  --color-system-white: #ffffff;
+
+  /* Spacing */
+  --spacing-16: 16px;
+  --spacing-80: 80px;
+
+  /* Breakpoints */
+  --breakpoint-mobile: 640px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1440px;
+  --breakpoint-wide: 1920px;
+}
+
+:root {
+  --rdp-accent-color: var(--color-blue-500);
+  --rdp-background-color: var(--color-blue-50);
+}
+
+.rdp-day_selected {
+  background-color: var(--color-blue-700);
+  color: var(--color-system-white);
+  font-weight: 600;
+}
+
+.rdp-day_range_start,
+.rdp-day_range_end {
+  background-color: var(--color-blue-700);
+  color: var(--color-system-white);
+  font-weight: 700;
+}
+
+.rdp-day_range_middle {
+  background-color: var(--color-blue-100);
+  color: var(--color-blue-700);
+}
+
+.rdp-caption_label {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+}
+
+.rdp-day_today {
+  border: 1px solid var(--color-blue-500);
+}
+
+.rdp {
+  font-size: var(--font-size-sm);
+}

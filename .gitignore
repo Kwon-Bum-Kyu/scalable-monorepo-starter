@@ -52,3 +52,6 @@ storybook-static/
 # dmux
 .dmux/
 .dmux-hooks/
+
+# omc
+.omc

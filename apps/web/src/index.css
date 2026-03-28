@@ -1,2 +1,2 @@
-/* Import the new CSS-first Tailwind configuration */
+@import "@repo/ui/globals.css";
 @import './tailwind.css';
