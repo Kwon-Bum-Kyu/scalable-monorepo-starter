@@ -3,16 +3,42 @@
  */
 
 // Common API Types
-export interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: {
-    message: string;
-    code: string;
-  };
+export interface ApiSuccessResponse<T> {
+  success: true;
+  data: T;
 }
+
+export interface ApiFailureResponse {
+  success: false;
+  error: ApiError;
+}
+
+export type ApiResponse<T> = ApiSuccessResponse<T> | ApiFailureResponse;
 
 export interface PaginationParams {
   page?: number;
   pageSize?: number;
+}
+
+export interface ApiError {
+  message: string;
+  code: string;
+}
+
+export type Environment = "development" | "test" | "production";
+
+export interface HealthStatus {
+  status: "ok";
+  environment: Environment;
+  timestamp: string;
+}
+
+export interface SystemInfoSummary {
+  name: string;
+  version: string;
+}
+
+export interface SystemInfo extends SystemInfoSummary {
+  environment: Environment;
+  timestamp: string;
 }
