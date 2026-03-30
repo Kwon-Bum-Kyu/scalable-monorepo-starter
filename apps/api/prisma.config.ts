@@ -1,5 +1,5 @@
-import path from "path";
 import { config } from "dotenv";
+import path from "path";
 import { defineConfig } from "prisma/config";
 
 config({ path: path.resolve(process.cwd(), "../../.env") });

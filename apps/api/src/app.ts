@@ -1,26 +1,22 @@
-import express from 'express';
-import cors from 'cors';
+import cors from "cors";
+import express from "express";
 
-const app = express();
+import { errorHandler } from "./middlewares/error-handler";
+import { notFoundHandler } from "./middlewares/not-found-handler";
+import { apiRouter } from "./routes";
 
-app.use(cors());
-app.use(express.json());
+export function createApp() {
+  const app = express();
 
-// Health check endpoint
-app.get('/health', (_req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
+  app.use(cors());
+  app.use(express.json());
+  app.use(apiRouter);
+  app.use(notFoundHandler);
+  app.use(errorHandler);
 
-// Routes
-// app.use('/api', yourRoutes);
+  return app;
+}
 
-// Global Error Handler
-app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    message: err.message || 'Internal Server Error',
-  });
-});
+const app = createApp();
 
 export default app;
