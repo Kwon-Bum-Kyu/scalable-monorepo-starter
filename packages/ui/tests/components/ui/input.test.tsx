@@ -1,6 +1,6 @@
+import { Input } from "@repo/ui/components/input";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Input } from "@repo/ui/components/input";
 
 describe("Input", () => {
   it("기본 텍스트 input이 렌더된다", () => {

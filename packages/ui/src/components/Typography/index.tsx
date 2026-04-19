@@ -1,5 +1,6 @@
-import { TypographyProps } from "./types";
 import React from "react";
+
+import { TypographyProps } from "./types";
 
 const variantStyles: Record<string, string> = {
   h1: "text-6xl font-normal leading-[72px]",

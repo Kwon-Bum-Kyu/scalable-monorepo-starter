@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import { BreadcrumbProps } from "./types";
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {

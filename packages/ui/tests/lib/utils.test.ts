@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { cn } from "@repo/ui/lib/utils";
+import { describe, expect, it } from "vitest";
 
 describe("cn", () => {
   it("여러 클래스 문자열을 공백으로 합친다", () => {

@@ -1,5 +1,3 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
 import {
   Carousel,
   CarouselContent,
@@ -7,6 +5,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@repo/ui/components/carousel";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 describe("Carousel", () => {
   it("기본 carousel이 렌더된다", () => {

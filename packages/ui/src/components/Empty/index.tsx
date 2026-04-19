@@ -1,7 +1,8 @@
 import React from "react";
-import { FaImage, FaFont, FaTimes } from "react-icons/fa";
+import { FaFont, FaImage, FaTimes } from "react-icons/fa";
+
 import { cn } from "../utils/cn";
-import { EmptyType, EmptyProps } from "./types";
+import { EmptyProps,EmptyType } from "./types";
 
 const iconMap: Record<EmptyType, React.ReactElement> = {
   blank: <FaTimes className="text-2xl text-gray-400" />,
