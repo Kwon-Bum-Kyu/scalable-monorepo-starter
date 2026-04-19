@@ -1,8 +1,7 @@
+import { SimplePagination } from "@repo/ui/components/simple-pagination";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-
-import { SimplePagination } from "@repo/ui/components/simple-pagination";
 
 describe("SimplePagination", () => {
   it("current 페이지에 aria-current=page가 적용된다", () => {
@@ -34,5 +33,15 @@ describe("SimplePagination", () => {
     expect(screen.getByRole("link", { name: "1" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "3" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "4" })).toBeNull();
+  });
+
+  it("총 페이지가 많을 때 ellipsis 윈도우로 축약된다", () => {
+    render(<SimplePagination current={50} total={100} />);
+    expect(screen.getByRole("link", { name: "1" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "100" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "50" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "25" })).toBeNull();
+    expect(screen.queryByRole("link", { name: "75" })).toBeNull();
+    expect(screen.getAllByText("More pages").length).toBeGreaterThan(0);
   });
 });
