@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Typography } from "@repo/ui";
 import type { TypographyProps } from "@repo/ui";
+import { Typography } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof Typography> = {
   title: "Common/Typography",

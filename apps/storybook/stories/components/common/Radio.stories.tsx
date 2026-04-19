@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Radio } from "@repo/ui";
 import type { RadioProps } from "@repo/ui";
+import { Radio } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof Radio> = {
   title: "Common/Radio",

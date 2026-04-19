@@ -1,7 +1,8 @@
 import { Logo, SystemIcon } from "@repo/ui";
-import { HeaderProps } from "@/components/Header/types.ts";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
+import { HeaderProps } from "@/components/Header/types.ts";
 
 // TODO: 햄버거 메뉴 오픈 시 반응형이 풀림
 const Header: React.FC<HeaderProps> = ({ isLoggedIn, username }) => {

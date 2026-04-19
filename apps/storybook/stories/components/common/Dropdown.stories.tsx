@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Dropdown } from "@repo/ui";
 import type { DropdownProps } from "@repo/ui";
+import { Dropdown } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof Dropdown> = {
   title: "Common/Dropdown",

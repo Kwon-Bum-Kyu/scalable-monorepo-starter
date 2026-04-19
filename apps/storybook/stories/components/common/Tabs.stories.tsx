@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Tabs } from "@repo/ui";
 import type { TabsProps } from "@repo/ui";
+import { Tabs } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 
 const meta: Meta<typeof Tabs> = {

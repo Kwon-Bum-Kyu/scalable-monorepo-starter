@@ -1,11 +1,11 @@
 import {
-  ApiResponse,
-  ApiError,
-  HttpMethod,
   ApiClientConfig,
+  ApiError,
+  ApiResponse,
+  HttpMethod,
+  RequestConfig,
   RequestInterceptor,
   ResponseInterceptor,
-  RequestConfig,
 } from '@/types/api';
 
 export class ApiClient {

@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Empty } from "@repo/ui";
 import type { EmptyProps } from "@repo/ui";
+import { Empty } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof Empty> = {
   title: "Common/Empty",

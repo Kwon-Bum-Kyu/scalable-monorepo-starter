@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { ButtonGroup, SystemIcon } from "@repo/ui";
 import type { ButtonGroupProps } from "@repo/ui";
+import { ButtonGroup, SystemIcon } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof ButtonGroup> = {
   title: "Common/ButtonGroup",

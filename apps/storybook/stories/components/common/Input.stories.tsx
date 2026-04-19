@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Input } from "@repo/ui";
 import type { InputProps } from "@repo/ui";
+import { Input } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof Input> = {
   title: "Common/Input",

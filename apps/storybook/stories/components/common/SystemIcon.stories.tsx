@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { SystemIcon } from "@repo/ui";
 import type { SystemIconProps } from "@repo/ui";
+import { SystemIcon } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof SystemIcon> = {
   title: "Common/SystemIcon",

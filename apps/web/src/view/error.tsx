@@ -1,5 +1,5 @@
-import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 import { cn } from "@repo/ui";
+import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
 type Error = {
   status: number;
