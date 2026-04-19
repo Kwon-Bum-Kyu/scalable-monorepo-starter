@@ -1,6 +1,7 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import { Pagenation as Pagination } from "@repo/ui";
+import { fireEvent,render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+
+import Pagination from "../../../src/components/Pagenation";
 
 describe("Pagination 컴포넌트", () => {
   it("올바른 페이지 번호와 네비게이션 버튼이 렌더링되어야 한다.", () => {

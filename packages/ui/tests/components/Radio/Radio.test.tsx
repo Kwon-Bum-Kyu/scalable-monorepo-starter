@@ -1,6 +1,7 @@
-import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Radio } from "@repo/ui";
+import { describe, expect,it } from "vitest";
+
+import Radio from "../../../src/components/Radio";
 
 describe("Radio 컴포넌트", () => {
   it("기본 라디오 버튼이 렌더링되어야 한다.", () => {

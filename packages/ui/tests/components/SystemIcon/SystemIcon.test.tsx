@@ -1,6 +1,7 @@
-import { describe, it, expect } from "vitest";
 import { render } from "@testing-library/react";
-import { SystemIcon } from "@repo/ui";
+import { describe, expect,it } from "vitest";
+
+import SystemIcon from "../../../src/components/SystemIcon";
 
 describe("SystemIcon 컴포넌트", () => {
   it("기본 아이콘이 렌더링되어야 한다.", () => {

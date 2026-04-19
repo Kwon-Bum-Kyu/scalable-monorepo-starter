@@ -1,7 +1,8 @@
-import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { Breadcrumb } from "@repo/ui";
+import { describe, expect,it } from "vitest";
+
+import Breadcrumb from "../../../src/components/Breadcrumb";
 
 const mockItems = [
   { label: "Home", href: "/" },

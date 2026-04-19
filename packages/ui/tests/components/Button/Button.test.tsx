@@ -1,6 +1,7 @@
-import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Button } from "@repo/ui";
+import { describe, expect,it } from "vitest";
+
+import Button from "../../../src/components/Button";
 
 describe("Button 컴포넌트", () => {
   it("기본 버튼이 렌더링되면 텍스트가 표시된다.", () => {
