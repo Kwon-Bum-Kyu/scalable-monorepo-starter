@@ -1,7 +1,4 @@
-import {
-  RadioGroup,
-  RadioGroupItem,
-} from "@repo/ui/components/radio-group";
+import { RadioGroup, RadioGroupItem } from "@repo/ui/components/radio-group";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
@@ -11,7 +8,7 @@ describe("RadioGroup", () => {
       <RadioGroup defaultValue="a" aria-label="옵션">
         <RadioGroupItem value="a" aria-label="A" />
         <RadioGroupItem value="b" aria-label="B" />
-      </RadioGroup>
+      </RadioGroup>,
     );
     expect(screen.getByRole("radio", { name: "A" })).toBeInTheDocument();
     expect(screen.getByRole("radio", { name: "B" })).toBeInTheDocument();
@@ -22,11 +19,11 @@ describe("RadioGroup", () => {
       <RadioGroup defaultValue="a" aria-label="옵션">
         <RadioGroupItem value="a" aria-label="A" />
         <RadioGroupItem value="b" aria-label="B" />
-      </RadioGroup>
+      </RadioGroup>,
     );
     expect(screen.getByRole("radio", { name: "A" })).toHaveAttribute(
       "data-state",
-      "checked"
+      "checked",
     );
   });
 });

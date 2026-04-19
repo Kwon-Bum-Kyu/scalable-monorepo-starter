@@ -1,6 +1,6 @@
-import { useCallback,useState } from 'react';
+import { useCallback, useState } from "react";
 
-import { ApiError,ApiResponse } from '@/types/api';
+import { ApiError, ApiResponse } from "@/types/api";
 
 interface UseMutationState<T> {
   data: T | null;
@@ -16,7 +16,7 @@ interface UseMutationOptions<T> {
 
 export function useMutation<TData, TVariables = void>(
   mutationFn: (variables: TVariables) => Promise<ApiResponse<TData>>,
-  options: UseMutationOptions<TData> = {}
+  options: UseMutationOptions<TData> = {},
 ) {
   const { onSuccess, onError, onSettled } = options;
 
@@ -28,7 +28,7 @@ export function useMutation<TData, TVariables = void>(
 
   const mutate = useCallback(
     async (variables: TVariables) => {
-      setState(prev => ({ ...prev, loading: true, error: null }));
+      setState((prev) => ({ ...prev, loading: true, error: null }));
 
       try {
         const response = await mutationFn(variables);
@@ -69,7 +69,7 @@ export function useMutation<TData, TVariables = void>(
         throw error;
       }
     },
-    [mutationFn, onSuccess, onError, onSettled]
+    [mutationFn, onSuccess, onError, onSettled],
   );
 
   const reset = useCallback(() => {

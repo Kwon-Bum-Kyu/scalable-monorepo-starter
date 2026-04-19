@@ -32,9 +32,7 @@ describe("ErrorPage 컴포넌트", () => {
     );
 
     render(<RouterProvider router={router} />);
-    expect(
-      screen.getByText("찾으시는 페이지가 없습니다."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("찾으시는 페이지가 없습니다.")).toBeInTheDocument();
   });
 
   it("isError가 true일 때 본문 설명 문구도 함께 표시된다", () => {

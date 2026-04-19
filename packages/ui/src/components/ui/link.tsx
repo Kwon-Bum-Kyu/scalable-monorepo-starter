@@ -1,8 +1,14 @@
 import { cn } from "@repo/ui/lib/utils";
 import * as React from "react";
-import { Link as RouterLink, type LinkProps as RouterLinkProps } from "react-router-dom";
+import {
+  Link as RouterLink,
+  type LinkProps as RouterLinkProps,
+} from "react-router-dom";
 
-type ExternalAnchorProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">;
+type ExternalAnchorProps = Omit<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  "href"
+>;
 
 interface LinkBaseProps {
   to: RouterLinkProps["to"];
@@ -11,18 +17,29 @@ interface LinkBaseProps {
 }
 
 export type LinkProps =
-  | (LinkBaseProps & { external?: false } & Omit<RouterLinkProps, "to" | "className" | "children">)
+  | (LinkBaseProps & { external?: false } & Omit<
+        RouterLinkProps,
+        "to" | "className" | "children"
+      >)
   | (LinkBaseProps & { external: true } & ExternalAnchorProps);
 
 function isExternal(
-  props: LinkProps
+  props: LinkProps,
 ): props is LinkBaseProps & { external: true } & ExternalAnchorProps {
   return (props as { external?: boolean }).external === true;
 }
 
 function Link(props: LinkProps): React.JSX.Element {
   if (isExternal(props)) {
-    const { to, className, children, external: _external, rel, target, ...rest } = props;
+    const {
+      to,
+      className,
+      children,
+      external: _external,
+      rel,
+      target,
+      ...rest
+    } = props;
     const href = typeof to === "string" ? to : "#";
     return (
       <a
@@ -37,7 +54,13 @@ function Link(props: LinkProps): React.JSX.Element {
     );
   }
 
-  const { to, className, children, external: _external, ...rest } = props as LinkBaseProps & {
+  const {
+    to,
+    className,
+    children,
+    external: _external,
+    ...rest
+  } = props as LinkBaseProps & {
     external?: false;
   } & Omit<RouterLinkProps, "to" | "className" | "children">;
   return (

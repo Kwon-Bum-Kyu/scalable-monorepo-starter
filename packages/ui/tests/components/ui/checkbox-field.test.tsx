@@ -18,7 +18,7 @@ describe("CheckboxField", () => {
         id="tos"
         label="약관 동의"
         onCheckedChange={onCheckedChange}
-      />
+      />,
     );
     await user.click(screen.getByText("약관 동의"));
     expect(onCheckedChange).toHaveBeenCalledWith(true);

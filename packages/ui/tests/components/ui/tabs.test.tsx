@@ -17,7 +17,7 @@ describe("Tabs", () => {
         </TabsList>
         <TabsContent value="a">A 콘텐츠</TabsContent>
         <TabsContent value="b">B 콘텐츠</TabsContent>
-      </Tabs>
+      </Tabs>,
     );
     expect(screen.getByRole("tab", { name: "A" })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "B" })).toBeInTheDocument();
@@ -32,7 +32,7 @@ describe("Tabs", () => {
         </TabsList>
         <TabsContent value="a">A 콘텐츠</TabsContent>
         <TabsContent value="b">B 콘텐츠</TabsContent>
-      </Tabs>
+      </Tabs>,
     );
     expect(screen.getByText("A 콘텐츠")).toBeInTheDocument();
   });

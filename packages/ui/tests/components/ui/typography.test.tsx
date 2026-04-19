@@ -13,7 +13,7 @@ describe("Typography", () => {
     render(
       <Typography variant="h1" as="span" data-testid="forced">
         span 제목
-      </Typography>
+      </Typography>,
     );
     const node = screen.getByTestId("forced");
     expect(node.tagName).toBe("SPAN");
@@ -23,7 +23,7 @@ describe("Typography", () => {
     render(
       <Typography variant="body" className="text-center">
         본문
-      </Typography>
+      </Typography>,
     );
     expect(screen.getByText("본문")).toHaveClass("text-center");
   });

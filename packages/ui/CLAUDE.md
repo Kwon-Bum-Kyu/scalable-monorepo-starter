@@ -22,13 +22,14 @@ src/
 
 ## 3-tier 컴포지션
 
-| Tier | 정의 | 예시 | 명명 |
-|------|------|------|------|
-| **L1** | shadcn 원본 (CLI 설치 그대로) | `Button`, `Input`, `Checkbox`, `RadioGroup`, `Select`, `Tabs`, `Pagination`, `Breadcrumb`, `Popover`, `Calendar`, `Slider`, `Label`, `Carousel` | shadcn 규약 그대로 (kebab-case 파일, PascalCase export) |
-| **L2** | 프로젝트 커스텀 wrapper (shadcn 조합) | `Typography`, `Grid`, `ButtonGroup`, `Radio`, `CheckboxField`, `DatePicker`, `FormSelect`, `Empty`, `Link`, `Logo`, `SystemIcon`, `Header`, `Footer` | PascalCase export, kebab-case 파일 |
-| **L3** | options 배열 기반 프리셋 | `SimpleRadio`, `SimpleCheckboxGroup`, `SimpleSelect`, `SimpleTabs`, `SimpleBreadcrumb`, `SimplePagination` | `Simple` 접두사 |
+| Tier   | 정의                                  | 예시                                                                                                                                                 | 명명                                                    |
+| ------ | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| **L1** | shadcn 원본 (CLI 설치 그대로)         | `Button`, `Input`, `Checkbox`, `RadioGroup`, `Select`, `Tabs`, `Pagination`, `Breadcrumb`, `Popover`, `Calendar`, `Slider`, `Label`, `Carousel`      | shadcn 규약 그대로 (kebab-case 파일, PascalCase export) |
+| **L2** | 프로젝트 커스텀 wrapper (shadcn 조합) | `Typography`, `Grid`, `ButtonGroup`, `Radio`, `CheckboxField`, `DatePicker`, `FormSelect`, `Empty`, `Link`, `Logo`, `SystemIcon`, `Header`, `Footer` | PascalCase export, kebab-case 파일                      |
+| **L3** | options 배열 기반 프리셋              | `SimpleRadio`, `SimpleCheckboxGroup`, `SimpleSelect`, `SimpleTabs`, `SimpleBreadcrumb`, `SimplePagination`                                           | `Simple` 접두사                                         |
 
 **선택 가이드:**
+
 - 재사용 형태가 고정된 단순 케이스 → L3 `Simple*`
 - 피그마 variant 기반 커스텀이 필요한 경우 → L2 PascalCase
 - shadcn 원본 그대로 합성해서 쓸 때 → L1

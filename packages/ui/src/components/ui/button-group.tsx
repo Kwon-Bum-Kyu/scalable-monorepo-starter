@@ -19,14 +19,14 @@ const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
             "[&>button:first-child]:rounded-l-md [&>button:last-child]:rounded-r-md [&>button:not(:first-child)]:-ml-px",
           orientation === "vertical" &&
             "[&>button:first-child]:rounded-t-md [&>button:last-child]:rounded-b-md [&>button:not(:first-child)]:-mt-px",
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </div>
     );
-  }
+  },
 );
 ButtonGroup.displayName = "ButtonGroup";
 

@@ -10,7 +10,7 @@ describe("cn", () => {
     const disabled = false;
     const maybe: string | undefined = undefined;
     expect(cn("px-2", disabled && "opacity-50", maybe, "py-1")).toBe(
-      "px-2 py-1"
+      "px-2 py-1",
     );
   });
 

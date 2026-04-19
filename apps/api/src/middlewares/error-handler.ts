@@ -6,7 +6,12 @@ import { sendError } from "../lib/http-response";
 
 const DEFAULT_ERROR_CODE = "INTERNAL_SERVER_ERROR";
 
-export const errorHandler: ErrorRequestHandler = (error, _request, response, _next) => {
+export const errorHandler: ErrorRequestHandler = (
+  error,
+  _request,
+  response,
+  _next,
+) => {
   if (error instanceof AppError) {
     return sendError(response, error.toApiError(), error.statusCode);
   }

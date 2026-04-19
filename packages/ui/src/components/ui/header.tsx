@@ -23,10 +23,7 @@ function Header({
 
   return (
     <header
-      className={cn(
-        "w-full border-b border-border bg-background",
-        className
-      )}
+      className={cn("w-full border-b border-border bg-background", className)}
       {...props}
     >
       <div className="mx-auto flex h-16 w-full max-w-app items-center justify-between px-6">

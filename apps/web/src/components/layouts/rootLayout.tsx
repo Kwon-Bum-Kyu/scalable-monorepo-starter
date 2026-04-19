@@ -1,10 +1,4 @@
-import {
-  Footer,
-  type FooterColumn,
-  Header,
-  Logo,
-  SystemIcon,
-} from "@repo/ui";
+import { Footer, type FooterColumn, Header, Logo, SystemIcon } from "@repo/ui";
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 
@@ -51,7 +45,7 @@ const headerNav = (
       <Link
         key={link.to}
         to={link.to}
-        className="text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground text-sm"
       >
         {link.label}
       </Link>
@@ -63,13 +57,13 @@ const headerActions = (
   <>
     <Link
       to="/login"
-      className="rounded bg-primary px-4 py-2 text-sm text-primary-foreground"
+      className="bg-primary text-primary-foreground rounded px-4 py-2 text-sm"
     >
       Log in
     </Link>
     <Link
       to="/register"
-      className="rounded bg-secondary px-4 py-2 text-sm text-secondary-foreground"
+      className="bg-secondary text-secondary-foreground rounded px-4 py-2 text-sm"
     >
       Register
     </Link>
@@ -82,7 +76,7 @@ const mobileMenu = (
       <Link
         key={link.to}
         to={link.to}
-        className="text-sm text-muted-foreground hover:text-foreground"
+        className="text-muted-foreground hover:text-foreground text-sm"
       >
         {link.label}
       </Link>

@@ -12,7 +12,7 @@ describe("Popover", () => {
       <Popover>
         <PopoverTrigger>열기</PopoverTrigger>
         <PopoverContent>내용</PopoverContent>
-      </Popover>
+      </Popover>,
     );
     expect(screen.getByText("열기")).toBeInTheDocument();
   });
@@ -22,7 +22,7 @@ describe("Popover", () => {
       <Popover>
         <PopoverTrigger>열기</PopoverTrigger>
         <PopoverContent>내용</PopoverContent>
-      </Popover>
+      </Popover>,
     );
     expect(screen.queryByText("내용")).not.toBeInTheDocument();
   });

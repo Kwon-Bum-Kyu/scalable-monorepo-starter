@@ -29,7 +29,7 @@ export interface RequestConfig {
   retryDelay?: number;
 }
 
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export interface ApiClientConfig {
   baseURL: string;
@@ -45,6 +45,8 @@ export interface RequestInterceptor {
 }
 
 export interface ResponseInterceptor {
-  onResponse?: <T>(response: ApiResponse<T>) => ApiResponse<T> | Promise<ApiResponse<T>>;
+  onResponse?: <T>(
+    response: ApiResponse<T>,
+  ) => ApiResponse<T> | Promise<ApiResponse<T>>;
   onError?: (error: ApiError) => ApiError | Promise<ApiError>;
 }

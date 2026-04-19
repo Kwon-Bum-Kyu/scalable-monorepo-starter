@@ -16,26 +16,23 @@ describe("SimpleBreadcrumb", () => {
           { label: "문서", href: "/docs" },
           { label: "가이드" },
         ]}
-      />
+      />,
     );
     expect(screen.getByRole("link", { name: "홈" })).toHaveAttribute(
       "href",
-      "/"
+      "/",
     );
     expect(screen.getByRole("link", { name: "문서" })).toHaveAttribute(
       "href",
-      "/docs"
+      "/docs",
     );
   });
 
   it("마지막 항목은 현재 페이지로 표시된다 (aria-current=page)", () => {
     renderWithRouter(
       <SimpleBreadcrumb
-        items={[
-          { label: "홈", href: "/" },
-          { label: "가이드" },
-        ]}
-      />
+        items={[{ label: "홈", href: "/" }, { label: "가이드" }]}
+      />,
     );
     const current = screen.getByText("가이드");
     expect(current).toHaveAttribute("aria-current", "page");
@@ -45,8 +42,12 @@ describe("SimpleBreadcrumb", () => {
 
   it("breadcrumb nav 랜드마크가 표시된다", () => {
     renderWithRouter(
-      <SimpleBreadcrumb items={[{ label: "홈", href: "/" }, { label: "현재" }]} />
+      <SimpleBreadcrumb
+        items={[{ label: "홈", href: "/" }, { label: "현재" }]}
+      />,
     );
-    expect(screen.getByRole("navigation", { name: /breadcrumb/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("navigation", { name: /breadcrumb/i }),
+    ).toBeInTheDocument();
   });
 });

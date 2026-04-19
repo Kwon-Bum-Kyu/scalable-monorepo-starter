@@ -10,7 +10,7 @@ describe("Slider", () => {
 
   it("disabled 상태이면 data-disabled 속성이 부여된다", () => {
     const { container } = render(
-      <Slider defaultValue={[50]} disabled data-testid="slider-root" />
+      <Slider defaultValue={[50]} disabled data-testid="slider-root" />,
     );
     const root = container.firstChild as HTMLElement;
     expect(root).toHaveAttribute("data-disabled");

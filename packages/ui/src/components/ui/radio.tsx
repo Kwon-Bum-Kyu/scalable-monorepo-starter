@@ -11,7 +11,13 @@ export interface RadioProps {
   className?: string;
 }
 
-function Radio({ value, label, id, disabled, className }: RadioProps): React.JSX.Element {
+function Radio({
+  value,
+  label,
+  id,
+  disabled,
+  className,
+}: RadioProps): React.JSX.Element {
   const itemId = id ?? `radio-${value}`;
   return (
     <div className={cn("flex items-center space-x-2", className)}>

@@ -12,7 +12,9 @@ export function validateRequest(schemas: RequestSchemas): RequestHandler {
     try {
       response.locals.validated = {
         body: schemas.body ? schemas.body.parse(request.body) : undefined,
-        params: schemas.params ? schemas.params.parse(request.params) : undefined,
+        params: schemas.params
+          ? schemas.params.parse(request.params)
+          : undefined,
         query: schemas.query ? schemas.query.parse(request.query) : undefined,
       };
 

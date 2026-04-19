@@ -10,7 +10,7 @@ describe("Header", () => {
         logo={<span data-testid="logo">L</span>}
         nav={<span data-testid="nav">N</span>}
         actions={<span data-testid="actions">A</span>}
-      />
+      />,
     );
     expect(screen.getByTestId("logo")).toBeInTheDocument();
     expect(screen.getByTestId("nav")).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe("Header", () => {
       <Header
         logo={<span>L</span>}
         mobileMenu={<div data-testid="mobile-menu">메뉴</div>}
-      />
+      />,
     );
     const toggle = screen.getByRole("button", { name: /메뉴 열기/ });
     await user.click(toggle);

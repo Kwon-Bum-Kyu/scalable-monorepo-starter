@@ -32,9 +32,7 @@ describe("useApi", () => {
     it("immediate=false이면 자동 호출하지 않는다", async () => {
       const fn = vi.fn().mockResolvedValue(okResponse({ id: "2" }));
 
-      const { result } = renderHook(() =>
-        useApi(fn, { immediate: false }),
-      );
+      const { result } = renderHook(() => useApi(fn, { immediate: false }));
 
       expect(fn).not.toHaveBeenCalled();
       expect(result.current.loading).toBe(false);
@@ -56,9 +54,7 @@ describe("useApi", () => {
       const err = apiError("500", "서버 오류");
       const fn = vi.fn().mockRejectedValue(err);
 
-      const { result } = renderHook(() =>
-        useApi(fn, { immediate: false }),
-      );
+      const { result } = renderHook(() => useApi(fn, { immediate: false }));
 
       await act(async () => {
         await expect(result.current.execute()).rejects.toBe(err);

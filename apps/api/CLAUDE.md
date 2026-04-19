@@ -14,19 +14,19 @@ Route → (validateRequest) → Controller → Service → Repository → Prisma
 
 ## 디렉터리 역할
 
-| 디렉터리 | 역할 |
-| --- | --- |
-| `src/app.ts` | Express app 조립 (미들웨어·라우터 마운트) |
-| `src/index.ts` | 진입점 (서버 구동) |
-| `src/config/` | `env.ts` (envalid 환경변수 검증), `app.ts` (앱 메타) |
-| `src/controllers/` | HTTP 요청 파싱 → Service 호출 → 응답 (상세: `controllers/CLAUDE.md`) |
-| `src/services/` | 비즈니스 로직 (상세: `services/CLAUDE.md`) |
-| `src/repositories/` | SQL·DB 접근 전담 (상세: `repositories/CLAUDE.md`) |
-| `src/routes/` | Express 라우터 조립 + `validateRequest` 미들웨어 |
-| `src/schemas/` | Zod 입력 검증 스키마 (`z.infer`로 타입 추출) |
-| `src/middlewares/` | `error-handler`, `not-found-handler`, `validate-request` |
-| `src/errors/` | `AppError` 클래스 (`statusCode`, `code`, `toApiError()`) |
-| `src/lib/` | `prisma.ts` (Prisma Client 싱글턴), `http-response.ts` (`sendSuccess`/`sendError`) |
+| 디렉터리            | 역할                                                                               |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| `src/app.ts`        | Express app 조립 (미들웨어·라우터 마운트)                                          |
+| `src/index.ts`      | 진입점 (서버 구동)                                                                 |
+| `src/config/`       | `env.ts` (envalid 환경변수 검증), `app.ts` (앱 메타)                               |
+| `src/controllers/`  | HTTP 요청 파싱 → Service 호출 → 응답 (상세: `controllers/CLAUDE.md`)               |
+| `src/services/`     | 비즈니스 로직 (상세: `services/CLAUDE.md`)                                         |
+| `src/repositories/` | SQL·DB 접근 전담 (상세: `repositories/CLAUDE.md`)                                  |
+| `src/routes/`       | Express 라우터 조립 + `validateRequest` 미들웨어                                   |
+| `src/schemas/`      | Zod 입력 검증 스키마 (`z.infer`로 타입 추출)                                       |
+| `src/middlewares/`  | `error-handler`, `not-found-handler`, `validate-request`                           |
+| `src/errors/`       | `AppError` 클래스 (`statusCode`, `code`, `toApiError()`)                           |
+| `src/lib/`          | `prisma.ts` (Prisma Client 싱글턴), `http-response.ts` (`sendSuccess`/`sendError`) |
 
 ## 핵심 규칙
 

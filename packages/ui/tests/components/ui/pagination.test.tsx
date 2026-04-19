@@ -26,7 +26,7 @@ describe("Pagination", () => {
             <PaginationNext href="#" />
           </PaginationItem>
         </PaginationContent>
-      </Pagination>
+      </Pagination>,
     );
     expect(screen.getByRole("navigation")).toBeInTheDocument();
     expect(screen.getByText("1")).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe("Pagination", () => {
             </PaginationLink>
           </PaginationItem>
         </PaginationContent>
-      </Pagination>
+      </Pagination>,
     );
     expect(screen.getByText("1")).toHaveAttribute("aria-current", "page");
   });

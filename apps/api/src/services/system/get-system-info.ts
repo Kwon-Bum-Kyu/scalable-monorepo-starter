@@ -4,7 +4,9 @@ import { createSystemSnapshot } from "../../repositories/system/system.repositor
 
 export type SystemInfoFormat = "summary" | "full";
 
-export function getSystemInfo(format: SystemInfoFormat): SystemInfo | SystemInfoSummary {
+export function getSystemInfo(
+  format: SystemInfoFormat,
+): SystemInfo | SystemInfoSummary {
   const systemSnapshot = createSystemSnapshot();
 
   if (format === "summary") {

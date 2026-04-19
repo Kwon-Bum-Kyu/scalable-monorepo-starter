@@ -5,7 +5,8 @@ import type { SystemInfoQuery } from "../../schemas/system/system-info-query-sch
 import { getSystemInfo } from "../../services/system/get-system-info";
 
 export const getSystemInfoController: RequestHandler = (_request, response) => {
-  const validatedQuery = (response.locals.validated?.query ?? {}) as SystemInfoQuery;
+  const validatedQuery = (response.locals.validated?.query ??
+    {}) as SystemInfoQuery;
 
   return sendSuccess(response, getSystemInfo(validatedQuery.format));
 };

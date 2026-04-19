@@ -20,10 +20,7 @@ type Story = StoryObj<typeof SimpleBreadcrumb>;
 
 export const TwoLevels: Story = {
   args: {
-    items: [
-      { label: "Home", href: "/" },
-      { label: "Guide" },
-    ],
+    items: [{ label: "Home", href: "/" }, { label: "Guide" }],
   },
 };
 export const ThreeLevels: Story = {

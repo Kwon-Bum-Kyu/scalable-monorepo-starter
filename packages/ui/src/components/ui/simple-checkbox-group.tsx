@@ -46,7 +46,7 @@ function SimpleCheckboxGroup({
       role="group"
       className={cn(
         orientation === "horizontal" ? "flex flex-row gap-4" : "grid gap-2",
-        className
+        className,
       )}
     >
       {options.map((opt) => (

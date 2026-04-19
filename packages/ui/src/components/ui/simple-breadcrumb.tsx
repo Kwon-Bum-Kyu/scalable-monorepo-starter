@@ -43,7 +43,9 @@ function SimpleBreadcrumb({
                   </BreadcrumbLink>
                 )}
               </BreadcrumbItem>
-              {!isLast && <BreadcrumbSeparator>{separator}</BreadcrumbSeparator>}
+              {!isLast && (
+                <BreadcrumbSeparator>{separator}</BreadcrumbSeparator>
+              )}
             </React.Fragment>
           );
         })}

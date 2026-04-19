@@ -25,13 +25,13 @@ describe("Footer", () => {
             links: [{ label: "소개", href: "/about" }],
           },
         ]}
-      />
+      />,
     );
     expect(screen.getByText("제품")).toBeInTheDocument();
     expect(screen.getByText("회사")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "가이드" })).toHaveAttribute(
       "href",
-      "/guide"
+      "/guide",
     );
   });
 
@@ -46,7 +46,7 @@ describe("Footer", () => {
             ],
           },
         ]}
-      />
+      />,
     );
     const link = screen.getByRole("link", { name: "깃허브" });
     expect(link.tagName).toBe("A");
@@ -58,7 +58,7 @@ describe("Footer", () => {
       <Footer
         columns={[]}
         bottom={<span data-testid="copyright">© 2026</span>}
-      />
+      />,
     );
     expect(screen.getByTestId("copyright")).toBeInTheDocument();
   });
@@ -72,7 +72,7 @@ describe("Footer", () => {
     renderWithRouter(
       <Footer
         columns={[{ title: "링크", links: [{ label: "홈", href: "/" }] }]}
-      />
+      />,
     );
     const footer = screen.getByRole("contentinfo");
     expect(within(footer).getByText("링크")).toBeInTheDocument();

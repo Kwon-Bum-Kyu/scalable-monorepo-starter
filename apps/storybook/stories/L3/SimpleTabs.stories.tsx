@@ -21,7 +21,12 @@ export const WithDisabled: Story = {
   args: {
     items: [
       ...items,
-      { value: "changelog", label: "Changelog", content: <p>—</p>, disabled: true },
+      {
+        value: "changelog",
+        label: "Changelog",
+        content: <p>—</p>,
+        disabled: true,
+      },
     ],
   },
 };

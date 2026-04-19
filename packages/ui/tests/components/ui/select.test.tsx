@@ -18,11 +18,9 @@ describe("Select", () => {
         <SelectContent>
           <SelectItem value="kr">한국</SelectItem>
         </SelectContent>
-      </Select>
+      </Select>,
     );
-    expect(
-      screen.getByRole("combobox", { name: "국가" })
-    ).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "국가" })).toBeInTheDocument();
   });
 
   it("placeholder 텍스트가 노출된다", () => {
@@ -34,7 +32,7 @@ describe("Select", () => {
         <SelectContent>
           <SelectItem value="kr">한국</SelectItem>
         </SelectContent>
-      </Select>
+      </Select>,
     );
     expect(screen.getByText("선택하세요")).toBeInTheDocument();
   });

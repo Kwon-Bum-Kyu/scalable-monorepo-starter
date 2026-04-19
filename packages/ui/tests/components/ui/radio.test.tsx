@@ -9,7 +9,7 @@ describe("Radio", () => {
     render(
       <RadioGroup defaultValue="a">
         <Radio value="a" label="옵션 A" id="opt-a" />
-      </RadioGroup>
+      </RadioGroup>,
     );
     const radio = screen.getByRole("radio", { name: "옵션 A" });
     expect(radio).toHaveAttribute("id", "opt-a");
@@ -19,7 +19,7 @@ describe("Radio", () => {
     render(
       <RadioGroup defaultValue="b">
         <Radio value="hello" label="옵션" />
-      </RadioGroup>
+      </RadioGroup>,
     );
     const radio = screen.getByRole("radio", { name: "옵션" });
     expect(radio.getAttribute("id")).toMatch(/hello/);
@@ -32,7 +32,7 @@ describe("Radio", () => {
       <RadioGroup onValueChange={onValueChange}>
         <Radio value="x" label="엑스" />
         <Radio value="y" label="와이" />
-      </RadioGroup>
+      </RadioGroup>,
     );
     await user.click(screen.getByText("와이"));
     expect(onValueChange).toHaveBeenCalledWith("y");

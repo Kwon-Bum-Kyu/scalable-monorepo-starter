@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef,useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import { ApiError,ApiResponse } from '@/types/api';
+import { ApiError, ApiResponse } from "@/types/api";
 
 interface UseApiState<T> {
   data: T | null;
@@ -16,7 +16,7 @@ interface UseApiOptions<T = unknown> {
 
 export function useApi<T>(
   apiFunction: () => Promise<ApiResponse<T>>,
-  options: UseApiOptions<T> = {}
+  options: UseApiOptions<T> = {},
 ) {
   const { immediate = true, onSuccess, onError } = options;
   const apiFunctionRef = useRef(apiFunction);
@@ -35,7 +35,7 @@ export function useApi<T>(
   });
 
   const execute = useCallback(async () => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+    setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
       const response = await apiFunctionRef.current();

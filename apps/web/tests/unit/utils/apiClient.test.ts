@@ -204,9 +204,9 @@ describe("ApiClient", () => {
       await client.get("users");
 
       const [, init] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-      expect(
-        (init.headers as Record<string, string>).Authorization,
-      ).toBe("Bearer T");
+      expect((init.headers as Record<string, string>).Authorization).toBe(
+        "Bearer T",
+      );
     });
 
     it("response 인터셉터가 응답을 가공할 수 있다", async () => {

@@ -50,7 +50,9 @@ describe("startServer", () => {
     const server = createServerDouble();
     const disconnectMock = vi.fn().mockResolvedValue(undefined);
 
-    vi.spyOn(process, "exit").mockImplementation(((_code?: string | number | null) => {
+    vi.spyOn(process, "exit").mockImplementation(((
+      _code?: string | number | null,
+    ) => {
       return undefined as never;
     }) as typeof process.exit);
 
@@ -70,7 +72,8 @@ describe("startServer", () => {
       },
     }));
 
-    const { createGracefulShutdown } = await import("../../src/server/start-server");
+    const { createGracefulShutdown } =
+      await import("../../src/server/start-server");
 
     const gracefulShutdown = createGracefulShutdown(server);
 

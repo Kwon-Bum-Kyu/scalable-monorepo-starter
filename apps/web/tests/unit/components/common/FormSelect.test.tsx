@@ -15,14 +15,14 @@ describe("FormSelect 소비처 스모크", () => {
         options={mockOptions}
         placeholder="Select an option"
         onChange={() => {}}
-      />
+      />,
     );
     expect(screen.getByRole("combobox")).toHaveTextContent("Select an option");
   });
 
   it("label이 주어지면 화면에 렌더된다", () => {
     render(
-      <FormSelect label="항목" options={mockOptions} placeholder="Select" />
+      <FormSelect label="항목" options={mockOptions} placeholder="Select" />,
     );
     expect(screen.getByText("항목")).toBeInTheDocument();
   });
@@ -33,7 +33,7 @@ describe("FormSelect 소비처 스모크", () => {
         options={mockOptions}
         placeholder="Select an option"
         disabled
-      />
+      />,
     );
     expect(screen.getByRole("combobox")).toBeDisabled();
   });

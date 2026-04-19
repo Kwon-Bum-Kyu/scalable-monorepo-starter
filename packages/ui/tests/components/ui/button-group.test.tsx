@@ -9,7 +9,7 @@ describe("ButtonGroup", () => {
       <ButtonGroup>
         <Button>A</Button>
         <Button>B</Button>
-      </ButtonGroup>
+      </ButtonGroup>,
     );
     const group = screen.getByRole("group");
     expect(group).toBeInTheDocument();
@@ -21,7 +21,7 @@ describe("ButtonGroup", () => {
       <ButtonGroup orientation="vertical">
         <Button>A</Button>
         <Button>B</Button>
-      </ButtonGroup>
+      </ButtonGroup>,
     );
     expect(screen.getByRole("group")).toHaveClass("flex-col");
   });
@@ -30,7 +30,7 @@ describe("ButtonGroup", () => {
     render(
       <ButtonGroup>
         <Button>A</Button>
-      </ButtonGroup>
+      </ButtonGroup>,
     );
     expect(screen.getByRole("group")).toHaveClass("inline-flex");
   });

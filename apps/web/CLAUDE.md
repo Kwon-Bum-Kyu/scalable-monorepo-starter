@@ -4,15 +4,15 @@ React 19 + Vite 7 + Tailwind CSS v4 프런트엔드 (port 3000).
 
 ## 디렉터리 역할
 
-| 디렉터리 | 역할 |
-| --- | --- |
-| `src/components/` | 앱 전용 컴포넌트 (재사용 가능하면 `@repo/ui`로 승격) |
-| `src/config/` | `api.ts` — `API_CONFIG` (baseURL, timeout, retry), `API_ENDPOINTS` |
-| `src/hooks/` | `useApi` (조회), `useMutation` (변경) — 공통 API 훅 |
-| `src/routes/` | `createBrowserRouter` 구성, `ROUTES` 상수 |
-| `src/types/` | 앱 로컬 타입 (`api.ts`, `user.ts` 등). FE/BE 공유 타입은 `@repo/shared-types` |
-| `src/utils/` | `ApiClient` 클래스, `api` 싱글턴, `errorHandler` |
-| `src/view/` | 라우터에 마운트되는 페이지 컴포넌트 |
+| 디렉터리          | 역할                                                                          |
+| ----------------- | ----------------------------------------------------------------------------- |
+| `src/components/` | 앱 전용 컴포넌트 (재사용 가능하면 `@repo/ui`로 승격)                          |
+| `src/config/`     | `api.ts` — `API_CONFIG` (baseURL, timeout, retry), `API_ENDPOINTS`            |
+| `src/hooks/`      | `useApi` (조회), `useMutation` (변경) — 공통 API 훅                           |
+| `src/routes/`     | `createBrowserRouter` 구성, `ROUTES` 상수                                     |
+| `src/types/`      | 앱 로컬 타입 (`api.ts`, `user.ts` 등). FE/BE 공유 타입은 `@repo/shared-types` |
+| `src/utils/`      | `ApiClient` 클래스, `api` 싱글턴, `errorHandler`                              |
+| `src/view/`       | 라우터에 마운트되는 페이지 컴포넌트                                           |
 
 ## 규칙
 

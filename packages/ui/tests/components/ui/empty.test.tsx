@@ -14,20 +14,15 @@ describe("Empty", () => {
       <Empty
         title="비었음"
         action={<button type="button">새로 만들기</button>}
-      />
+      />,
     );
     expect(
-      screen.getByRole("button", { name: "새로 만들기" })
+      screen.getByRole("button", { name: "새로 만들기" }),
     ).toBeInTheDocument();
   });
 
   it("icon 슬롯이 렌더된다", () => {
-    render(
-      <Empty
-        title="비었음"
-        icon={<span data-testid="icon">🗂️</span>}
-      />
-    );
+    render(<Empty title="비었음" icon={<span data-testid="icon">🗂️</span>} />);
     expect(screen.getByTestId("icon")).toBeInTheDocument();
   });
 });

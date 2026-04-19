@@ -37,7 +37,7 @@ function DatePicker({
           className={cn(
             "w-60 justify-start text-left font-normal",
             !value && "text-muted-foreground",
-            className
+            className,
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />

@@ -119,7 +119,7 @@ const SystemIcon = React.forwardRef<SVGSVGElement, SystemIconProps>(
       return null;
     }
     return <Icon ref={ref} size={size} {...props} />;
-  }
+  },
 );
 SystemIcon.displayName = "SystemIcon";
 

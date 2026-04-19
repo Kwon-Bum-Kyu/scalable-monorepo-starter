@@ -6,7 +6,7 @@ import {
   RequestConfig,
   RequestInterceptor,
   ResponseInterceptor,
-} from '@/types/api';
+} from "@/types/api";
 
 export class ApiClient {
   private config: ApiClientConfig;
@@ -26,13 +26,13 @@ export class ApiClient {
   }
 
   private async sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   private async executeWithRetry<T>(
     operation: () => Promise<T>,
     retries: number = this.config.retryCount,
-    delay: number = this.config.retryDelay
+    delay: number = this.config.retryDelay,
   ): Promise<T> {
     try {
       return await operation();
@@ -46,11 +46,11 @@ export class ApiClient {
   }
 
   private shouldRetry(error: unknown): boolean {
-    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+    if (error instanceof TypeError && error.message === "Failed to fetch") {
       return true;
     }
 
-    if (typeof error === 'object' && error !== null && 'status' in error) {
+    if (typeof error === "object" && error !== null && "status" in error) {
       const status = (error as { status: number }).status;
       if (status >= 500) {
         return true;
@@ -60,7 +60,9 @@ export class ApiClient {
     return false;
   }
 
-  private async applyRequestInterceptors(config: RequestInit): Promise<RequestInit> {
+  private async applyRequestInterceptors(
+    config: RequestInit,
+  ): Promise<RequestInit> {
     let processedConfig = config;
 
     for (const interceptor of this.requestInterceptors) {
@@ -79,7 +81,9 @@ export class ApiClient {
     return processedConfig;
   }
 
-  private async applyResponseInterceptors<T>(response: ApiResponse<T>): Promise<ApiResponse<T>> {
+  private async applyResponseInterceptors<T>(
+    response: ApiResponse<T>,
+  ): Promise<ApiResponse<T>> {
     let processedResponse = response;
 
     for (const interceptor of this.responseInterceptors) {
@@ -99,14 +103,16 @@ export class ApiClient {
   }
 
   private buildUrl(endpoint: string): string {
-    const baseUrl = this.config.baseURL.replace(/\/$/, '');
-    const cleanEndpoint = endpoint.replace(/^\//, '');
+    const baseUrl = this.config.baseURL.replace(/\/$/, "");
+    const cleanEndpoint = endpoint.replace(/^\//, "");
     return `${baseUrl}/${cleanEndpoint}`;
   }
 
-  private buildHeaders(customHeaders?: Record<string, string>): Record<string, string> {
+  private buildHeaders(
+    customHeaders?: Record<string, string>,
+  ): Record<string, string> {
     const defaultHeaders = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...this.config.defaultHeaders,
     };
 
@@ -117,10 +123,10 @@ export class ApiClient {
   }
 
   private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
-    const contentType = response.headers.get('content-type');
+    const contentType = response.headers.get("content-type");
     let data: unknown;
 
-    if (contentType && contentType.includes('application/json')) {
+    if (contentType && contentType.includes("application/json")) {
       data = await response.json();
     } else {
       data = await response.text();
@@ -129,7 +135,7 @@ export class ApiClient {
     if (!response.ok) {
       const errorData = data as Record<string, unknown>;
       const error: ApiError = {
-        message: (errorData?.message as string) || 'Request failed',
+        message: (errorData?.message as string) || "Request failed",
         code: (errorData?.code as string) || response.status.toString(),
         details: errorData?.details as Record<string, unknown>,
         timestamp: new Date().toISOString(),
@@ -140,7 +146,7 @@ export class ApiClient {
     const responseData = data as Record<string, unknown>;
     const apiResponse: ApiResponse<T> = {
       data: (responseData?.data as T) || (data as T),
-      message: (responseData?.message as string) || 'Success',
+      message: (responseData?.message as string) || "Success",
       success: true,
       timestamp: new Date().toISOString(),
     };
@@ -152,7 +158,7 @@ export class ApiClient {
     method: HttpMethod,
     endpoint: string,
     data?: unknown,
-    config?: RequestConfig
+    config?: RequestConfig,
   ): Promise<ApiResponse<T>> {
     const url = this.buildUrl(endpoint);
     const headers = this.buildHeaders(config?.headers);
@@ -164,9 +170,9 @@ export class ApiClient {
       signal: AbortSignal.timeout(timeout),
     };
 
-    if (data && method !== 'GET') {
+    if (data && method !== "GET") {
       if (data instanceof FormData) {
-        delete headers['Content-Type'];
+        delete headers["Content-Type"];
         requestConfig.body = data;
       } else {
         requestConfig.body = JSON.stringify(data);
@@ -181,27 +187,45 @@ export class ApiClient {
         return this.handleResponse<T>(response);
       },
       config?.retries,
-      config?.retryDelay
+      config?.retryDelay,
     );
   }
 
-  async get<T>(endpoint: string, config?: RequestConfig): Promise<ApiResponse<T>> {
-    return this.request<T>('GET', endpoint, undefined, config);
+  async get<T>(
+    endpoint: string,
+    config?: RequestConfig,
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>("GET", endpoint, undefined, config);
   }
 
-  async post<T>(endpoint: string, data?: unknown, config?: RequestConfig): Promise<ApiResponse<T>> {
-    return this.request<T>('POST', endpoint, data, config);
+  async post<T>(
+    endpoint: string,
+    data?: unknown,
+    config?: RequestConfig,
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>("POST", endpoint, data, config);
   }
 
-  async put<T>(endpoint: string, data?: unknown, config?: RequestConfig): Promise<ApiResponse<T>> {
-    return this.request<T>('PUT', endpoint, data, config);
+  async put<T>(
+    endpoint: string,
+    data?: unknown,
+    config?: RequestConfig,
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>("PUT", endpoint, data, config);
   }
 
-  async patch<T>(endpoint: string, data?: unknown, config?: RequestConfig): Promise<ApiResponse<T>> {
-    return this.request<T>('PATCH', endpoint, data, config);
+  async patch<T>(
+    endpoint: string,
+    data?: unknown,
+    config?: RequestConfig,
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>("PATCH", endpoint, data, config);
   }
 
-  async delete<T>(endpoint: string, config?: RequestConfig): Promise<ApiResponse<T>> {
-    return this.request<T>('DELETE', endpoint, undefined, config);
+  async delete<T>(
+    endpoint: string,
+    config?: RequestConfig,
+  ): Promise<ApiResponse<T>> {
+    return this.request<T>("DELETE", endpoint, undefined, config);
   }
 }

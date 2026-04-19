@@ -22,7 +22,7 @@ describe("Breadcrumb", () => {
             <BreadcrumbPage>상세</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
-      </Breadcrumb>
+      </Breadcrumb>,
     );
     expect(screen.getByRole("navigation")).toBeInTheDocument();
     expect(screen.getByText("홈")).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe("Breadcrumb", () => {
             <BreadcrumbPage>상세</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
-      </Breadcrumb>
+      </Breadcrumb>,
     );
     expect(screen.getByText("상세")).toHaveAttribute("aria-current", "page");
   });

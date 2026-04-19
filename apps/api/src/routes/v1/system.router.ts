@@ -6,4 +6,8 @@ import { systemInfoQuerySchema } from "../../schemas/system/system-info-query-sc
 
 export const systemRouter = Router();
 
-systemRouter.get("/info", validateRequest({ query: systemInfoQuerySchema }), getSystemInfoController);
+systemRouter.get(
+  "/info",
+  validateRequest({ query: systemInfoQuerySchema }),
+  getSystemInfoController,
+);

@@ -19,7 +19,7 @@ describe("FormSelect", () => {
         label="과일"
         options={options}
         assistiveText="원하는 과일을 고르세요"
-      />
+      />,
     );
     expect(screen.getByText("원하는 과일을 고르세요")).toBeInTheDocument();
   });
@@ -31,7 +31,7 @@ describe("FormSelect", () => {
         options={options}
         assistiveText="가이드"
         errorMessage="필수값입니다"
-      />
+      />,
     );
     expect(screen.getByText("필수값입니다")).toHaveClass("text-destructive");
     expect(screen.queryByText("가이드")).not.toBeInTheDocument();

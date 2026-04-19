@@ -8,7 +8,7 @@ describe("Link", () => {
     render(
       <MemoryRouter>
         <Link to="/dashboard">대시보드</Link>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const link = screen.getByRole("link", { name: "대시보드" });
     expect(link).toHaveAttribute("href", "/dashboard");
@@ -18,7 +18,7 @@ describe("Link", () => {
     render(
       <Link to="https://anthropic.com" external>
         외부
-      </Link>
+      </Link>,
     );
     const link = screen.getByRole("link", { name: "외부" });
     expect(link.tagName).toBe("A");
@@ -33,8 +33,10 @@ describe("Link", () => {
         <Link to="/" className="text-primary">
           홈
         </Link>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
-    expect(screen.getByRole("link", { name: "홈" })).toHaveClass("text-primary");
+    expect(screen.getByRole("link", { name: "홈" })).toHaveClass(
+      "text-primary",
+    );
   });
 });

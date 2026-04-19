@@ -10,7 +10,11 @@ export function sendSuccess<T>(response: Response, data: T, statusCode = 200) {
   return response.status(statusCode).json(body);
 }
 
-export function sendError(response: Response, error: ApiError, statusCode: number) {
+export function sendError(
+  response: Response,
+  error: ApiError,
+  statusCode: number,
+) {
   const body: ApiResponse<never> = {
     success: false,
     error,

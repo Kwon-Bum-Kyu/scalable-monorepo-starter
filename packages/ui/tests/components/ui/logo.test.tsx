@@ -8,7 +8,7 @@ describe("Logo", () => {
     render(
       <MemoryRouter>
         <Logo />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("href", "/");
@@ -20,7 +20,7 @@ describe("Logo", () => {
     render(
       <MemoryRouter>
         <Logo to="/home" src="/brand.png" alt="Brand" />
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("href", "/home");

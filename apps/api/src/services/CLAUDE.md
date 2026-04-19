@@ -28,9 +28,12 @@
 import type { SystemInfo } from "@repo/shared-types";
 import { createSystemSnapshot } from "../../repositories/system/system.repository";
 
-export function getSystemInfo(format: "summary" | "full"): SystemInfo | SystemInfoSummary {
+export function getSystemInfo(
+  format: "summary" | "full",
+): SystemInfo | SystemInfoSummary {
   const snapshot = createSystemSnapshot();
-  if (format === "summary") return { name: snapshot.name, version: snapshot.version };
+  if (format === "summary")
+    return { name: snapshot.name, version: snapshot.version };
   return snapshot;
 }
 

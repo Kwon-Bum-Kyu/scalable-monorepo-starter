@@ -7,7 +7,7 @@ describe("Grid", () => {
     render(
       <Grid data-testid="grid" cols={3}>
         <span>child</span>
-      </Grid>
+      </Grid>,
     );
     expect(screen.getByTestId("grid")).toHaveClass("grid", "grid-cols-3");
   });
@@ -16,7 +16,7 @@ describe("Grid", () => {
     render(
       <Grid data-testid="grid" cols={2} gap={4}>
         <span>child</span>
-      </Grid>
+      </Grid>,
     );
     expect(screen.getByTestId("grid")).toHaveClass("gap-4");
   });
@@ -27,7 +27,7 @@ describe("GridItem", () => {
     render(
       <GridItem data-testid="item" colSpan={2}>
         item
-      </GridItem>
+      </GridItem>,
     );
     expect(screen.getByTestId("item")).toHaveClass("col-span-2");
   });

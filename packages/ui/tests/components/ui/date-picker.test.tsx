@@ -6,7 +6,9 @@ import { describe, expect, it, vi } from "vitest";
 describe("DatePicker", () => {
   it("placeholder가 없는 상태에서 기본 placeholder가 표시된다", () => {
     render(<DatePicker />);
-    expect(screen.getByRole("button", { name: /날짜 선택/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /날짜 선택/ }),
+    ).toBeInTheDocument();
   });
 
   it("value가 주어지면 포맷된 날짜가 표시된다", () => {

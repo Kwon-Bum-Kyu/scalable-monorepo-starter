@@ -31,7 +31,9 @@ describe("System API", () => {
   });
 
   it("지원하지 않는 format 요청 시 검증 오류를 반환한다", async () => {
-    const response = await request(app).get("/api/v1/system/info?format=invalid");
+    const response = await request(app).get(
+      "/api/v1/system/info?format=invalid",
+    );
 
     expect(response.status).toBe(400);
     expect(response.body).toMatchObject({

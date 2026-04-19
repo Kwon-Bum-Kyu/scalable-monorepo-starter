@@ -25,7 +25,10 @@ type TypographyVariant = NonNullable<
   VariantProps<typeof typographyVariants>["variant"]
 >;
 
-const DEFAULT_TAG: Record<TypographyVariant, keyof React.JSX.IntrinsicElements> = {
+const DEFAULT_TAG: Record<
+  TypographyVariant,
+  keyof React.JSX.IntrinsicElements
+> = {
   h1: "h1",
   h2: "h2",
   h3: "h3",
@@ -38,7 +41,8 @@ const DEFAULT_TAG: Record<TypographyVariant, keyof React.JSX.IntrinsicElements> 
 };
 
 export interface TypographyProps
-  extends React.HTMLAttributes<HTMLElement>,
+  extends
+    React.HTMLAttributes<HTMLElement>,
     VariantProps<typeof typographyVariants> {
   as?: keyof React.JSX.IntrinsicElements;
 }
@@ -50,13 +54,16 @@ const Typography = React.forwardRef<HTMLElement, TypographyProps>(
     return (
       <Tag
         ref={ref}
-        className={cn(typographyVariants({ variant: resolvedVariant }), className)}
+        className={cn(
+          typographyVariants({ variant: resolvedVariant }),
+          className,
+        )}
         {...props}
       >
         {children}
       </Tag>
     );
-  }
+  },
 );
 Typography.displayName = "Typography";
 

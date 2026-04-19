@@ -46,14 +46,14 @@ const Grid = React.forwardRef<HTMLDivElement, GridProps>(
           "grid",
           COLS_CLASS[cols],
           gap !== undefined && GAP_CLASS[gap],
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </div>
     );
-  }
+  },
 );
 Grid.displayName = "Grid";
 
@@ -90,7 +90,7 @@ const GridItem = React.forwardRef<HTMLDivElement, GridItemProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 GridItem.displayName = "GridItem";
 

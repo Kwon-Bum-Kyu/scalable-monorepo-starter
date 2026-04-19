@@ -70,7 +70,7 @@ const config: StorybookConfig = {
             find: "@/common",
             replacement: path.resolve(
               __dirname,
-              "../../web/src/components/common"
+              "../../web/src/components/common",
             ),
           },
           {
@@ -87,7 +87,7 @@ const config: StorybookConfig = {
             acc[`import.meta.env.${key}`] = JSON.stringify(env[key]);
             return acc;
           },
-          {} as Record<string, string>
+          {} as Record<string, string>,
         ),
       },
     };

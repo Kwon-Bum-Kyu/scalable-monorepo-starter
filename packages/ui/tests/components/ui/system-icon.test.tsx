@@ -11,7 +11,11 @@ describe("SystemIcon", () => {
 
   it("className이 svg에 적용된다", () => {
     render(
-      <SystemIcon name="close" className="text-destructive" data-testid="icon" />
+      <SystemIcon
+        name="close"
+        className="text-destructive"
+        data-testid="icon"
+      />,
     );
     expect(screen.getByTestId("icon")).toHaveClass("text-destructive");
   });
@@ -19,7 +23,7 @@ describe("SystemIcon", () => {
   it("알 수 없는 name이면 null을 반환한다", () => {
     const { container } = render(
       // @ts-expect-error 의도적으로 잘못된 이름 전달
-      <SystemIcon name="__invalid__" />
+      <SystemIcon name="__invalid__" />,
     );
     expect(container.firstChild).toBeNull();
   });

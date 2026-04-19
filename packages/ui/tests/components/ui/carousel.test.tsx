@@ -18,7 +18,7 @@ describe("Carousel", () => {
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
-      </Carousel>
+      </Carousel>,
     );
     expect(screen.getByRole("region")).toBeInTheDocument();
     expect(screen.getByText("슬라이드 1")).toBeInTheDocument();
@@ -32,13 +32,13 @@ describe("Carousel", () => {
         </CarouselContent>
         <CarouselPrevious />
         <CarouselNext />
-      </Carousel>
+      </Carousel>,
     );
     expect(
-      screen.getByRole("button", { name: /previous slide/i })
+      screen.getByRole("button", { name: /previous slide/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /next slide/i })
+      screen.getByRole("button", { name: /next slide/i }),
     ).toBeInTheDocument();
   });
 });

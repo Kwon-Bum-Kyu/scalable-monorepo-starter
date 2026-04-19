@@ -24,7 +24,7 @@ describe("SimpleCheckboxGroup", () => {
         options={options}
         value={["green"]}
         onChange={onChange}
-      />
+      />,
     );
     await user.click(screen.getByRole("checkbox", { name: "빨강" }));
     expect(onChange).toHaveBeenCalledWith(["green", "red"]);
@@ -38,7 +38,7 @@ describe("SimpleCheckboxGroup", () => {
         options={options}
         value={["green", "blue"]}
         onChange={onChange}
-      />
+      />,
     );
     await user.click(screen.getByRole("checkbox", { name: "초록" }));
     expect(onChange).toHaveBeenCalledWith(["blue"]);

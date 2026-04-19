@@ -22,10 +22,7 @@ export const Horizontal: Story = {
 };
 export const WithDisabled: Story = {
   args: {
-    options: [
-      ...options,
-      { value: "durian", label: "두리안", disabled: true },
-    ],
+    options: [...options, { value: "durian", label: "두리안", disabled: true }],
     defaultValue: "apple",
   },
 };

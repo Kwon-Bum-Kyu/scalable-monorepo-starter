@@ -28,7 +28,7 @@ function Footer({
     <footer
       className={cn(
         "w-full border-t border-border bg-background text-foreground",
-        className
+        className,
       )}
       {...props}
     >
