@@ -1,8 +1,7 @@
-import * as matchers from "@testing-library/jest-dom/matchers";
-import { cleanup } from "@testing-library/react";
-import { afterEach, expect, vi } from "vitest";
+import "@testing-library/jest-dom/vitest";
 
-expect.extend(matchers);
+import { cleanup } from "@testing-library/react";
+import { afterEach, vi } from "vitest";
 
 afterEach(() => {
   cleanup();
@@ -15,7 +14,8 @@ class ResizeObserverMock {
 }
 
 if (typeof globalThis.ResizeObserver === "undefined") {
-  globalThis.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
+  globalThis.ResizeObserver =
+    ResizeObserverMock as unknown as typeof ResizeObserver;
 }
 
 class IntersectionObserverMock {
