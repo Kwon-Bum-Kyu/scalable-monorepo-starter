@@ -1,18 +1,18 @@
 import {
+  Breadcrumb,
   Button,
   ButtonGroup,
+  DatePicker,
+  Dropdown,
+  Empty,
   Grid,
   GridItem,
   Input,
-  Typography,
-  Dropdown,
-  Slider,
-  DatePicker,
-  Breadcrumb,
-  Tabs,
-  SystemIcon,
-  Empty,
   Pagenation as Pagination,
+  Slider,
+  SystemIcon,
+  Tabs,
+  Typography,
 } from "@repo/ui";
 import React, { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -88,7 +88,7 @@ const Guide = () => {
           {/* 텍스트 버튼 그룹 */}
           <ButtonGroup
             buttons={[
-              { label: "Button 1", onClick: () => console.log("1") },
+              { label: "Button 1", onClick: () => {} },
               { label: "Button 2" },
               { label: "Button 3", disabled: true },
             ]}
