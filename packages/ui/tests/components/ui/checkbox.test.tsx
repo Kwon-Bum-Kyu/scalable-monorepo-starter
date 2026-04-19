@@ -1,6 +1,6 @@
+import { Checkbox } from "@repo/ui/components/checkbox";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Checkbox } from "@repo/ui/components/checkbox";
 
 describe("Checkbox", () => {
   it("기본 체크박스가 렌더된다", () => {

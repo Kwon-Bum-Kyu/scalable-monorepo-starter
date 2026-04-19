@@ -1,9 +1,8 @@
-import * as React from "react";
+import { Footer } from "@repo/ui/components/footer";
 import { render, screen, within } from "@testing-library/react";
+import * as React from "react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-
-import { Footer } from "@repo/ui/components/footer";
 
 function renderWithRouter(ui: React.ReactElement) {
   return render(<MemoryRouter>{ui}</MemoryRouter>);

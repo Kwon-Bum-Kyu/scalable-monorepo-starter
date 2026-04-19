@@ -1,7 +1,6 @@
+import { cn } from "@repo/ui/lib/utils";
 import * as React from "react";
 import { Link as RouterLink } from "react-router-dom";
-
-import { cn } from "@repo/ui/lib/utils";
 
 export interface LogoProps {
   to?: string;

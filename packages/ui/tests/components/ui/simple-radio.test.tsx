@@ -1,8 +1,7 @@
+import { SimpleRadio } from "@repo/ui/components/simple-radio";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-
-import { SimpleRadio } from "@repo/ui/components/simple-radio";
 
 const options = [
   { value: "a", label: "옵션 A" },

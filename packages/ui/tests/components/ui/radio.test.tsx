@@ -1,9 +1,8 @@
+import { Radio } from "@repo/ui/components/radio";
+import { RadioGroup } from "@repo/ui/components/radio-group";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-
-import { RadioGroup } from "@repo/ui/components/radio-group";
-import { Radio } from "@repo/ui/components/radio";
 
 describe("Radio", () => {
   it("label과 radio가 같은 id로 연결된다", () => {

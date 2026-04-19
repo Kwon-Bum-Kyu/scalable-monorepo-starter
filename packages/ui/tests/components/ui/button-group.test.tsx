@@ -1,8 +1,7 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
-
 import { Button } from "@repo/ui/components/button";
 import { ButtonGroup } from "@repo/ui/components/button-group";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 describe("ButtonGroup", () => {
   it("자식 Button이 role=group 컨테이너 안에 렌더된다", () => {

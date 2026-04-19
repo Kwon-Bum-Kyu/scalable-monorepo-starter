@@ -1,7 +1,6 @@
+import { cn } from "@repo/ui/lib/utils";
 import * as React from "react";
 import { Link as RouterLink, type LinkProps as RouterLinkProps } from "react-router-dom";
-
-import { cn } from "@repo/ui/lib/utils";
 
 type ExternalAnchorProps = Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href">;
 

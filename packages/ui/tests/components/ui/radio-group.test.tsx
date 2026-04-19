@@ -1,9 +1,9 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
 import {
   RadioGroup,
   RadioGroupItem,
 } from "@repo/ui/components/radio-group";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 describe("RadioGroup", () => {
   it("기본 라디오 그룹이 렌더된다", () => {

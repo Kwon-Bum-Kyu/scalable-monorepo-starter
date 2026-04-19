@@ -1,8 +1,7 @@
+import { CheckboxField } from "@repo/ui/components/checkbox-field";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-
-import { CheckboxField } from "@repo/ui/components/checkbox-field";
 
 describe("CheckboxField", () => {
   it("label이 체크박스와 id로 연결된다", () => {

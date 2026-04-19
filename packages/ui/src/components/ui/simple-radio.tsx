@@ -1,8 +1,7 @@
-import * as React from "react";
-
-import { cn } from "@repo/ui/lib/utils";
 import { Radio } from "@repo/ui/components/radio";
 import { RadioGroup } from "@repo/ui/components/radio-group";
+import { cn } from "@repo/ui/lib/utils";
+import * as React from "react";
 
 export interface SimpleRadioOption {
   value: string;

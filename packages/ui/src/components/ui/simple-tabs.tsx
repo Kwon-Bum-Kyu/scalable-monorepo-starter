@@ -1,12 +1,11 @@
-import * as React from "react";
-
-import { cn } from "@repo/ui/lib/utils";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@repo/ui/components/tabs";
+import { cn } from "@repo/ui/lib/utils";
+import * as React from "react";
 
 export interface SimpleTabItem {
   value: string;

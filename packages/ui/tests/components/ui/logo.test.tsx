@@ -1,8 +1,7 @@
+import { Logo } from "@repo/ui/components/logo";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-
-import { Logo } from "@repo/ui/components/logo";
 
 describe("Logo", () => {
   it("기본 렌더 시 to=/ 로 링크되며 alt=Logo 이미지가 표시된다", () => {

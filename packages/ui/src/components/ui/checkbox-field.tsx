@@ -1,8 +1,7 @@
-import * as React from "react";
-
-import { cn } from "@repo/ui/lib/utils";
 import { Checkbox } from "@repo/ui/components/checkbox";
 import { Label } from "@repo/ui/components/label";
+import { cn } from "@repo/ui/lib/utils";
+import * as React from "react";
 
 type CheckboxProps = React.ComponentPropsWithoutRef<typeof Checkbox>;
 

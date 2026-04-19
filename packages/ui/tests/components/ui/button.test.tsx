@@ -1,6 +1,6 @@
+import { Button } from "@repo/ui/components/button";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Button } from "@repo/ui/components/button";
 
 describe("Button", () => {
   it("기본 variant가 렌더된다", () => {

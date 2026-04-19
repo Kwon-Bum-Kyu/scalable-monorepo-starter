@@ -1,7 +1,6 @@
+import { SystemIcon } from "@repo/ui/components/system-icon";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-
-import { SystemIcon } from "@repo/ui/components/system-icon";
 
 describe("SystemIcon", () => {
   it("유효한 name이 주어지면 lucide svg가 렌더된다", () => {

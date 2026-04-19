@@ -1,5 +1,3 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,6 +6,8 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@repo/ui/components/breadcrumb";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 describe("Breadcrumb", () => {
   it("기본 breadcrumb 내비게이션이 렌더된다", () => {

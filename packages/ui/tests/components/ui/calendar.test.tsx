@@ -1,6 +1,6 @@
+import { Calendar } from "@repo/ui/components/calendar";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Calendar } from "@repo/ui/components/calendar";
 
 describe("Calendar", () => {
   it("기본 달력이 렌더된다", () => {

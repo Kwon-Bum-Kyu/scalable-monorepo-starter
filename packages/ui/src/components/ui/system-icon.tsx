@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   ArrowDown,
   ArrowLeft,
@@ -34,6 +33,7 @@ import {
   UserCircle2,
   X,
 } from "lucide-react";
+import * as React from "react";
 
 export type SystemIconName =
   | "bars"

@@ -1,7 +1,6 @@
-import * as React from "react";
-
-import { cn } from "@repo/ui/lib/utils";
 import { CheckboxField } from "@repo/ui/components/checkbox-field";
+import { cn } from "@repo/ui/lib/utils";
+import * as React from "react";
 
 export interface SimpleCheckboxOption {
   value: string;

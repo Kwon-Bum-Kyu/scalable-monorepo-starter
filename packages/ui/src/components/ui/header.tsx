@@ -1,7 +1,6 @@
-import * as React from "react";
-import { Menu, X } from "lucide-react";
-
 import { cn } from "@repo/ui/lib/utils";
+import { Menu, X } from "lucide-react";
+import * as React from "react";
 
 export interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
   logo?: React.ReactNode;
@@ -30,7 +29,7 @@ function Header({
       )}
       {...props}
     >
-      <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center justify-between px-6">
+      <div className="mx-auto flex h-16 w-full max-w-app items-center justify-between px-6">
         {logo && <div className="flex items-center">{logo}</div>}
 
         {nav && (

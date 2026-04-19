@@ -1,7 +1,6 @@
+import { Grid, GridItem } from "@repo/ui/components/grid";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-
-import { Grid, GridItem } from "@repo/ui/components/grid";
 
 describe("Grid", () => {
   it("cols=3일 때 grid-cols-3 클래스가 적용된다", () => {

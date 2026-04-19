@@ -1,8 +1,7 @@
+import { DatePicker } from "@repo/ui/components/date-picker";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-
-import { DatePicker } from "@repo/ui/components/date-picker";
 
 describe("DatePicker", () => {
   it("placeholder가 없는 상태에서 기본 placeholder가 표시된다", () => {

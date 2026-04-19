@@ -1,7 +1,6 @@
+import { FormSelect } from "@repo/ui/components/form-select";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-
-import { FormSelect } from "@repo/ui/components/form-select";
 
 const options = [
   { label: "사과", value: "apple" },

@@ -1,7 +1,6 @@
+import { Typography } from "@repo/ui/components/typography";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-
-import { Typography } from "@repo/ui/components/typography";
 
 describe("Typography", () => {
   it("variant가 h1일 때 h1 태그로 렌더된다", () => {

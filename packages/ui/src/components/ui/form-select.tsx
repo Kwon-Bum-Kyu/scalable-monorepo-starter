@@ -1,6 +1,3 @@
-import * as React from "react";
-
-import { cn } from "@repo/ui/lib/utils";
 import {
   Select,
   SelectContent,
@@ -8,6 +5,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@repo/ui/components/select";
+import { cn } from "@repo/ui/lib/utils";
+import * as React from "react";
 
 export interface FormSelectOption {
   label: string;

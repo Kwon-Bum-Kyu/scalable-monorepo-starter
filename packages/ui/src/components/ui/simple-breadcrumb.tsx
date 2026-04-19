@@ -1,7 +1,3 @@
-import * as React from "react";
-import { Link as RouterLink } from "react-router-dom";
-
-import { cn } from "@repo/ui/lib/utils";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,6 +6,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@repo/ui/components/breadcrumb";
+import { cn } from "@repo/ui/lib/utils";
+import * as React from "react";
+import { Link as RouterLink } from "react-router-dom";
 
 export interface SimpleBreadcrumbItem {
   label: React.ReactNode;

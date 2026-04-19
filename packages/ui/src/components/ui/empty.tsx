@@ -1,6 +1,5 @@
-import * as React from "react";
-
 import { cn } from "@repo/ui/lib/utils";
+import * as React from "react";
 
 export interface EmptyProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {

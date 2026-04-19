@@ -1,8 +1,7 @@
+import { SimpleBreadcrumb } from "@repo/ui/components/simple-breadcrumb";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-
-import { SimpleBreadcrumb } from "@repo/ui/components/simple-breadcrumb";
 
 function renderWithRouter(ui: React.ReactElement) {
   return render(<MemoryRouter>{ui}</MemoryRouter>);

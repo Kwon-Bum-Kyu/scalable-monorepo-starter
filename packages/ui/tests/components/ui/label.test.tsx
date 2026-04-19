@@ -1,6 +1,6 @@
+import { Label } from "@repo/ui/components/label";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { Label } from "@repo/ui/components/label";
 
 describe("Label", () => {
   it("기본 라벨 텍스트가 렌더된다", () => {

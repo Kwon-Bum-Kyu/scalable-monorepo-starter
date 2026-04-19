@@ -1,8 +1,7 @@
+import { Link } from "@repo/ui/components/link";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
-
-import { Link } from "@repo/ui/components/link";
 
 describe("Link", () => {
   it("to prop이 href로 전달된다", () => {

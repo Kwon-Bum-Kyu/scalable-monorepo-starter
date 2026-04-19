@@ -1,10 +1,10 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@repo/ui/components/popover";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 describe("Popover", () => {
   it("기본 trigger가 렌더된다", () => {

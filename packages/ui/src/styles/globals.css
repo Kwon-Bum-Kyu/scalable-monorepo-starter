@@ -66,6 +66,9 @@
   --breakpoint-desktop: 1440px;
   --breakpoint-wide: 1920px;
 
+  /* Layout container */
+  --container-app: 1280px;
+
   /* Semantic color aliases (기존 유지) */
   --color-text-primary:        var(--color-gray-900);
   --color-text-secondary:      var(--color-gray-400);

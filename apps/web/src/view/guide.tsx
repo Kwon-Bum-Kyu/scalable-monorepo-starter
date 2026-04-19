@@ -5,37 +5,38 @@ import {
   GridItem,
   Input,
   Typography,
-  Dropdown,
+  FormSelect,
   Slider,
   DatePicker,
-  Breadcrumb,
-  Tabs,
+  SimpleBreadcrumb,
+  SimpleTabs,
+  SimplePagination,
   SystemIcon,
   Empty,
-  Pagenation as Pagination,
 } from "@repo/ui";
 import React, { useState } from "react";
-import { DateRange } from "react-day-picker";
 
 const Paddings = ({ children }: { children?: React.ReactNode }) => (
   <div className="p-10">{children}</div>
 );
 
 const Guide = () => {
-  const [val, setVal] = useState(50); // Continuous
-  const [range, setRange] = useState<DateRange | undefined>();
+  const [val, setVal] = useState<number[]>([50]);
+  const [date, setDate] = useState<Date | undefined>();
+  const [activeTab, setActiveTab] = useState("Tab 1");
+  const [page, setPage] = useState(1);
 
   return (
     <main className="container gap-4">
       <Paddings>
         <Typography variant="h1">H1 Title</Typography>
         <Typography variant="h2">H2 Title</Typography>
-        <Typography variant="large">This is a large text.</Typography>
-        <Typography variant="paragraph">
+        <Typography variant="h3">H3 Title</Typography>
+        <Typography variant="body">
           This is a paragraph with default styles.
         </Typography>
         <Typography variant="small">This is small text.</Typography>
-        <Typography variant="xsmall">This is extra small text.</Typography>
+        <Typography variant="caption">This is caption text.</Typography>
       </Paddings>
       <Paddings>
         {/* Blue Palette */}
@@ -77,52 +78,43 @@ const Guide = () => {
         </Grid>
       </Paddings>
       <Paddings>
-        <Button variant="primary">Primary</Button>
+        <Button variant="default">Primary</Button>
         <Button variant="secondary">Secondary</Button>
-        <Button variant="primary" disabled>
+        <Button variant="default" disabled>
           Disabled
         </Button>
       </Paddings>
       <Paddings>
         <div className="w-72 flex-col gap-y-10">
           {/* 텍스트 버튼 그룹 */}
-          <ButtonGroup
-            buttons={[
-              { label: "Button 1", onClick: () => console.log("1") },
-              { label: "Button 2" },
-              { label: "Button 3", disabled: true },
-            ]}
-          />
+          <ButtonGroup>
+            <Button variant="default" onClick={() => console.log("1")}>
+              Button 1
+            </Button>
+            <Button variant="default">Button 2</Button>
+            <Button variant="default" disabled>
+              Button 3
+            </Button>
+          </ButtonGroup>
 
-          {/* 아이콘 버튼 그룹 (자동 감지) */}
-          <ButtonGroup
-            buttons={[
-              { label: <Typography variant="xsmall">아이</Typography> },
-              {
-                label: <Typography variant="xsmall">아이</Typography>,
-                disabled: true,
-              },
-            ]}
-          />
+          {/* 아이콘 버튼 그룹 */}
+          <ButtonGroup>
+            <Button variant="outline" size="icon">
+              <Typography variant="caption">아이</Typography>
+            </Button>
+            <Button variant="outline" size="icon" disabled>
+              <Typography variant="caption">아이</Typography>
+            </Button>
+          </ButtonGroup>
         </div>
       </Paddings>
       <Paddings>
-        <Input
-          label="Label"
-          placeholder="Text input"
-          assistiveText="Assistive text"
-        />
-
-        <Input
-          label="Label"
-          placeholder="Text input"
-          errorMessage="Error message"
-        />
-
-        <Input label="Label" placeholder="Text input" disabled />
+        <Input placeholder="Text input" />
+        <Input placeholder="Text input" aria-invalid />
+        <Input placeholder="Text input" disabled />
       </Paddings>
       <Paddings>
-        <Dropdown
+        <FormSelect
           label="Label"
           assistiveText="Assistive text"
           placeholder="Select"
@@ -132,10 +124,9 @@ const Guide = () => {
             { label: "Item 3", value: "3" },
           ]}
           value={"2"}
-          // onChange={setSelected}
         />
 
-        <Dropdown
+        <FormSelect
           label="Label"
           errorMessage="Error message"
           options={[{ label: "Item 1", value: "1" }]}
@@ -143,51 +134,45 @@ const Guide = () => {
           disabled
         />
 
-        <Dropdown
+        {/* TODO(shadcn-combobox): searchable 케이스는 후속 Combobox 기획에서 재도입. 임시로 FormSelect 사용. */}
+        <FormSelect
           label="Label"
-          searchable
           options={[
             { label: "Lorem ipsum", value: "1" },
             { label: "Irure dolor", value: "2" },
             { label: "Labor et dolore", value: "3" },
           ]}
           value={"1"}
-          // onChange={setValue}
         />
       </Paddings>
       <Paddings>
-        <Slider value={val} onChange={setVal} />
+        <Slider value={val} onValueChange={setVal} />
         <span>Discrete</span>
-        <Slider value={val} onChange={setVal} step={10} />
+        <Slider value={val} onValueChange={setVal} step={10} />
         <span>Disabled</span>
-        <Slider value={val} onChange={() => {}} disabled />
-        <span>Hide value</span>
-        <Slider value={val} onChange={setVal} showValue={false} />
+        <Slider value={val} onValueChange={() => {}} disabled />
       </Paddings>
       <Paddings>
-        <DatePicker
-          mode="range"
-          value={range}
-          onChange={(val) => {
-            if (!val || "from" in val) {
-              setRange(val as DateRange | undefined);
-            }
-          }}
+        <DatePicker value={date} onSelect={setDate} />
+      </Paddings>
+      <Paddings>
+        <SimpleBreadcrumb
+          items={[{ label: "Home", href: "/" }, { label: "Products" }]}
         />
       </Paddings>
       <Paddings>
-        <Breadcrumb items={[{ label: "Home" }, { label: "Products" }]} />
-      </Paddings>
-      <Paddings>
-        <Tabs
-          tabs={["Tab 1", "Tab 2", "Tab 3"]}
-          activeTab={"Tab 1"}
-          onChange={() => {}}
-          variant="pill"
+        <SimpleTabs
+          items={[
+            { value: "Tab 1", label: "Tab 1", content: "Content 1" },
+            { value: "Tab 2", label: "Tab 2", content: "Content 2" },
+            { value: "Tab 3", label: "Tab 3", content: "Content 3" },
+          ]}
+          value={activeTab}
+          onValueChange={setActiveTab}
         />
       </Paddings>
       <Paddings>
-        <Pagination current={0} total={10} onChange={() => {}} />
+        <SimplePagination current={page} total={10} onChange={setPage} />
       </Paddings>
       <Paddings>
         <SystemIcon name="eye" size={20} />
@@ -195,11 +180,13 @@ const Guide = () => {
         <SystemIcon name="check-circle-outline" size={24} />
       </Paddings>
       <Paddings>
-        <Empty type="blank" />
-        <Empty type="image" />
-        <Empty type="text" />
-        <Empty type="image" size={48} />
-        <Empty type="text" size={32} />
+        <Empty title="데이터가 없습니다" />
+        <Empty title="비어있는 상태" description="추가 설명 텍스트" />
+        <Empty
+          title="결과 없음"
+          description="검색어를 다시 확인해 주세요"
+          icon={<SystemIcon name="info" size={24} />}
+        />
       </Paddings>
     </main>
   );

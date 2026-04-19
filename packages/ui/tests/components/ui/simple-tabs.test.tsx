@@ -1,8 +1,7 @@
+import { SimpleTabs } from "@repo/ui/components/simple-tabs";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-
-import { SimpleTabs } from "@repo/ui/components/simple-tabs";
 
 const items = [
   { value: "a", label: "첫째", content: <div>첫째 컨텐츠</div> },

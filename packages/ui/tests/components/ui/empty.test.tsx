@@ -1,7 +1,6 @@
+import { Empty } from "@repo/ui/components/empty";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-
-import { Empty } from "@repo/ui/components/empty";
 
 describe("Empty", () => {
   it("title과 description이 렌더된다", () => {

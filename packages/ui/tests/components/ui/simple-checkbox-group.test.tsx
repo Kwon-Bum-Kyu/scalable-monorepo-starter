@@ -1,8 +1,7 @@
+import { SimpleCheckboxGroup } from "@repo/ui/components/simple-checkbox-group";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-
-import { SimpleCheckboxGroup } from "@repo/ui/components/simple-checkbox-group";
 
 const options = [
   { value: "red", label: "빨강" },

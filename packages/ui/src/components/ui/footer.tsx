@@ -1,7 +1,6 @@
+import { cn } from "@repo/ui/lib/utils";
 import * as React from "react";
 import { Link as RouterLink } from "react-router-dom";
-
-import { cn } from "@repo/ui/lib/utils";
 
 export interface FooterLink {
   label: string;
@@ -33,7 +32,7 @@ function Footer({
       )}
       {...props}
     >
-      <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-8 px-6 py-10">
+      <div className="mx-auto flex w-full max-w-app flex-col gap-8 px-6 py-10">
         {columns.length > 0 && (
           <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
             {columns.map((col) => (

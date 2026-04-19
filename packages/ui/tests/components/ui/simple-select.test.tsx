@@ -1,7 +1,6 @@
+import { SimpleSelect } from "@repo/ui/components/simple-select";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-
-import { SimpleSelect } from "@repo/ui/components/simple-select";
 
 const options = [
   { value: "ko", label: "한국어" },

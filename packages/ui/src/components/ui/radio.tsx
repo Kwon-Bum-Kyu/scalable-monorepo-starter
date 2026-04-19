@@ -1,8 +1,7 @@
-import * as React from "react";
-
-import { cn } from "@repo/ui/lib/utils";
 import { Label } from "@repo/ui/components/label";
 import { RadioGroupItem } from "@repo/ui/components/radio-group";
+import { cn } from "@repo/ui/lib/utils";
+import * as React from "react";
 
 export interface RadioProps {
   value: string;

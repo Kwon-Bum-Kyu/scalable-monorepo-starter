@@ -1,5 +1,3 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
 import {
   Pagination,
   PaginationContent,
@@ -8,6 +6,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@repo/ui/components/pagination";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 describe("Pagination", () => {
   it("기본 pagination이 렌더된다", () => {

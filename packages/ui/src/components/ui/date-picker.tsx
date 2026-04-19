@@ -1,8 +1,3 @@
-import * as React from "react";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-
-import { cn } from "@repo/ui/lib/utils";
 import { Button } from "@repo/ui/components/button";
 import { Calendar } from "@repo/ui/components/calendar";
 import {
@@ -10,6 +5,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@repo/ui/components/popover";
+import { cn } from "@repo/ui/lib/utils";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import * as React from "react";
 
 export interface DatePickerProps {
   value?: Date;
@@ -36,7 +35,7 @@ function DatePicker({
           variant="outline"
           disabled={disabled}
           className={cn(
-            "w-[240px] justify-start text-left font-normal",
+            "w-60 justify-start text-left font-normal",
             !value && "text-muted-foreground",
             className
           )}

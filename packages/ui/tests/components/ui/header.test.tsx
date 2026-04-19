@@ -1,8 +1,7 @@
+import { Header } from "@repo/ui/components/header";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-
-import { Header } from "@repo/ui/components/header";
 
 describe("Header", () => {
   it("logo·nav·actions 슬롯이 각각 렌더된다", () => {
