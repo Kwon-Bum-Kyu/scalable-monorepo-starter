@@ -9,7 +9,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn, username }) => {
 
   return (
     <header className="bg-white shadow-md">
-      <div className="mx-auto flex min-h-[88px] items-center justify-between px-[72px]">
+      <div className="min-h-header-min-h px-page-x mx-auto flex items-center justify-between">
         {/* 로고 */}
         <div className="flex items-center">
           <Logo />

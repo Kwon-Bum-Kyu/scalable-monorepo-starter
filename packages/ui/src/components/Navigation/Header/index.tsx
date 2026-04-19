@@ -1,10 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+
 import { HeaderProps } from "./types";
 
 const menuId = "mobile-nav";
 
-function Header({ isLoggedIn, username, onLogout, logoText = "Logo" }: HeaderProps) {
+function Header({
+  isLoggedIn,
+  username,
+  onLogout,
+  logoText = "Logo",
+}: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -53,11 +59,8 @@ function Header({ isLoggedIn, username, onLogout, logoText = "Logo" }: HeaderPro
 
   return (
     <header className="w-full bg-(--color-bg-primary) border-b border-(--color-border)">
-      <div className="mx-auto flex h-16 w-full max-w-[1280px] items-center justify-between px-6">
-        <Link
-          to="/"
-          className="text-xl font-bold text-(--color-text-primary)"
-        >
+      <div className="max-w-container-content mx-auto flex h-16 w-full items-center justify-between px-6">
+        <Link to="/" className="text-xl font-bold text-(--color-text-primary)">
           {logoText}
         </Link>
 

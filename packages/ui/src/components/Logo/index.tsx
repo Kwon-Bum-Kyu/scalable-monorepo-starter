@@ -7,7 +7,7 @@ const Logo: React.FC = () => {
       <img
         src="/logo.png"
         alt="Logo"
-        className="order-1 h-[40px] w-[160px] flex-none grow-0"
+        className="h-logo-h w-container-logo order-1 flex-none grow-0"
       />
     </Link>
   );

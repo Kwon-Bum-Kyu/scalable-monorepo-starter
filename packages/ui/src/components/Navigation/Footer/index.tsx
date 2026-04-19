@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { FooterProps, FooterSection } from "./types";
+
 import { cn } from "../../utils/cn";
+import { FooterProps, FooterSection } from "./types";
 
 const DEFAULT_SECTIONS: FooterSection[] = [
   {

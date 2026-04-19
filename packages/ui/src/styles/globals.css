@@ -60,6 +60,19 @@
   --spacing-16: 16px;
   --spacing-80: 80px;
 
+  /* Semantic container widths (max-w-*, w-*) */
+  --container-content: 1280px;
+  --container-error-text: 480px;
+  --container-datepicker: 240px;
+  --container-logo: 160px;
+
+  /* Semantic fixed sizes (h-*, min-h-*) */
+  --size-logo-h: 40px;
+  --size-header-min-h: 88px;
+
+  /* Semantic page padding */
+  --spacing-page-x: 72px;
+
   /* Breakpoints */
   --breakpoint-mobile: 640px;
   --breakpoint-tablet: 768px;

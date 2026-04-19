@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { format } from "date-fns";
-import { DateRange, DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+
+import { format } from "date-fns";
+import React, { useState } from "react";
+import { DateRange, DayPicker } from "react-day-picker";
+
 import { cn } from "../utils/cn";
 import { DatePickerProps } from "./types";
 
@@ -29,7 +31,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
         : "Select range";
 
   return (
-    <div className="relative inline-block w-[240px] text-left">
+    <div className="w-container-datepicker relative inline-block text-left">
       <button
         type="button"
         onClick={() => setOpen(!open)}
