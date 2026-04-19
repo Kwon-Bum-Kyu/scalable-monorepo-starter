@@ -1,4 +1,3 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import {
   Pagination,
   PaginationContent,
@@ -7,6 +6,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta = { title: "L1/Pagination", tags: ["autodocs"] };
 export default meta;

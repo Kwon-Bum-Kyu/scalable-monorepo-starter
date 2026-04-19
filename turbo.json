@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["DATABASE_URL", "npm_package_version"],
+  "globalEnv": ["DATABASE_URL", "npm_package_version", "DEV", "PROD"],
   "globalDependencies": ["**/.env"],
   "tasks": {
     "build": {

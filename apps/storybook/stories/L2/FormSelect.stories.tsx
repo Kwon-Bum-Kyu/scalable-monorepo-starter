@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import { FormSelect } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof FormSelect> = {
   title: "L2/FormSelect",

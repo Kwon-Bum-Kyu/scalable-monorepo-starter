@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { MemoryRouter } from "react-router-dom";
 import { Link } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { MemoryRouter } from "react-router-dom";
 
 const meta: Meta<typeof Link> = {
   title: "L2/Link",

@@ -1,18 +1,18 @@
 import {
   Button,
   ButtonGroup,
+  DatePicker,
+  Empty,
+  FormSelect,
   Grid,
   GridItem,
   Input,
-  Typography,
-  FormSelect,
-  Slider,
-  DatePicker,
   SimpleBreadcrumb,
-  SimpleTabs,
   SimplePagination,
+  SimpleTabs,
+  Slider,
   SystemIcon,
-  Empty,
+  Typography,
 } from "@repo/ui";
 import React, { useState } from "react";
 
@@ -88,7 +88,7 @@ const Guide = () => {
         <div className="w-72 flex-col gap-y-10">
           {/* 텍스트 버튼 그룹 */}
           <ButtonGroup>
-            <Button variant="default" onClick={() => console.log("1")}>
+            <Button variant="default" onClick={() => {}}>
               Button 1
             </Button>
             <Button variant="default">Button 2</Button>

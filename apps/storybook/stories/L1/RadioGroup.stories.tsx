@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import { Label, RadioGroup, RadioGroupItem } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof RadioGroup> = {
   title: "L1/RadioGroup",

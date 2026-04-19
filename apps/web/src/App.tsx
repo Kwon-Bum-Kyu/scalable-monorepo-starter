@@ -1,7 +1,8 @@
-import { Suspense } from "react";
 import "./App.css";
-import { Outlet } from "react-router-dom";
+
 import { Typography } from "@repo/ui";
+import { Suspense } from "react";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import { SimpleTabs } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof SimpleTabs> = {
   title: "L3/SimpleTabs",

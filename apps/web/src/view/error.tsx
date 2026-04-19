@@ -1,5 +1,5 @@
-import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 import { cn } from "@repo/ui";
+import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
 type Error = {
   status: number;
@@ -43,10 +43,10 @@ const ErrorPage = ({ isError, className }: ErrorPageProps) => {
         className,
       )}
     >
-      <h3 className="mt-[28px] text-[18px] font-bold">
+      <h3 className="mt-7 text-lg font-bold">
         찾으시는 페이지가 없습니다.
       </h3>
-      <p className="text-gray-750 c-b2 mt-[16px] w-[480px]">
+      <p className="c-b2 mt-4 w-container-error-text text-gray-700">
         페이지가 삭제되었거나 주소가 변경되어 요청하신 페이지를 찾을 수
         없습니다. 입력하신 주소가 정확한지 다시 한번 확인해 주시기 바랍니다.
       </p>

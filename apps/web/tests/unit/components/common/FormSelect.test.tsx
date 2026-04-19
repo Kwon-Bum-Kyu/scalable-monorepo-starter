@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
 import { FormSelect } from "@repo/ui";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 const mockOptions = [
   { label: "Option 1", value: "1" },

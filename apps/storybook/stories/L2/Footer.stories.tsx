@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { MemoryRouter } from "react-router-dom";
 import { Footer } from "@repo/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { MemoryRouter } from "react-router-dom";
 
 const meta: Meta<typeof Footer> = {
   title: "L2/Footer",

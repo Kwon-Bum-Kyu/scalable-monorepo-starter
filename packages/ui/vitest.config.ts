@@ -32,5 +32,23 @@ export default defineConfig({
     include: ["tests/**/*.test.{ts,tsx}"],
     exclude: ["node_modules/**"],
     setupFiles: ["./tests/setup.ts"],
+    coverage: {
+      provider: "v8",
+      include: ["src/**/*.{ts,tsx}"],
+      exclude: [
+        "src/**/*.d.ts",
+        "src/**/types.ts",
+        "src/**/types.tsx",
+        "src/**/index.ts",
+        "src/styles/**",
+        "src/components/Navigation/**",
+      ],
+      thresholds: {
+        lines: 80,
+        statements: 80,
+        functions: 80,
+        branches: 80,
+      },
+    },
   },
 });

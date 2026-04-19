@@ -1,6 +1,7 @@
-import { ApiClient } from "./apiClient";
 import { API_CONFIG } from "@/config/api";
 import { ApiError } from "@/types/api";
+
+import { ApiClient } from "./apiClient";
 
 export const api = new ApiClient({
   baseURL: API_CONFIG.BASE_URL,
@@ -19,14 +20,6 @@ api.addRequestInterceptor({
       config.headers = headers;
     }
 
-    if (import.meta.env.DEV) {
-      console.log("request: ", {
-        url: config,
-        headers: config.headers,
-        body: config.body,
-      });
-    }
-
     return config;
   },
   onError: async (error) => {
@@ -37,9 +30,6 @@ api.addRequestInterceptor({
 
 api.addResponseInterceptor({
   onResponse: async (response) => {
-    if (import.meta.env.DEV) {
-      console.log("response: ", response);
-    }
     return response;
   },
   onError: async (error: ApiError) => {
