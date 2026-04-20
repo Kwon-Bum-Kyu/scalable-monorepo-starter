@@ -34,7 +34,9 @@ describe("useMutation", () => {
 
   describe("성공 경로", () => {
     it("mutate 성공 시 data와 isSuccess가 갱신된다", async () => {
-      const fn = vi.fn().mockResolvedValue(okResponse({ id: "created" }));
+      const fn = vi
+        .fn<() => Promise<ApiResponse<{ id: string }>>>()
+        .mockResolvedValue(okResponse({ id: "created" }));
 
       const { result } = renderHook(() => useMutation(fn));
 
@@ -86,7 +88,9 @@ describe("useMutation", () => {
   describe("실패 경로", () => {
     it("mutate 실패 시 error를 저장하고 isError를 true로 만든다", async () => {
       const err = apiError("500", "서버 다운");
-      const fn = vi.fn().mockRejectedValue(err);
+      const fn = vi
+        .fn<() => Promise<ApiResponse<{ id: string }>>>()
+        .mockRejectedValue(err);
 
       const { result } = renderHook(() => useMutation(fn));
 
@@ -103,7 +107,9 @@ describe("useMutation", () => {
       const onError = vi.fn();
       const onSettled = vi.fn();
       const err = apiError("400", "검증 실패");
-      const fn = vi.fn().mockRejectedValue(err);
+      const fn = vi
+        .fn<() => Promise<ApiResponse<{ id: string }>>>()
+        .mockRejectedValue(err);
 
       const { result } = renderHook(() =>
         useMutation(fn, { onError, onSettled }),
@@ -120,7 +126,9 @@ describe("useMutation", () => {
 
   describe("reset", () => {
     it("reset 호출 시 data·error·loading을 모두 초기화한다", async () => {
-      const fn = vi.fn().mockResolvedValue(okResponse({ id: "x" }));
+      const fn = vi
+        .fn<() => Promise<ApiResponse<{ id: string }>>>()
+        .mockResolvedValue(okResponse({ id: "x" }));
 
       const { result } = renderHook(() => useMutation(fn));
 
