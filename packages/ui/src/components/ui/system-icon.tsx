@@ -14,10 +14,8 @@ import {
   Disc,
   Eye,
   EyeOff,
-  Github,
   Globe,
   Info,
-  Linkedin,
   type LucideIcon,
   type LucideProps,
   Mail,
@@ -34,6 +32,8 @@ import {
   X,
 } from "lucide-react";
 import * as React from "react";
+
+import { GithubBrandIcon, LinkedinBrandIcon } from "./brand-icons";
 
 export type SystemIconName =
   | "bars"
@@ -103,8 +103,8 @@ const iconMap: Record<SystemIconName, LucideIcon> = {
   "check-circle-outline": CheckCircle,
   square: Square,
   "square-outline": Square,
-  linkedin: Linkedin,
-  github: Github,
+  linkedin: LinkedinBrandIcon,
+  github: GithubBrandIcon,
   globe: Globe,
 };
 

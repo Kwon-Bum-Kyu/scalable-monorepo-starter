@@ -54,6 +54,10 @@ export { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 // ============================================================
 // Level 2 — wrapper (PascalCase, 프로젝트 기본 재사용 단위)
 // ============================================================
+export {
+  GithubBrandIcon,
+  LinkedinBrandIcon,
+} from "./components/ui/brand-icons";
 export type { ButtonGroupProps } from "./components/ui/button-group";
 export { ButtonGroup } from "./components/ui/button-group";
 export type { CheckboxFieldProps } from "./components/ui/checkbox-field";

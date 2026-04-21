@@ -1,3 +1,5 @@
+// provider "prisma-client"는 7.x에서 여전히 preview 상태지만 신규 client 생성기 검증을 위해 유지한다.
+// v1.0 릴리스 기준 GA 전환 시 provider 값을 재검토한다.
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
