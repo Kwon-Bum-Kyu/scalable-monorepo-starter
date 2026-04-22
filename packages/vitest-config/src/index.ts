@@ -21,20 +21,6 @@ export const nodeConfig: TestConfig = {
 };
 
 /**
- * Browser 환경 테스트 설정 (React 컴포넌트 등)
- * Playwright를 사용한 실제 브라우저 테스트
- */
-export const browserConfig: TestConfig = {
-  ...baseConfig,
-  browser: {
-    enabled: true,
-    provider: "playwright",
-    headless: true,
-    instances: [{ browser: "chromium" }],
-  },
-};
-
-/**
  * React Unit 테스트 설정 (JSDOM)
  * 브라우저 없이 빠른 컴포넌트 로직 검증용
  */
