@@ -3,7 +3,8 @@
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": ".",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"]
   },
   "include": ["src/**/*", "tests/**/*"],
   "exclude": ["node_modules", "dist"]

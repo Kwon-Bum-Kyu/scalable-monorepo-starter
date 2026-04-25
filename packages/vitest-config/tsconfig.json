@@ -7,7 +7,8 @@
     "declarationMap": true,
     "noEmit": false,
     "allowImportingTsExtensions": false,
-    "moduleResolution": "node"
+    "moduleResolution": "bundler",
+    "types": ["node"]
   },
   "include": ["src"]
 }

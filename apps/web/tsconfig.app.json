@@ -2,8 +2,8 @@
   "extends": "@repo/typescript-config/vite.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "types": ["vitest/globals", "@testing-library/jest-dom"],
-    "baseUrl": ".",
+    "rootDir": ".",
+    "types": ["node", "vite/client", "vitest/globals", "@testing-library/jest-dom"],
     "paths": {
       "@/*": ["./src/*"],
       "@/img/*": ["./src/assets/img/*"],

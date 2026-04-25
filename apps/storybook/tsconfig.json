@@ -1,7 +1,7 @@
 {
   "extends": "@repo/typescript-config/vite.json",
   "compilerOptions": {
-    "baseUrl": ".",
+    "types": ["node", "vite/client"],
     "paths": {
       "@/*": ["../web/src/*"],
       "@/common": ["../web/src/components/common"],
