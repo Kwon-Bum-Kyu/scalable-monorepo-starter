@@ -1,29 +1,16 @@
-import type { RequestId } from "@repo/shared-types";
+import type {
+  ApiError as SharedApiError,
+  RequestId,
+} from "@repo/shared-types";
 
-export interface ApiResponse<T = unknown> {
-  data: T;
-  message: string;
-  success: boolean;
+/**
+ * FE 측 ApiError 보강.
+ * shared-types `ApiError`(message/code/details)에 클라이언트 메타데이터(timestamp/requestId)를 추가한다.
+ * envelope 단일 출처는 `@repo/shared-types`의 `ApiResponse` union이며, 본 파일은 더 이상 자체 envelope 타입을 정의하지 않는다.
+ */
+export interface ApiError extends SharedApiError {
   timestamp: string;
   requestId?: RequestId;
-}
-
-export interface ApiError {
-  message: string;
-  code: string;
-  details?: Record<string, unknown>;
-  timestamp: string;
-  requestId?: RequestId;
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
 }
 
 export interface RequestConfig {
@@ -48,9 +35,12 @@ export interface RequestInterceptor {
   onError?: (error: Error) => Error | Promise<Error>;
 }
 
+/**
+ * 응답 인터셉터.
+ * 주의: 본 시그니처는 T-03-G에서 `UnwrappedResponse<T>` 기반으로 갱신된다.
+ * 현재 파일 단독으로는 envelope 의존이 남지 않도록 제네릭을 `unknown` 기반 wrapper로 표현한다.
+ */
 export interface ResponseInterceptor {
-  onResponse?: <T>(
-    response: ApiResponse<T>,
-  ) => ApiResponse<T> | Promise<ApiResponse<T>>;
+  onResponse?: <T>(response: T) => T | Promise<T>;
   onError?: (error: ApiError) => ApiError | Promise<ApiError>;
 }

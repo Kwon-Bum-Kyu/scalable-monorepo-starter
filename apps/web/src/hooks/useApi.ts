@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { ApiError, ApiResponse } from "@/types/api";
+import type { ApiError } from "@/types/api";
 
 interface UseApiState<T> {
   data: T | null;
@@ -15,7 +15,7 @@ interface UseApiOptions<T = unknown> {
 }
 
 export function useApi<T>(
-  apiFunction: () => Promise<ApiResponse<T>>,
+  apiFunction: () => Promise<T>,
   options: UseApiOptions<T> = {},
 ) {
   const { immediate = true, onSuccess, onError } = options;
@@ -38,18 +38,18 @@ export function useApi<T>(
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      const response = await apiFunctionRef.current();
+      const data = await apiFunctionRef.current();
       setState({
-        data: response.data,
+        data,
         loading: false,
         error: null,
       });
 
       if (onSuccessRef.current) {
-        onSuccessRef.current(response.data);
+        onSuccessRef.current(data);
       }
 
-      return response;
+      return data;
     } catch (error) {
       const apiError = error as ApiError;
       setState({
@@ -75,9 +75,12 @@ export function useApi<T>(
   }, []);
 
   useEffect(() => {
-    if (immediate) {
-      execute();
+    if (!immediate) {
+      return;
     }
+    void execute().catch(() => {
+      // execute already surfaces the error through state and onError.
+    });
   }, [immediate, execute]);
 
   return {

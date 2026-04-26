@@ -1,12 +1,29 @@
+import type { ApiResponse, PaginationMeta } from "@repo/shared-types";
+
 import {
-  ApiClientConfig,
-  ApiError,
-  ApiResponse,
-  HttpMethod,
-  RequestConfig,
-  RequestInterceptor,
-  ResponseInterceptor,
+  type ApiClientConfig,
+  type ApiError,
+  type HttpMethod,
+  type RequestConfig,
+  type RequestInterceptor,
+  type ResponseInterceptor,
 } from "@/types/api";
+import { isApiResponseEnvelope } from "@/utils/apiResponseGuards";
+
+/**
+ * apiClient가 호출자에게 반환하는 언래핑 결과 형태.
+ * BE의 envelope `{ success: true, data, meta? }`에서 `data`/`meta`만 분리해 노출한다.
+ */
+export interface UnwrappedResponse<T> {
+  data: T;
+  meta?: PaginationMeta;
+}
+
+/**
+ * envelope 자체를 제네릭에 넘기는 호출 패턴(`api.get<ApiResponse<...>>`)을 컴파일 시점에 차단하는 negative constraint.
+ * `T extends ApiResponse<unknown>` 일 경우 `never`로 분기되어 호출자가 envelope 자체 타입을 제네릭으로 사용할 수 없다.
+ */
+export type UnwrappedPayload<T> = T extends ApiResponse<unknown> ? never : T;
 
 export class ApiClient {
   private config: ApiClientConfig;
@@ -82,8 +99,8 @@ export class ApiClient {
   }
 
   private async applyResponseInterceptors<T>(
-    response: ApiResponse<T>,
-  ): Promise<ApiResponse<T>> {
+    response: UnwrappedResponse<T>,
+  ): Promise<UnwrappedResponse<T>> {
     let processedResponse = response;
 
     for (const interceptor of this.responseInterceptors) {
@@ -122,39 +139,70 @@ export class ApiClient {
     };
   }
 
-  private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
+  private async parseBody(response: Response): Promise<unknown> {
     const contentType = response.headers.get("content-type");
-    const requestId = response.headers.get("X-Request-Id") ?? undefined;
-    let data: unknown;
-
     if (contentType && contentType.includes("application/json")) {
-      data = await response.json();
-    } else {
-      data = await response.text();
+      try {
+        return await response.json();
+      } catch {
+        return undefined;
+      }
     }
+    return response.text();
+  }
 
-    if (!response.ok) {
-      const errorData = data as Record<string, unknown>;
-      const error: ApiError = {
-        message: (errorData?.message as string) || "Request failed",
-        code: (errorData?.code as string) || response.status.toString(),
-        details: errorData?.details as Record<string, unknown>,
-        timestamp: new Date().toISOString(),
-        requestId,
-      };
-      throw error;
-    }
-
-    const responseData = data as Record<string, unknown>;
-    const apiResponse: ApiResponse<T> = {
-      data: (responseData?.data as T) || (data as T),
-      message: (responseData?.message as string) || "Success",
-      success: true,
+  private toApiError(
+    source: { code?: unknown; message?: unknown; details?: unknown },
+    requestId: string | undefined,
+  ): ApiError {
+    return {
+      code: typeof source.code === "string" ? source.code : "UNKNOWN_ERROR",
+      message:
+        typeof source.message === "string"
+          ? source.message
+          : "Request failed",
+      details:
+        typeof source.details === "object" && source.details !== null
+          ? (source.details as Record<string, unknown>)
+          : undefined,
       timestamp: new Date().toISOString(),
       requestId,
     };
+  }
 
-    return this.applyResponseInterceptors(apiResponse);
+  private async handleResponse<T>(
+    response: Response,
+  ): Promise<UnwrappedResponse<T>> {
+    const requestId = response.headers.get("X-Request-Id") ?? undefined;
+    const body = await this.parseBody(response);
+
+    if (!isApiResponseEnvelope(body)) {
+      throw this.toApiError(
+        {
+          code: "INVALID_ENVELOPE",
+          message: "Response is not a valid API envelope",
+        },
+        requestId,
+      );
+    }
+
+    if (body.success === false) {
+      throw this.toApiError(
+        {
+          code: body.error.code,
+          message: body.error.message,
+          details: body.error.details,
+        },
+        requestId,
+      );
+    }
+
+    const unwrapped: UnwrappedResponse<T> = {
+      data: body.data as T,
+      meta: body.meta,
+    };
+
+    return this.applyResponseInterceptors(unwrapped);
   }
 
   async request<T>(
@@ -162,7 +210,7 @@ export class ApiClient {
     endpoint: string,
     data?: unknown,
     config?: RequestConfig,
-  ): Promise<ApiResponse<T>> {
+  ): Promise<UnwrappedResponse<UnwrappedPayload<T>>> {
     const url = this.buildUrl(endpoint);
     const headers = this.buildHeaders(config?.headers);
     const timeout = config?.timeout || this.config.timeout;
@@ -187,7 +235,7 @@ export class ApiClient {
     return this.executeWithRetry(
       async () => {
         const response = await fetch(url, requestConfig);
-        return this.handleResponse<T>(response);
+        return this.handleResponse<UnwrappedPayload<T>>(response);
       },
       config?.retries,
       config?.retryDelay,
@@ -197,7 +245,7 @@ export class ApiClient {
   async get<T>(
     endpoint: string,
     config?: RequestConfig,
-  ): Promise<ApiResponse<T>> {
+  ): Promise<UnwrappedResponse<UnwrappedPayload<T>>> {
     return this.request<T>("GET", endpoint, undefined, config);
   }
 
@@ -205,7 +253,7 @@ export class ApiClient {
     endpoint: string,
     data?: unknown,
     config?: RequestConfig,
-  ): Promise<ApiResponse<T>> {
+  ): Promise<UnwrappedResponse<UnwrappedPayload<T>>> {
     return this.request<T>("POST", endpoint, data, config);
   }
 
@@ -213,7 +261,7 @@ export class ApiClient {
     endpoint: string,
     data?: unknown,
     config?: RequestConfig,
-  ): Promise<ApiResponse<T>> {
+  ): Promise<UnwrappedResponse<UnwrappedPayload<T>>> {
     return this.request<T>("PUT", endpoint, data, config);
   }
 
@@ -221,14 +269,14 @@ export class ApiClient {
     endpoint: string,
     data?: unknown,
     config?: RequestConfig,
-  ): Promise<ApiResponse<T>> {
+  ): Promise<UnwrappedResponse<UnwrappedPayload<T>>> {
     return this.request<T>("PATCH", endpoint, data, config);
   }
 
   async delete<T>(
     endpoint: string,
     config?: RequestConfig,
-  ): Promise<ApiResponse<T>> {
+  ): Promise<UnwrappedResponse<UnwrappedPayload<T>>> {
     return this.request<T>("DELETE", endpoint, undefined, config);
   }
 }

@@ -1,17 +1,16 @@
 import type {
   CreateExampleInput,
-  ExampleListItem as ExampleListItemType,
   UpdateExampleInput,
 } from "@repo/shared-types";
 import { Button } from "@repo/ui";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
-  createExample,
-  deleteExample,
-  fetchExamplesList,
-  updateExample,
-} from "@/services/examples";
+  useCreateExample,
+  useDeleteExample,
+  useExamplesList,
+  useUpdateExample,
+} from "@/hooks/useExamples";
 import type { ApiError } from "@/types/api";
 import { ErrorHandler } from "@/utils/errorHandler";
 
@@ -30,59 +29,63 @@ const isApiError = (error: unknown): error is ApiError => {
   );
 };
 
+const formatToast = (error: unknown): string => {
+  if (isApiError(error) || error instanceof Error) {
+    return ErrorHandler.formatToastMessage(error);
+  }
+  return "알 수 없는 오류 (req: -)";
+};
+
 const ExamplesPage = () => {
-  const [items, setItems] = useState<ExampleListItemType[]>([]);
-  const [loading, setLoading] = useState(false);
+  const list = useExamplesList();
+  const createMutation = useCreateExample();
+  const updateMutation = useUpdateExample();
+  const deleteMutation = useDeleteExample();
+
   const [toast, setToast] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<DialogMode>("create");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<ExampleFormState>(EMPTY_EXAMPLE_FORM);
 
-  const showError = useCallback((error: unknown) => {
-    if (isApiError(error) || error instanceof Error) {
-      setToast(ErrorHandler.formatToastMessage(error));
-      return;
-    }
-    setToast("알 수 없는 오류 (req: -)");
-  }, []);
-
-  const loadList = useCallback(async () => {
-    setLoading(true);
-    try {
-      const response = await fetchExamplesList();
-      setItems(response.data);
-    } catch (error) {
-      showError(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [showError]);
+  const items = useMemo(() => list.data?.items ?? [], [list.data]);
+  const submitting = createMutation.isLoading || updateMutation.isLoading;
 
   useEffect(() => {
-    void loadList();
-  }, [loadList]);
+    const error =
+      list.error ??
+      createMutation.error ??
+      updateMutation.error ??
+      deleteMutation.error;
+    if (!error) {
+      return;
+    }
+    setToast(formatToast(error));
+  }, [
+    list.error,
+    createMutation.error,
+    updateMutation.error,
+    deleteMutation.error,
+  ]);
 
-  const openCreateDialog = () => {
+  const openCreateDialog = useCallback(() => {
     setDialogMode("create");
     setEditingId(null);
     setForm(EMPTY_EXAMPLE_FORM);
     setDialogOpen(true);
-  };
+  }, []);
 
-  const closeDialog = () => {
+  const closeDialog = useCallback(() => {
     setDialogOpen(false);
     setDialogMode("create");
     setEditingId(null);
     setForm(EMPTY_EXAMPLE_FORM);
-  };
+  }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (submitting) {
       return;
     }
-    setSubmitting(true);
     try {
       if (dialogMode === "edit" && editingId) {
         const update: UpdateExampleInput = {
@@ -90,47 +93,60 @@ const ExamplesPage = () => {
           description: form.description || null,
           status: form.status,
         };
-        await updateExample(editingId, update);
+        await updateMutation.mutate({ id: editingId, input: update });
       } else {
         const payload: CreateExampleInput = {
           title: form.title,
           description: form.description || undefined,
           status: form.status,
         };
-        await createExample(payload);
+        await createMutation.mutate(payload);
       }
       closeDialog();
-      await loadList();
-    } catch (error) {
-      showError(error);
-    } finally {
-      setSubmitting(false);
+      await list.refetch();
+    } catch {
+      // toast useEffect가 mutation.error를 watching해 표시한다.
     }
-  };
+  }, [
+    submitting,
+    dialogMode,
+    editingId,
+    form,
+    updateMutation,
+    createMutation,
+    closeDialog,
+    list,
+  ]);
 
-  const handleDelete = async (id: string) => {
-    try {
-      await deleteExample(id);
-      await loadList();
-    } catch (error) {
-      showError(error);
-    }
-  };
+  const handleDelete = useCallback(
+    async (id: string) => {
+      try {
+        await deleteMutation.mutate(id);
+        await list.refetch();
+      } catch {
+        // toast useEffect가 deleteMutation.error를 watching해 표시한다.
+      }
+    },
+    [deleteMutation, list],
+  );
 
-  const handleEdit = (id: string) => {
-    const target = items.find((item) => item.id === id);
-    if (!target) {
-      return;
-    }
-    setDialogMode("edit");
-    setEditingId(id);
-    setForm({
-      title: target.title,
-      description: "",
-      status: target.status,
-    });
-    setDialogOpen(true);
-  };
+  const handleEdit = useCallback(
+    (id: string) => {
+      const target = items.find((item) => item.id === id);
+      if (!target) {
+        return;
+      }
+      setDialogMode("edit");
+      setEditingId(id);
+      setForm({
+        title: target.title,
+        description: "",
+        status: target.status,
+      });
+      setDialogOpen(true);
+    },
+    [items],
+  );
 
   return (
     <main className="container mx-auto p-6">
@@ -152,7 +168,7 @@ const ExamplesPage = () => {
       ) : null}
 
       <section
-        aria-busy={loading}
+        aria-busy={list.loading}
         className="bg-card text-card-foreground rounded-md border"
       >
         <table className="w-full text-left">
