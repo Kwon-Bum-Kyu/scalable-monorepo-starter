@@ -82,4 +82,41 @@ describe("errorHandler", () => {
       }),
     );
   });
+
+  it("AppError에 details가 포함되면 응답 error.details로 직렬화된다", () => {
+    const response = makeResponse();
+    const details = { field: "email", reason: "이미 사용 중" };
+    const error = new AppError(
+      "검증 실패",
+      422,
+      "VALIDATION_FAILED",
+      details,
+    );
+
+    errorHandler(error, {} as never, response, vi.fn());
+
+    expect(response.status).toHaveBeenCalledWith(422);
+    expect(response.json).toHaveBeenCalledWith(
+      expect.objectContaining({
+        success: false,
+        error: expect.objectContaining({
+          code: "VALIDATION_FAILED",
+          message: "검증 실패",
+          details,
+        }),
+      }),
+    );
+  });
+
+  it("AppError에 details가 없으면 응답 envelope에 details 키가 포함되지 않는다", () => {
+    const response = makeResponse();
+    const error = new AppError("유저 없음", 404, "USER_NOT_FOUND");
+
+    errorHandler(error, {} as never, response, vi.fn());
+
+    const body = response.json.mock.calls[0]?.[0] as {
+      error: Record<string, unknown>;
+    };
+    expect(body.error).not.toHaveProperty("details");
+  });
 });
