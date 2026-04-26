@@ -124,6 +124,7 @@ export class ApiClient {
 
   private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     const contentType = response.headers.get("content-type");
+    const requestId = response.headers.get("X-Request-Id") ?? undefined;
     let data: unknown;
 
     if (contentType && contentType.includes("application/json")) {
@@ -139,6 +140,7 @@ export class ApiClient {
         code: (errorData?.code as string) || response.status.toString(),
         details: errorData?.details as Record<string, unknown>,
         timestamp: new Date().toISOString(),
+        requestId,
       };
       throw error;
     }
@@ -149,6 +151,7 @@ export class ApiClient {
       message: (responseData?.message as string) || "Success",
       success: true,
       timestamp: new Date().toISOString(),
+      requestId,
     };
 
     return this.applyResponseInterceptors(apiResponse);

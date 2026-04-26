@@ -7,6 +7,7 @@ const makeApiError = (overrides: Partial<ApiError> = {}): ApiError => ({
   message: "오류 발생",
   code: "UNKNOWN_ERROR",
   timestamp: new Date().toISOString(),
+  requestId: undefined,
   ...overrides,
 });
 
@@ -164,6 +165,33 @@ describe("ErrorHandler", () => {
     it("알 수 없는 code일 때 원본 message로 대체한다", () => {
       const error = makeApiError({ code: "TEAPOT", message: "I'm a teapot" });
       expect(ErrorHandler.formatErrorForUser(error)).toBe("I'm a teapot");
+    });
+  });
+
+  describe("formatToastMessage (requestId 포맷)", () => {
+    it("requestId가 있으면 앞 8자리만 표시한다", () => {
+      const error = makeApiError({
+        code: "500",
+        message: "boom",
+        requestId: "7f3a3c5b-1234-5678-9abc-def012345678",
+      });
+      expect(ErrorHandler.formatToastMessage(error)).toBe(
+        "서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. (req: 7f3a3c5b)",
+      );
+    });
+
+    it("requestId가 없으면 (req: -) 로 표시한다", () => {
+      const error = makeApiError({ code: "500" });
+      expect(ErrorHandler.formatToastMessage(error)).toBe(
+        "서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. (req: -)",
+      );
+    });
+
+    it("일반 Error에서도 (req: -) 가 붙는다", () => {
+      const error = new TypeError("Failed to fetch");
+      expect(ErrorHandler.formatToastMessage(error)).toBe(
+        "네트워크 연결을 확인해주세요. (req: -)",
+      );
     });
   });
 

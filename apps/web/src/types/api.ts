@@ -1,8 +1,11 @@
+import type { RequestId } from "@repo/shared-types";
+
 export interface ApiResponse<T = unknown> {
   data: T;
   message: string;
   success: boolean;
   timestamp: string;
+  requestId?: RequestId;
 }
 
 export interface ApiError {
@@ -10,6 +13,7 @@ export interface ApiError {
   code: string;
   details?: Record<string, unknown>;
   timestamp: string;
+  requestId?: RequestId;
 }
 
 export interface PaginatedResponse<T> {

@@ -11,11 +11,17 @@ const DEFAULT_CONFIG = {
 
 const jsonResponse = (
   body: unknown,
-  init: { status?: number } = {},
+  init: { status?: number; requestId?: string } = {},
 ): Response => {
+  const headers: Record<string, string> = {
+    "content-type": "application/json",
+  };
+  if (init.requestId) {
+    headers["X-Request-Id"] = init.requestId;
+  }
   return new Response(JSON.stringify(body), {
     status: init.status ?? 200,
-    headers: { "content-type": "application/json" },
+    headers,
   });
 };
 
@@ -182,6 +188,53 @@ describe("ApiClient", () => {
 
       await expect(client.get("users")).rejects.toBeDefined();
       expect(fetch).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("X-Request-Id 보존", () => {
+    it("응답이 실패일 때 X-Request-Id 헤더를 에러 객체에 첨부한다", async () => {
+      const client = new ApiClient({ ...DEFAULT_CONFIG, retryCount: 0 });
+      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+        jsonResponse(
+          { message: "잘못된 요청", code: "BAD_REQUEST" },
+          { status: 400, requestId: "7f3a3c5b-1234-5678-9abc-def012345678" },
+        ),
+      );
+
+      await expect(client.get("examples")).rejects.toMatchObject({
+        message: "잘못된 요청",
+        code: "BAD_REQUEST",
+        requestId: "7f3a3c5b-1234-5678-9abc-def012345678",
+      });
+    });
+
+    it("성공 응답에서도 X-Request-Id를 ApiResponse에 포함한다", async () => {
+      const client = new ApiClient(DEFAULT_CONFIG);
+      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+        jsonResponse(
+          { data: { id: "1" }, message: "ok" },
+          { requestId: "abc12345-aaaa-bbbb-cccc-ddddeeeeffff" },
+        ),
+      );
+
+      const result = await client.get<{ id: string }>("examples");
+
+      expect(result.requestId).toBe("abc12345-aaaa-bbbb-cccc-ddddeeeeffff");
+    });
+
+    it("응답 헤더에 X-Request-Id가 없으면 requestId는 undefined이다", async () => {
+      const client = new ApiClient({ ...DEFAULT_CONFIG, retryCount: 0 });
+      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+        jsonResponse(
+          { message: "오류", code: "ERR" },
+          { status: 500 },
+        ),
+      );
+
+      await expect(client.get("examples")).rejects.toMatchObject({
+        message: "오류",
+        requestId: undefined,
+      });
     });
   });
 
