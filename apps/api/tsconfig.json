@@ -4,6 +4,8 @@
     "outDir": "./dist",
     "rootDir": ".",
     "types": ["node", "vitest/globals"],
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": ["./src/*"]
     }
