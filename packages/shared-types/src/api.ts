@@ -6,6 +6,7 @@
 export interface ApiSuccessResponse<T> {
   success: true;
   data: T;
+  meta?: PaginationMeta;
 }
 
 export interface ApiFailureResponse {
@@ -20,10 +21,19 @@ export interface PaginationParams {
   pageSize?: number;
 }
 
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export interface ApiError {
   message: string;
   code: string;
+  details?: unknown;
 }
+
+export type RequestId = string;
 
 export type Environment = "development" | "test" | "production";
 
