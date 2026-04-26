@@ -40,10 +40,30 @@ export default defineConfig({
     },
   ],
 
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-  },
+  /*
+   * Run dependent dev servers before starting the tests.
+   * The /examples flow hits apps/api (4000), so we boot both apps via
+   * the root turbo `dev` task. `reuseExistingServer` keeps developers'
+   * locally running `npm run dev` intact.
+   *
+   * Note: the second entry only re-checks readiness for the API on
+   * http://localhost:4000/api/v1/health and reuses the same root server
+   * spawned by the first entry (no second process is started because
+   * `reuseExistingServer: true` short-circuits when the URL is reachable).
+   */
+  webServer: [
+    {
+      command: "npm run dev -- --filter=web --filter=api",
+      cwd: "../..",
+      url: "http://localhost:3000",
+      reuseExistingServer: !process.env.CI,
+      timeout: 180_000,
+    },
+    {
+      command: "echo 'api readiness probe'",
+      url: "http://localhost:4000/health/live",
+      reuseExistingServer: true,
+      timeout: 180_000,
+    },
+  ],
 });
