@@ -7,13 +7,13 @@ import {
   useExampleDetail,
   useExamplesList,
   useUpdateExample,
-} from "@/services/examples";
+} from "@/hooks/useExamples";
 
-const jsonResponse = (
-  body: unknown,
+const successEnvelope = (
+  data: unknown,
   init: { status?: number } = {},
 ): Response => {
-  return new Response(JSON.stringify(body), {
+  return new Response(JSON.stringify({ success: true, data }), {
     status: init.status ?? 200,
     headers: { "content-type": "application/json" },
   });
@@ -31,19 +31,19 @@ describe("examples hooks", () => {
 
   it("useExamplesList 가 마운트 시 목록을 로딩한다", async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-      jsonResponse({ data: [{ id: "x1" }], message: "ok" }),
+      successEnvelope([{ id: "x1" }]),
     );
 
     const { result } = renderHook(() => useExamplesList());
 
     await waitFor(() => {
-      expect(result.current.data).toEqual([{ id: "x1" }]);
+      expect(result.current.data).toEqual({ items: [{ id: "x1" }] });
     });
   });
 
   it("useExampleDetail 이 id로 상세를 로딩한다", async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-      jsonResponse({ data: { id: "d1" }, message: "ok" }),
+      successEnvelope({ id: "d1" }),
     );
 
     const { result } = renderHook(() => useExampleDetail("d1"));
@@ -55,7 +55,7 @@ describe("examples hooks", () => {
 
   it("useCreateExample 이 mutate 호출 시 POST 요청을 발사한다", async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-      jsonResponse({ data: { id: "n1" }, message: "ok" }, { status: 201 }),
+      successEnvelope({ id: "n1" }, { status: 201 }),
     );
 
     const { result } = renderHook(() => useCreateExample());
@@ -70,7 +70,7 @@ describe("examples hooks", () => {
 
   it("useUpdateExample 이 mutate 호출 시 PATCH 요청을 발사한다", async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-      jsonResponse({ data: { id: "u1" }, message: "ok" }),
+      successEnvelope({ id: "u1" }),
     );
 
     const { result } = renderHook(() => useUpdateExample());
@@ -86,7 +86,7 @@ describe("examples hooks", () => {
 
   it("useDeleteExample 이 mutate 호출 시 DELETE 요청을 발사한다", async () => {
     (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-      jsonResponse({ data: null, message: "ok" }),
+      successEnvelope(null),
     );
 
     const { result } = renderHook(() => useDeleteExample());

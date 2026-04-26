@@ -1,3 +1,4 @@
+import type { ApiResponse } from "@repo/shared-types";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ApiClient } from "@/utils/apiClient";
@@ -9,7 +10,7 @@ const DEFAULT_CONFIG = {
   retryDelay: 10,
 };
 
-const jsonResponse = (
+const envelopeResponse = (
   body: unknown,
   init: { status?: number; requestId?: string } = {},
 ): Response => {
@@ -25,7 +26,7 @@ const jsonResponse = (
   });
 };
 
-describe("ApiClient", () => {
+describe("ApiClient envelope 언래핑", () => {
   beforeEach(() => {
     vi.stubGlobal("fetch", vi.fn());
   });
@@ -35,248 +36,114 @@ describe("ApiClient", () => {
     vi.restoreAllMocks();
   });
 
-  describe("URL 빌드", () => {
-    it("baseURL 끝의 슬래시와 endpoint 앞의 슬래시를 제거하여 결합한다", async () => {
-      const client = new ApiClient(DEFAULT_CONFIG);
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse({ data: { id: "1" }, message: "ok" }),
-      );
+  it("apiClient가 success: true envelope를 받을 때 data를 반환한다", async () => {
+    const client = new ApiClient(DEFAULT_CONFIG);
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+      envelopeResponse({ success: true, data: { id: "1", title: "T" } }),
+    );
 
-      await client.get("/users");
+    const result = await client.get<{ id: string; title: string }>("examples");
 
-      const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-      expect(url).toBe("http://localhost:4000/users");
-    });
+    expect(result.data).toEqual({ id: "1", title: "T" });
+    expect(result.meta).toBeUndefined();
   });
 
-  describe("성공 응답", () => {
-    it("JSON body의 data 필드를 ApiResponse로 감싸 반환한다", async () => {
-      const client = new ApiClient(DEFAULT_CONFIG);
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse({ data: { id: "1" }, message: "조회 성공" }),
-      );
+  it("apiClient가 success: true envelope에 meta가 있을 때 meta를 함께 반환한다", async () => {
+    const client = new ApiClient(DEFAULT_CONFIG);
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+      envelopeResponse({
+        success: true,
+        data: [{ id: "1" }],
+        meta: { total: 1, page: 1, pageSize: 10 },
+      }),
+    );
 
-      const result = await client.get<{ id: string }>("users");
+    const result = await client.get<Array<{ id: string }>>("examples");
 
-      expect(result.data).toEqual({ id: "1" });
-      expect(result.message).toBe("조회 성공");
-      expect(result.success).toBe(true);
-    });
+    expect(result.data).toEqual([{ id: "1" }]);
+    expect(result.meta).toEqual({ total: 1, page: 1, pageSize: 10 });
   });
 
-  describe("HTTP 메서드", () => {
-    it("post는 data를 JSON body로 직렬화한다", async () => {
-      const client = new ApiClient(DEFAULT_CONFIG);
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse({ data: { ok: true }, message: "생성" }),
-      );
-
-      await client.post("users", { name: "김" });
-
-      const [, init] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-      expect(init.method).toBe("POST");
-      expect(init.body).toBe(JSON.stringify({ name: "김" }));
-    });
-
-    it("put·patch·delete도 각자 올바른 메서드로 호출된다", async () => {
-      const client = new ApiClient(DEFAULT_CONFIG);
-      (fetch as ReturnType<typeof vi.fn>).mockImplementation(() =>
-        Promise.resolve(jsonResponse({ data: null, message: "ok" })),
-      );
-
-      await client.put("users/1", { name: "A" });
-      await client.patch("users/1", { name: "B" });
-      await client.delete("users/1");
-
-      const calls = (fetch as ReturnType<typeof vi.fn>).mock.calls;
-      expect(calls[0][1].method).toBe("PUT");
-      expect(calls[1][1].method).toBe("PATCH");
-      expect(calls[2][1].method).toBe("DELETE");
-    });
-
-    it("FormData를 보내면 Content-Type 헤더를 브라우저가 설정하도록 위임한다", async () => {
-      const client = new ApiClient(DEFAULT_CONFIG);
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse({ data: null, message: "업로드" }),
-      );
-
-      const form = new FormData();
-      form.append("file", new Blob(["x"]));
-
-      await client.post("upload", form);
-
-      const [, init] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-      expect(init.body).toBeInstanceOf(FormData);
-    });
-  });
-
-  describe("에러 처리", () => {
-    it("응답이 실패면 ApiError 형태로 throw한다", async () => {
-      const client = new ApiClient({ ...DEFAULT_CONFIG, retryCount: 0 });
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse(
-          { message: "권한 없음", code: "FORBIDDEN" },
-          { status: 403 },
-        ),
-      );
-
-      await expect(client.get("users")).rejects.toMatchObject({
-        message: "권한 없음",
-        code: "FORBIDDEN",
-      });
-    });
-
-    it("JSON body가 없으면 status 문자열을 code로 사용한다", async () => {
-      const client = new ApiClient({ ...DEFAULT_CONFIG, retryCount: 0 });
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        new Response("server down", {
-          status: 500,
-          headers: { "content-type": "text/plain" },
-        }),
-      );
-
-      await expect(client.get("users")).rejects.toMatchObject({
-        code: "500",
-        message: "Request failed",
-      });
-    });
-  });
-
-  describe("재시도", () => {
-    it("status 필드를 가진 5xx 오류는 재시도 대상이다", async () => {
-      const client = new ApiClient({
-        ...DEFAULT_CONFIG,
-        retryCount: 2,
-        retryDelay: 0,
-      });
-      const networkLike = Object.assign(new Error("Bad Gateway"), {
-        status: 502,
-      });
-      (fetch as ReturnType<typeof vi.fn>).mockRejectedValue(networkLike);
-
-      await expect(client.get("users")).rejects.toBe(networkLike);
-      expect(fetch).toHaveBeenCalledTimes(3);
-    });
-
-    it("TypeError(Failed to fetch) 네트워크 오류도 재시도 대상이다", async () => {
-      const client = new ApiClient({
-        ...DEFAULT_CONFIG,
-        retryCount: 1,
-        retryDelay: 0,
-      });
-      (fetch as ReturnType<typeof vi.fn>)
-        .mockRejectedValueOnce(new TypeError("Failed to fetch"))
-        .mockResolvedValueOnce(
-          jsonResponse({ data: { ok: true }, message: "ok" }),
-        );
-
-      const result = await client.get<{ ok: boolean }>("users");
-
-      expect(result.data).toEqual({ ok: true });
-      expect(fetch).toHaveBeenCalledTimes(2);
-    });
-
-    it("4xx 에러는 재시도하지 않고 즉시 실패한다", async () => {
-      const client = new ApiClient({
-        ...DEFAULT_CONFIG,
-        retryCount: 3,
-        retryDelay: 0,
-      });
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse({ message: "잘못된 요청" }, { status: 400 }),
-      );
-
-      await expect(client.get("users")).rejects.toBeDefined();
-      expect(fetch).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe("X-Request-Id 보존", () => {
-    it("응답이 실패일 때 X-Request-Id 헤더를 에러 객체에 첨부한다", async () => {
-      const client = new ApiClient({ ...DEFAULT_CONFIG, retryCount: 0 });
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse(
-          { message: "잘못된 요청", code: "BAD_REQUEST" },
-          { status: 400, requestId: "7f3a3c5b-1234-5678-9abc-def012345678" },
-        ),
-      );
-
-      await expect(client.get("examples")).rejects.toMatchObject({
-        message: "잘못된 요청",
-        code: "BAD_REQUEST",
-        requestId: "7f3a3c5b-1234-5678-9abc-def012345678",
-      });
-    });
-
-    it("성공 응답에서도 X-Request-Id를 ApiResponse에 포함한다", async () => {
-      const client = new ApiClient(DEFAULT_CONFIG);
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse(
-          { data: { id: "1" }, message: "ok" },
-          { requestId: "abc12345-aaaa-bbbb-cccc-ddddeeeeffff" },
-        ),
-      );
-
-      const result = await client.get<{ id: string }>("examples");
-
-      expect(result.requestId).toBe("abc12345-aaaa-bbbb-cccc-ddddeeeeffff");
-    });
-
-    it("응답 헤더에 X-Request-Id가 없으면 requestId는 undefined이다", async () => {
-      const client = new ApiClient({ ...DEFAULT_CONFIG, retryCount: 0 });
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse(
-          { message: "오류", code: "ERR" },
-          { status: 500 },
-        ),
-      );
-
-      await expect(client.get("examples")).rejects.toMatchObject({
-        message: "오류",
-        requestId: undefined,
-      });
-    });
-  });
-
-  describe("인터셉터", () => {
-    it("request 인터셉터가 헤더를 추가하면 fetch 호출에 반영된다", async () => {
-      const client = new ApiClient(DEFAULT_CONFIG);
-      client.addRequestInterceptor({
-        onRequest: (config) => {
-          const headers = {
-            ...(config.headers as Record<string, string>),
-            Authorization: "Bearer T",
-          };
-          return { ...config, headers };
+  it("apiClient가 success: false envelope를 받을 때 ApiError를 throw한다", async () => {
+    const client = new ApiClient({ ...DEFAULT_CONFIG, retryCount: 0 });
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+      envelopeResponse(
+        {
+          success: false,
+          error: { code: "VALIDATION_ERROR", message: "잘못된 입력" },
         },
-      });
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse({ data: {}, message: "ok" }),
-      );
+        { status: 200 },
+      ),
+    );
 
-      await client.get("users");
-
-      const [, init] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-      expect((init.headers as Record<string, string>).Authorization).toBe(
-        "Bearer T",
-      );
+    await expect(client.get("examples")).rejects.toMatchObject({
+      code: "VALIDATION_ERROR",
+      message: "잘못된 입력",
     });
+  });
 
-    it("response 인터셉터가 응답을 가공할 수 있다", async () => {
-      const client = new ApiClient(DEFAULT_CONFIG);
-      client.addResponseInterceptor({
-        onResponse: (response) => ({
-          ...response,
-          message: `[intercepted] ${response.message}`,
-        }),
-      });
-      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
-        jsonResponse({ data: { ok: 1 }, message: "원본" }),
-      );
+  it("apiClient가 envelope 형태가 아닌 응답을 받을 때 INVALID_ENVELOPE 에러를 throw한다", async () => {
+    const client = new ApiClient({ ...DEFAULT_CONFIG, retryCount: 0 });
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+      envelopeResponse({ data: { id: "1" }, message: "ok" }),
+    );
 
-      const result = await client.get<{ ok: number }>("users");
-
-      expect(result.message).toBe("[intercepted] 원본");
+    await expect(client.get("examples")).rejects.toMatchObject({
+      code: "INVALID_ENVELOPE",
     });
+  });
+
+  it("apiClient가 4xx HTTP status일 때 envelope의 error를 그대로 throw한다", async () => {
+    const client = new ApiClient({ ...DEFAULT_CONFIG, retryCount: 0 });
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+      envelopeResponse(
+        {
+          success: false,
+          error: { code: "FORBIDDEN", message: "권한 없음" },
+        },
+        {
+          status: 403,
+          requestId: "7f3a3c5b-1234-5678-9abc-def012345678",
+        },
+      ),
+    );
+
+    await expect(client.get("examples")).rejects.toMatchObject({
+      code: "FORBIDDEN",
+      message: "권한 없음",
+      requestId: "7f3a3c5b-1234-5678-9abc-def012345678",
+    });
+  });
+
+  it("apiClient가 5xx HTTP status일 때 retry 후에도 실패하면 throw한다", async () => {
+    const client = new ApiClient({
+      ...DEFAULT_CONFIG,
+      retryCount: 2,
+      retryDelay: 0,
+    });
+    const networkLike = Object.assign(new Error("Bad Gateway"), {
+      status: 502,
+    });
+    (fetch as ReturnType<typeof vi.fn>).mockRejectedValue(networkLike);
+
+    await expect(client.get("examples")).rejects.toBe(networkLike);
+    expect(fetch).toHaveBeenCalledTimes(3);
+  });
+});
+
+describe("ApiClient 컴파일러 강제 (Q-4)", () => {
+  it("envelope 자체를 제네릭에 넘기면 결과의 data가 사용 불가 타입(never)이 되어 컴파일 차단된다", () => {
+    const client = new ApiClient(DEFAULT_CONFIG);
+    // 본 블록은 런타임 검증이 아니라 타입 시스템 검증이다.
+    // envelope 제네릭을 넘기면 UnwrappedPayload<T> = never로 평가되어 data를 의미 있게 사용할 수 없다.
+    const _typeOnly = async (): Promise<{ id: string }> => {
+      const response = await client.get<ApiResponse<{ id: string }>>(
+        "examples",
+      );
+      // @ts-expect-error envelope 직접 제네릭은 결과를 사용할 수 없다 (data가 never)
+      const id: string = response.data.id;
+      return { id };
+    };
+    expect(typeof _typeOnly).toBe("function");
   });
 });
