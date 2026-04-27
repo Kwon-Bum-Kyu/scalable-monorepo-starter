@@ -3,6 +3,7 @@ import { ZodError } from "zod";
 
 import { AppError } from "../errors/app-error";
 import { sendError } from "../lib/http-response";
+import { logger } from "../lib/logger";
 
 const DEFAULT_ERROR_CODE = "INTERNAL_SERVER_ERROR";
 
@@ -26,6 +27,8 @@ export const errorHandler: ErrorRequestHandler = (
       400,
     );
   }
+
+  logger.error({ err: error }, "Unhandled error in request pipeline");
 
   return sendError(
     response,
