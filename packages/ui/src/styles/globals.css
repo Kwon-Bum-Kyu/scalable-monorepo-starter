@@ -66,11 +66,9 @@
   --container-datepicker: 240px;
   --container-logo: 160px;
 
-  /* Semantic fixed sizes (h-*, min-h-*) */
-  --size-logo-h: 40px;
-  --size-header-min-h: 88px;
-
-  /* Semantic page padding */
+  /* Semantic spacing tokens (h-*, min-h-*, w-*, p*-*) */
+  --spacing-logo-h: 40px;
+  --spacing-header: 88px;
   --spacing-page-x: 72px;
 
   /* Breakpoints */

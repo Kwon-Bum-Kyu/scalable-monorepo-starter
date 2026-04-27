@@ -113,7 +113,9 @@ const RootLayout: React.FC = () => {
         actions={headerActions}
         mobileMenu={mobileMenu}
       />
-      <Outlet />
+      <main className="mx-auto w-full max-w-app px-page-x">
+        <Outlet />
+      </main>
       <Footer columns={footerColumns} bottom={footerBottom} />
     </>
   );
