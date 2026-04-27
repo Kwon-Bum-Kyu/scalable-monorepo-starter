@@ -12,7 +12,8 @@
     "RATE_LIMIT_WINDOW_MS",
     "RATE_LIMIT_MAX",
     "HEALTH_DB_TIMEOUT_MS",
-    "ENABLE_EXAMPLES"
+    "ENABLE_EXAMPLES",
+    "SKIP_DEV_BOOTSTRAP"
   ],
   "globalDependencies": ["**/.env"],
   "tasks": {
