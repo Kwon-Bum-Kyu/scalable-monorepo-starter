@@ -38,6 +38,27 @@ export default defineConfig({
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
     },
+    /* Visual regression matrix — 4 viewport × 5 라우트 = 20 스냅샷 (claude-design-system-migration) */
+    {
+      name: "vr-mobile-640",
+      testMatch: /visual-regression\.spec\.ts/,
+      use: { viewport: { width: 640, height: 960 } },
+    },
+    {
+      name: "vr-tablet-768",
+      testMatch: /visual-regression\.spec\.ts/,
+      use: { viewport: { width: 768, height: 1024 } },
+    },
+    {
+      name: "vr-desktop-1280",
+      testMatch: /visual-regression\.spec\.ts/,
+      use: { viewport: { width: 1280, height: 800 } },
+    },
+    {
+      name: "vr-wide-1920",
+      testMatch: /visual-regression\.spec\.ts/,
+      use: { viewport: { width: 1920, height: 1080 } },
+    },
   ],
 
   /*

@@ -26,6 +26,9 @@ describe("Header", () => {
     render(<Header logo={<span>L</span>} />);
     const banner = screen.getByRole("banner");
     const inner = banner.firstElementChild as HTMLElement;
+    // 의미적 토큰만 사용해야 함 (min-h-header / px-page-x / max-w-app).
+    // h-16 / px-6 같은 4px-base 자동 utility는 우연히 동일 px가 나올 수 있어도
+    // "의미"를 표현하지 못하므로 금지.
     expect(inner.className).toContain("min-h-header");
     expect(inner.className).toContain("px-page-x");
     expect(inner.className).toContain("max-w-app");
