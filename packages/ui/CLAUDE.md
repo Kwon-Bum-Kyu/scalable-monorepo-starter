@@ -49,6 +49,12 @@ src/
 - 토큰 네이밍: `--color-<name>-<scale>`, `--font-family-<name>`, `--breakpoint-<name>`.
 - 상세: [.claude/rules/tailwind-v4.md](../../.claude/rules/tailwind-v4.md).
 
+### spacing 정책 (FR-10)
+
+- **의미적 별칭만 정의**: `--spacing-page-x`(72px), `--spacing-header`(64px), `--spacing-logo-h`(40px), `--spacing-16`(64px, header content alias) — 페이지 레이아웃·콘텐츠 영역에서 반복 사용되는 의미 있는 값만 토큰화한다.
+- **4px-base 풀세트는 Tailwind 표준에 의존**: `p-1=4px`, `p-2=8px`, ..., `p-20=80px`, `p-32=128px` 등은 Tailwind v4 가 자동 생성한다. `--spacing-1`~`--spacing-32` 같은 풀세트 토큰을 추가로 정의하지 않는다.
+- **`--spacing-80` 같은 숫자 별칭 추가 금지**: 자동 utility 와 의미가 중복되며, 의미적 토큰의 가독성을 떨어뜨린다 (FR-10 deprecate).
+
 ## 테스트
 
 - 경로: `tests/**/*.test.{ts,tsx}` (Vitest + Testing Library).
