@@ -18,19 +18,27 @@
   --font-size-5xl: 48px;
   --font-size-6xl: 56px;
 
-  /* Line heights */
+  /* Line heights — Claude Design 풀세트 (FR-6) */
   --line-height-16: 16px;
+  --line-height-20: 20px;
   --line-height-24: 24px;
+  --line-height-28: 28px;
   --line-height-32: 32px;
   --line-height-40: 40px;
   --line-height-48: 48px;
+  --line-height-56: 56px;
   --line-height-64: 64px;
   --line-height-72: 72px;
+
+  /* Font weights (FR-9) */
+  --font-weight-regular: 400;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
   /* Blue color palette */
   --color-blue-50: #e1e9ef;
   --color-blue-100: #b5c8d6;
-  --color-blue-200: #84a38b;
+  --color-blue-200: #84a3bb;
   --color-blue-300: #527ea0;
   --color-blue-400: #2d638b;
   --color-blue-500: #084777;
@@ -54,11 +62,14 @@
   /* System colors */
   --color-system-red: #c2050b;
   --color-system-green: #07b46f;
+  --color-system-warning: #f9a80a;
+  --color-system-info: #2196f3;
   --color-system-white: #ffffff;
 
-  /* Spacing */
-  --spacing-16: 16px;
-  --spacing-80: 80px;
+  /* Spacing — 의미적 별칭(Tailwind 4px-base 표준에 추가). FR-2: 16 단계는 64px(Tailwind 표준 p-16).
+     4px-base 풀세트(p-1=4, p-2=8, ..., p-20=80, p-32=128 등)는 Tailwind v4 표준 자동
+     utility 에 의존하며 본 @theme 블록에는 별도 토큰을 정의하지 않는다 (FR-10 deprecate). */
+  --spacing-16: 64px;
 
   /* Semantic container widths (max-w-*, w-*) */
   --container-content: 1280px;
@@ -68,13 +79,13 @@
 
   /* Semantic spacing tokens (h-*, min-h-*, w-*, p*-*) */
   --spacing-logo-h: 40px;
-  --spacing-header: 88px;
+  --spacing-header: 64px;
   --spacing-page-x: 72px;
 
   /* Breakpoints */
   --breakpoint-mobile: 640px;
   --breakpoint-tablet: 768px;
-  --breakpoint-desktop: 1440px;
+  --breakpoint-desktop: 1280px;
   --breakpoint-wide: 1920px;
 
   /* Layout container */
@@ -92,6 +103,24 @@
   --color-interactive-active:  var(--color-blue-800);
   --color-state-error:         var(--color-system-red);
   --color-state-success:       var(--color-system-green);
+  --color-state-warning:       var(--color-system-warning);
+  --color-state-info:          var(--color-system-info);
+
+  /* Semantic alias 4건 (FR-12) */
+  --color-text-inverse:        var(--color-system-white);
+  --color-bg-accent:           var(--color-blue-50);
+  --color-border-strong:       var(--color-gray-300);
+  --color-focus-ring:          var(--color-blue-500);
+
+  /* Elevation shadow 4단계 (FR-8) */
+  --shadow-1-subtle:  0 1px 2px 0 rgba(22,22,19,0.05),
+                      0 1px 3px 0 rgba(181,200,214,0.4);
+  --shadow-2-default: 0 2px 4px -1px rgba(22,22,19,0.06),
+                      0 4px 8px -2px rgba(181,200,214,0.4);
+  --shadow-3-raised:  0 4px 6px -1px rgba(22,22,19,0.08),
+                      0 10px 20px -4px rgba(181,200,214,0.7);
+  --shadow-4-overlay: 0 8px 12px -2px rgba(22,22,19,0.1),
+                      0 20px 36px -8px rgba(225,233,239,0.75);
 }
 
 /* ───────── :root: shadcn semantic 토큰 ───────── */
@@ -120,9 +149,9 @@
 
   --border:                 var(--color-gray-100);
   --input:                  var(--color-gray-100);
-  --ring:                   var(--color-blue-500);
+  --ring:                   var(--color-focus-ring);
 
-  --radius: 0.5rem;
+  --radius: 0.75rem;
 
   --chart-1: var(--color-blue-500);
   --chart-2: var(--color-blue-300);
@@ -181,10 +210,12 @@
   --color-input:                  var(--input);
   --color-ring:                   var(--ring);
 
+  --radius-none: 0;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: 24px;
 }
 
 /* ───────── @layer base ───────── */
