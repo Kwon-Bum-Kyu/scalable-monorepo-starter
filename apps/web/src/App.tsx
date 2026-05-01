@@ -7,9 +7,9 @@ import { Outlet } from "react-router-dom";
 function App() {
   return (
     <Suspense fallback={<Typography variant="h1">Loading...</Typography>}>
-      <main className={`min-h-screen min-w-[100vh]`}>
+      <div className="min-h-screen">
         <Outlet />
-      </main>
+      </div>
     </Suspense>
   );
 }

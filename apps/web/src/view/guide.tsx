@@ -27,7 +27,7 @@ const Guide = () => {
   const [page, setPage] = useState(1);
 
   return (
-    <main className="container gap-4">
+    <div className="container gap-4">
       <Paddings>
         <Typography variant="h1">H1 Title</Typography>
         <Typography variant="h2">H2 Title</Typography>
@@ -188,7 +188,7 @@ const Guide = () => {
           icon={<SystemIcon name="info" size={24} />}
         />
       </Paddings>
-    </main>
+    </div>
   );
 };
 

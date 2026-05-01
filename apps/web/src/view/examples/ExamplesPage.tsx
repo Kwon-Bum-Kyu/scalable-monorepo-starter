@@ -15,10 +15,7 @@ import type { ApiError } from "@/types/api";
 import { ErrorHandler } from "@/utils/errorHandler";
 
 import ExampleFormDialog from "./ExampleFormDialog";
-import {
-  EMPTY_EXAMPLE_FORM,
-  type ExampleFormState,
-} from "./exampleFormState";
+import { EMPTY_EXAMPLE_FORM, type ExampleFormState } from "./exampleFormState";
 import ExampleListItem from "./ExampleListItem";
 
 type DialogMode = "create" | "edit";
@@ -149,7 +146,7 @@ const ExamplesPage = () => {
   );
 
   return (
-    <main className="container mx-auto p-6">
+    <div className="container mx-auto p-6">
       <header className="mb-4 flex items-center justify-between">
         <h1 className="text-foreground text-2xl font-bold">Examples</h1>
         <Button type="button" onClick={openCreateDialog}>
@@ -201,7 +198,7 @@ const ExamplesPage = () => {
         onSubmit={handleSubmit}
         onClose={closeDialog}
       />
-    </main>
+    </div>
   );
 };
 
