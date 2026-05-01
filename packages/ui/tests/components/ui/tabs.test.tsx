@@ -36,4 +36,25 @@ describe("Tabs", () => {
     );
     expect(screen.getByText("A 콘텐츠")).toBeInTheDocument();
   });
+
+  it("active 상태 trigger는 elevation 1단계(subtle) 토큰을 적용한다", () => {
+    render(
+      <Tabs defaultValue="a">
+        <TabsList>
+          <TabsTrigger value="a">A</TabsTrigger>
+          <TabsTrigger value="b">B</TabsTrigger>
+        </TabsList>
+        <TabsContent value="a">A 콘텐츠</TabsContent>
+        <TabsContent value="b">B 콘텐츠</TabsContent>
+      </Tabs>,
+    );
+
+    const triggerA = screen.getByRole("tab", { name: "A" });
+    expect(triggerA.className).toContain(
+      "data-[state=active]:shadow-1-subtle",
+    );
+    expect(triggerA.className).not.toContain(
+      "data-[state=active]:shadow-sm",
+    );
+  });
 });

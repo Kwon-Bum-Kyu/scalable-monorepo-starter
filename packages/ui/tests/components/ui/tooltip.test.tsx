@@ -63,6 +63,21 @@ describe("Tooltip", () => {
     expect(content.className).toContain("rounded-md");
   });
 
+  it("열린 상태의 content는 elevation 3단계(raised) 토큰을 적용한다", () => {
+    render(
+      <TooltipProvider>
+        <Tooltip defaultOpen>
+          <TooltipTrigger>도움말</TooltipTrigger>
+          <TooltipContent data-testid="tt-content">설명 텍스트</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>,
+    );
+
+    const content = screen.getByTestId("tt-content");
+    expect(content.className).toContain("shadow-3-raised");
+    expect(content.className).not.toContain("shadow-md");
+  });
+
   it("trigger는 button 역할로 키보드 접근이 가능하다", () => {
     render(
       <TooltipProvider>

@@ -41,6 +41,18 @@ describe("Card", () => {
     expect(root.className).toContain("text-card-foreground");
   });
 
+  it("컨테이너는 elevation 2단계(default) 토큰을 적용한다", () => {
+    render(
+      <Card data-testid="card-root">
+        <CardContent>내용</CardContent>
+      </Card>,
+    );
+
+    const root = screen.getByTestId("card-root");
+    expect(root.className).toContain("shadow-2-default");
+    expect(root.className).not.toContain("shadow-sm");
+  });
+
   it("className 추가가 cn 유틸로 병합된다", () => {
     render(
       <Card className="custom-card" data-testid="card-root">

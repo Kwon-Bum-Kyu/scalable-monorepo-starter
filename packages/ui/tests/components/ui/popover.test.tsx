@@ -26,4 +26,17 @@ describe("Popover", () => {
     );
     expect(screen.queryByText("내용")).not.toBeInTheDocument();
   });
+
+  it("열린 상태의 content는 elevation 3단계(raised) 토큰을 적용한다", () => {
+    render(
+      <Popover defaultOpen>
+        <PopoverTrigger>열기</PopoverTrigger>
+        <PopoverContent data-testid="pop-content">내용</PopoverContent>
+      </Popover>,
+    );
+
+    const content = screen.getByTestId("pop-content");
+    expect(content.className).toContain("shadow-3-raised");
+    expect(content.className).not.toContain("shadow-md");
+  });
 });
