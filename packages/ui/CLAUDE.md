@@ -55,6 +55,23 @@ src/
 - **4px-base 풀세트는 Tailwind 표준에 의존**: `p-1=4px`, `p-2=8px`, ..., `p-20=80px`, `p-32=128px` 등은 Tailwind v4 가 자동 생성한다. `--spacing-1`~`--spacing-32` 같은 풀세트 토큰을 추가로 정의하지 않는다.
 - **`--spacing-80` 같은 숫자 별칭 추가 금지**: 자동 utility 와 의미가 중복되며, 의미적 토큰의 가독성을 떨어뜨린다 (FR-10 deprecate).
 
+### 색상 사용 가이드 (NFR-3 / WCAG AA)
+
+- **`blue-200` (`#84a3bb`)는 옅은 배경 본문 텍스트로 사용 금지** — white(2.65:1) / gray-50(2.47:1) 모두 WCAG AA(4.5:1) 미달. 어두운 배경(gray-900: 6.71:1) 또는 보조 시각 요소(아이콘 stroke, 비강조 border)로만 사용.
+- **focus-ring(`--color-focus-ring` = `blue-500` `#084777`)** 은 white 9.64:1 / blue-50 7.85:1 모두 AAA 충족 — 포커스 강조에 안전.
+- **본문 텍스트 권장**: `gray-900`(white 16:1+ AAA), `gray-700` 이상. `gray-500` 미만은 옅은 배경 본문 텍스트로 사용 금지.
+
+### radius 비례 원칙 (FR-7)
+
+기준값 `--radius: 0.75rem`(12px). 컴포넌트 중첩 시 다음 비례를 따른다:
+
+- **컨테이너 레벨**: `rounded-md`(10px) — input, select trigger·content, popover content, tabs list, calendar, button(default·sm·lg)
+- **nested 요소**: `rounded-sm`(8px) — select item, tabs trigger, checkbox(4×4), 작은 inline 요소
+- **range edge** (calendar 등): `rounded-l-md`/`rounded-r-md`로 컨테이너 곡률과 일치
+- **명세 외 변형**: `--radius-none`(0), `--radius-xl`(16px), `--radius-2xl`(24px) — 의도된 강조 표현에만 사용
+
+원칙: **자식 요소 radius ≤ 부모 요소 radius**. 그래야 corner blending이 자연스럽다.
+
 ## 테스트
 
 - 경로: `tests/**/*.test.{ts,tsx}` (Vitest + Testing Library).
