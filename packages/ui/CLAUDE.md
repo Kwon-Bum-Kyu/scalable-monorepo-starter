@@ -72,6 +72,22 @@ src/
 
 원칙: **자식 요소 radius ≤ 부모 요소 radius**. 그래야 corner blending이 자연스럽다.
 
+### elevation 위계 매핑 (FR-8)
+
+shadow 토큰은 4단계 위계로 정의된다(`globals.css` `@theme`). 각 컴포넌트는 의도된 표면 위계에 따라 정확한 토큰만 사용한다.
+
+| 토큰 | utility | 위계 | 용도 |
+| ---- | ------- | ---- | ---- |
+| `--shadow-1-subtle` | `shadow-1-subtle` | 1 (subtle) | 같은 평면 내 미세 강조 — `tabs trigger active`, `calendar dropdown_root` |
+| `--shadow-2-default` | `shadow-2-default` | 2 (default) | 컨텐츠 그룹화 default surface — `card` |
+| `--shadow-3-raised` | `shadow-3-raised` | 3 (raised) | 사용자 트리거로 띄워지는 raised surface — `popover content`, `select content`, `tooltip content` |
+| `--shadow-4-overlay` | `shadow-4-overlay` | 4 (overlay) | 최상위 overlay — Dialog/Sheet/Drawer (해당 컴포넌트 추가 시 적용) |
+
+**원칙:**
+- **자식 위계 ≤ 부모 위계** — popover 안에 떠 있는 select은 부모(popover)와 같은 raised 또는 더 약한 위계만 허용.
+- **외부 override 가능**: `<Card className="shadow-3-raised">` 같이 호출부에서 위계 변경 가능 (Tailwind 우선순위로 자연 동작).
+- **하드코딩 금지**: `shadow-md`/`shadow-sm`/`shadow-xs` 등 Tailwind 기본 토큰 직접 사용 금지 — 4단계 토큰만 사용.
+
 ## 테스트
 
 - 경로: `tests/**/*.test.{ts,tsx}` (Vitest + Testing Library).
