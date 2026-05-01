@@ -14,6 +14,14 @@ export type { ButtonProps } from "./components/ui/button";
 export { Button, buttonVariants } from "./components/ui/button";
 export { Calendar, CalendarDayButton } from "./components/ui/calendar";
 export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./components/ui/card";
+export {
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -50,6 +58,12 @@ export {
 } from "./components/ui/select";
 export { Slider } from "./components/ui/slider";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
+export {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./components/ui/tooltip";
 
 // ============================================================
 // Level 2 — wrapper (PascalCase, 프로젝트 기본 재사용 단위)
