@@ -1,7 +1,9 @@
 import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
+import App from "@/App";
 import Guide from "@/view/guide";
 
 const renderGuide = () =>
@@ -54,6 +56,23 @@ describe("Guide 페이지 — Claude Design system guide", () => {
           expect.stringMatching(/^#/),
         );
       }
+    });
+
+    it("'참고' 그룹에 README와 monorepo starter 외부 링크가 노출된다", () => {
+      renderGuide();
+      const nav = screen.getByRole("navigation", {
+        name: "Design System Guide",
+      });
+      expect(within(nav).getByRole("link", { name: /README/i })).toBeInTheDocument();
+      const repoLink = within(nav).getByRole("link", {
+        name: /monorepo starter/i,
+      });
+      expect(repoLink).toHaveAttribute(
+        "href",
+        "https://github.com/Kwon-Bum-Kyu/scalable-monorepo-starter",
+      );
+      expect(repoLink).toHaveAttribute("target", "_blank");
+      expect(repoLink.getAttribute("rel") ?? "").toMatch(/noopener/);
     });
   });
 
@@ -152,22 +171,95 @@ describe("Guide 페이지 — Claude Design system guide", () => {
   });
 
   describe("Components 섹션", () => {
-    it("Button variants 데모가 노출된다", () => {
+    it("정본 10개 카드 제목이 모두 노출된다", () => {
       renderGuide();
+      const components = document.getElementById("components");
+      expect(components).not.toBeNull();
+      const expected = [
+        "Button · variants",
+        "Button · sizes",
+        "Input · field",
+        "Selection",
+        "Slider",
+        "Badge",
+        "Card",
+        "Toast",
+        "Modal",
+        "Tabs · nav",
+      ];
+      for (const title of expected) {
+        expect(within(components!).getByText(title)).toBeInTheDocument();
+      }
+    });
+
+    it.each([
+      "ButtonGroup",
+      "FormSelect",
+      "DatePicker",
+      "Breadcrumb",
+      "Pagination",
+      "Empty state",
+    ])("'%s' 카드는 더 이상 노출되지 않는다", (name) => {
+      renderGuide();
+      const components = document.getElementById("components");
+      expect(components).not.toBeNull();
+      expect(within(components!).queryByText(name)).toBeNull();
+    });
+
+    it("Selection 카드 안에 checkbox · radio · switch가 함께 노출된다", () => {
+      renderGuide();
+      const components = document.getElementById("components");
+      expect(components).not.toBeNull();
       expect(
-        screen.getByRole("button", { name: "Primary" }),
+        within(components!).getByRole("checkbox", { name: /checkbox/i }),
       ).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: "Secondary" }),
+        within(components!).getByRole("radio", { name: /radio/i }),
+      ).toBeInTheDocument();
+      expect(
+        within(components!).getByRole("switch", { name: /switch/i }),
       ).toBeInTheDocument();
     });
 
-    it("Input · FormSelect · Slider · Tabs · Pagination 데모가 노출된다", () => {
+    it("Toast 카드의 Info 버튼을 클릭하면 토스트가 노출된다", async () => {
+      const user = userEvent.setup();
+      render(
+        <MemoryRouter>
+          <App />
+          <Guide />
+        </MemoryRouter>,
+      );
+      const components = document.getElementById("components");
+      expect(components).not.toBeNull();
+      const infoBtn = within(components!).getByRole("button", { name: "Info" });
+      await user.click(infoBtn);
+      expect(await screen.findByText(/info 토스트/i)).toBeInTheDocument();
+    });
+
+    it("Modal 카드 안에 Dialog와 Drawer 트리거가 함께 노출된다", () => {
       renderGuide();
-      expect(screen.getAllByPlaceholderText("Text input").length).toBe(3);
-      expect(screen.getAllByRole("combobox").length).toBeGreaterThan(0);
-      expect(screen.getAllByRole("slider").length).toBeGreaterThan(0);
-      expect(screen.getByRole("tablist")).toBeInTheDocument();
+      const components = document.getElementById("components");
+      expect(components).not.toBeNull();
+      expect(
+        within(components!).getByRole("button", { name: /dialog 열기/i }),
+      ).toBeInTheDocument();
+      expect(
+        within(components!).getByRole("button", { name: /drawer 열기/i }),
+      ).toBeInTheDocument();
+    });
+
+    it("Badge 카드에 5개 variants 라벨이 노출된다", () => {
+      renderGuide();
+      const badgeTitles = screen.getAllByText("Badge");
+      expect(badgeTitles.length).toBeGreaterThan(0);
+      const badgeCard = badgeTitles[0]?.closest(
+        ".rounded-lg.border",
+      ) as HTMLElement | null;
+      expect(badgeCard).not.toBeNull();
+      const labels = ["Default", "Secondary", "Outline", "Destructive", "Success"];
+      for (const text of labels) {
+        expect(within(badgeCard!).getByText(text)).toBeInTheDocument();
+      }
     });
   });
 
@@ -184,12 +276,23 @@ describe("Guide 페이지 — Claude Design system guide", () => {
   });
 
   describe("UI Kit 섹션", () => {
-    it("후속 슬러그(Slug E) 안내 헤딩이 노출된다", () => {
+    it("후속 슬러그 placeholder는 더 이상 노출되지 않는다", () => {
       renderGuide();
       expect(
-        screen.getByRole("heading", {
-          name: /후속 슬러그\(Slug E\)에서 통합 스토리 작성 예정/,
-        }),
+        screen.queryByText(/후속 슬러그\(Slug E\)에서 통합 스토리 작성 예정/),
+      ).not.toBeInTheDocument();
+    });
+
+    it("정본 표기 '전체 화면으로 열기 → README .tsx · Babel standalone'가 노출된다", () => {
+      renderGuide();
+      const uikit = document.getElementById("uikit");
+      expect(uikit).not.toBeNull();
+      expect(
+        within(uikit!).getByText(/전체 화면으로 열기/),
+      ).toBeInTheDocument();
+      expect(within(uikit!).getByText(/README/)).toBeInTheDocument();
+      expect(
+        within(uikit!).getByText(/Babel standalone/),
       ).toBeInTheDocument();
     });
   });

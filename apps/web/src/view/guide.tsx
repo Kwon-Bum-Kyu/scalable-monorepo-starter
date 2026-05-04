@@ -1,26 +1,50 @@
 import {
+  Badge,
   Button,
-  ButtonGroup,
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  DatePicker,
-  Empty,
-  FormSelect,
+  Checkbox,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
   Input,
-  SimpleBreadcrumb,
-  SimplePagination,
+  Label,
+  RadioGroup,
+  RadioGroupItem,
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
   SimpleTabs,
   Slider,
+  Switch,
   SystemIcon,
-  Typography,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  toast,
 } from "@repo/ui";
 import React, { useState } from "react";
 
-type SidebarLink = { href: string; label: string };
+type SidebarLink = {
+  href: string;
+  label: string;
+  external?: boolean;
+};
 type SidebarGroup = { title: string; links: ReadonlyArray<SidebarLink> };
+
+const REPO_URL = "https://github.com/Kwon-Bum-Kyu/scalable-monorepo-starter";
 
 const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
   {
@@ -49,6 +73,13 @@ const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
   {
     title: "UI Kit",
     links: [{ href: "#uikit", label: "웹 UI Kit" }],
+  },
+  {
+    title: "참고",
+    links: [
+      { href: "#overview", label: "README" },
+      { href: REPO_URL, label: "monorepo starter ↗", external: true },
+    ],
   },
 ];
 
@@ -434,6 +465,13 @@ const Sidebar = () => (
                   <a
                     href={link.href}
                     className="block rounded-md px-2 py-1.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    {...(link.external
+                      ? {
+                          target: "_blank",
+                          rel: "noopener noreferrer",
+                          "aria-label": `${link.label} (외부 링크)`,
+                        }
+                      : null)}
                   >
                     {link.label}
                   </a>
@@ -747,21 +785,17 @@ const BreakpointsSection = () => (
 const ComponentsSection = ({
   sliderValue,
   onSliderChange,
-  date,
-  onDateChange,
+  rangeValue,
+  onRangeChange,
   activeTab,
   onActiveTabChange,
-  page,
-  onPageChange,
 }: {
   sliderValue: number[];
   onSliderChange: (value: number[]) => void;
-  date: Date | undefined;
-  onDateChange: (date: Date | undefined) => void;
+  rangeValue: number[];
+  onRangeChange: (value: number[]) => void;
   activeTab: string;
   onActiveTabChange: (value: string) => void;
-  page: number;
-  onPageChange: (page: number) => void;
 }) => (
   <Section
     id="components"
@@ -770,118 +804,203 @@ const ComponentsSection = ({
     description="shadcn/ui 베이스 위에 KBK 브랜드 색을 입힌 핵심 컴포넌트."
   >
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      <TokenCard title="Button · variants" hint="default · secondary · outline">
+      <TokenCard title="Button · variants" hint="6 variants">
         <div className="flex flex-wrap gap-2">
           <Button variant="default">Primary</Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="outline">Outline</Button>
-          <Button variant="default" disabled>
-            Disabled
+          <Button variant="ghost">Ghost</Button>
+          <Button variant="link">Link</Button>
+          <Button variant="destructive">Destructive</Button>
+        </div>
+      </TokenCard>
+
+      <TokenCard title="Button · sizes" hint="sm · md · lg · icon">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button size="sm">Small</Button>
+          <Button size="default">Medium</Button>
+          <Button size="lg">Large</Button>
+          <Button size="icon" aria-label="아이콘 버튼">
+            <span aria-hidden>★</span>
           </Button>
         </div>
       </TokenCard>
 
-      <TokenCard title="ButtonGroup" hint="textual · icon">
-        <div className="flex flex-col gap-4">
-          <ButtonGroup>
-            <Button variant="default">Button 1</Button>
-            <Button variant="default">Button 2</Button>
-            <Button variant="default" disabled>
-              Button 3
-            </Button>
-          </ButtonGroup>
-          <ButtonGroup>
-            <Button variant="outline" size="icon" aria-label="아이콘 1">
-              <SystemIcon name="eye" size={16} />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              aria-label="아이콘 2"
-              disabled
-            >
-              <SystemIcon name="close" size={16} />
-            </Button>
-          </ButtonGroup>
-        </div>
-      </TokenCard>
-
-      <TokenCard title="Input · field" hint="default · invalid · disabled">
-        <div className="flex flex-col gap-2">
-          <Input placeholder="Text input" />
-          <Input placeholder="Text input" aria-invalid />
+      <TokenCard title="Input · field" hint="label · hint · error">
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="guide-input-default">Label</Label>
+            <Input id="guide-input-default" placeholder="Text input" />
+            <p className="text-xs text-gray-400">Assistive text</p>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="guide-input-error">Label</Label>
+            <Input
+              id="guide-input-error"
+              placeholder="Text input"
+              aria-invalid
+            />
+            <p className="text-xs text-system-red">Error message</p>
+          </div>
           <Input placeholder="Text input" disabled />
         </div>
       </TokenCard>
 
-      <TokenCard title="FormSelect" hint="label · assistive · error">
-        <div className="flex flex-col gap-3">
-          <FormSelect
-            label="Label"
-            assistiveText="Assistive text"
-            placeholder="Select"
-            options={[
-              { label: "Item 1", value: "1" },
-              { label: "Item 2", value: "2" },
-              { label: "Item 3", value: "3" },
-            ]}
-            value="2"
-          />
-          <FormSelect
-            label="Label"
-            errorMessage="Error message"
-            options={[{ label: "Item 1", value: "1" }]}
-            value="1"
-            disabled
-          />
+      <TokenCard title="Selection" hint="checkbox · radio · switch">
+        <div className="flex flex-wrap items-center gap-6">
+          <label className="flex items-center gap-2 text-sm">
+            <Checkbox aria-label="checkbox" />
+            Checkbox
+          </label>
+          <RadioGroup defaultValue="a" className="flex gap-3">
+            <label className="flex items-center gap-2 text-sm">
+              <RadioGroupItem value="a" aria-label="radio" />
+              Radio
+            </label>
+          </RadioGroup>
+          <label className="flex items-center gap-2 text-sm">
+            <Switch aria-label="switch" />
+            Switch
+          </label>
         </div>
       </TokenCard>
 
-      <TokenCard title="Slider" hint="single · step · disabled">
+      <TokenCard title="Slider" hint="single · range">
         <div className="flex flex-col gap-4">
           <Slider value={sliderValue} onValueChange={onSliderChange} />
-          <Slider
-            value={sliderValue}
-            onValueChange={onSliderChange}
-            step={10}
-          />
-          <Slider value={sliderValue} onValueChange={() => {}} disabled />
+          <Slider value={rangeValue} onValueChange={onRangeChange} />
         </div>
       </TokenCard>
 
-      <TokenCard title="DatePicker" hint="popover · calendar">
-        <DatePicker value={date} onSelect={onDateChange} />
+      <TokenCard title="Badge" hint="5 variants">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="default">Default</Badge>
+          <Badge variant="secondary">Secondary</Badge>
+          <Badge variant="outline">Outline</Badge>
+          <Badge variant="destructive">Destructive</Badge>
+          <Badge variant="success">Success</Badge>
+        </div>
       </TokenCard>
 
-      <TokenCard title="Breadcrumb" hint="Home › Products">
-        <SimpleBreadcrumb
-          items={[{ label: "Home", href: "/" }, { label: "Products" }]}
-        />
+      <TokenCard title="Card" hint="header · body · footer">
+        <Card className="shadow-2-default">
+          <CardHeader>
+            <CardTitle>Card 제목</CardTitle>
+            <CardDescription>header · body · footer 컴포지션</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm leading-6 text-gray-700">
+              본문 영역. 길이가 길어지면 자동으로 줄바꿈됩니다.
+            </p>
+          </CardContent>
+          <CardFooter>
+            <Button size="sm" variant="outline">
+              Footer 액션
+            </Button>
+          </CardFooter>
+        </Card>
       </TokenCard>
 
-      <TokenCard title="Tabs" hint="3 tabs">
-        <SimpleTabs
-          items={[
-            { value: "Tab 1", label: "Tab 1", content: "Content 1" },
-            { value: "Tab 2", label: "Tab 2", content: "Content 2" },
-            { value: "Tab 3", label: "Tab 3", content: "Content 3" },
-          ]}
-          value={activeTab}
-          onValueChange={onActiveTabChange}
-        />
+      <TokenCard title="Toast" hint="info · success · warn · error">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => toast.info("Info 토스트")}
+          >
+            Info
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => toast.success("Success 토스트")}
+          >
+            Success
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => toast.warning("Warning 토스트")}
+          >
+            Warning
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => toast.error("Error 토스트")}
+          >
+            Error
+          </Button>
+        </div>
       </TokenCard>
 
-      <TokenCard title="Pagination" hint="10 pages">
-        <SimplePagination current={page} total={10} onChange={onPageChange} />
+      <TokenCard title="Modal" hint="dialog · drawer">
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="default" size="sm">
+                  Dialog 열기
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Dialog 제목</DialogTitle>
+                  <DialogDescription>
+                    중앙 정렬 modal — focus trap · ESC 닫기 지원.
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <Button variant="outline" size="sm">
+                    닫기
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="sm">
+                  Drawer 열기
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <SheetHeader>
+                  <SheetTitle>Drawer 제목</SheetTitle>
+                  <SheetDescription>
+                    측면에서 슬라이드되는 modal — 동일 Radix primitive 컴포지션.
+                  </SheetDescription>
+                </SheetHeader>
+              </SheetContent>
+            </Sheet>
+          </div>
+          <p className="font-mono text-xs text-gray-400">
+            dialog · drawer 는 동일 Radix primitive 위 컴포지션 패턴
+          </p>
+        </div>
       </TokenCard>
 
-      <TokenCard title="Empty state" hint="title · description · icon">
+      <TokenCard title="Tabs · nav" hint="underline · pill">
         <div className="flex flex-col gap-4">
-          <Empty title="데이터가 없습니다" />
-          <Empty
-            title="결과 없음"
-            description="검색어를 다시 확인해 주세요"
-            icon={<SystemIcon name="info" size={24} />}
+          <Tabs defaultValue="a">
+            <TabsList>
+              <TabsTrigger value="a">Underline A</TabsTrigger>
+              <TabsTrigger value="b">Underline B</TabsTrigger>
+            </TabsList>
+            <TabsContent value="a">
+              <p className="mt-3 text-sm text-gray-700">Underline 콘텐츠 A</p>
+            </TabsContent>
+            <TabsContent value="b">
+              <p className="mt-3 text-sm text-gray-700">Underline 콘텐츠 B</p>
+            </TabsContent>
+          </Tabs>
+          <SimpleTabs
+            items={[
+              { value: "Tab 1", label: "Pill 1", content: "Pill 콘텐츠 1" },
+              { value: "Tab 2", label: "Pill 2", content: "Pill 콘텐츠 2" },
+            ]}
+            value={activeTab}
+            onValueChange={onActiveTabChange}
           />
         </div>
       </TokenCard>
@@ -937,17 +1056,10 @@ const UIKitSection = () => (
     title="웹 UI Kit (TypeScript)"
     description="토큰과 컴포넌트를 조합한 실제 화면. 랜딩 → 인증 → 대시보드 플로우 포함."
   >
-    <Card className="border border-dashed border-gray-100 bg-gray-50/40 shadow-1-subtle">
+    <Card className="shadow-1-subtle">
       <CardContent className="pt-6">
-        <div className="font-mono text-xs text-gray-400">UI Kit · TODO</div>
-        <Typography variant="h3" className="mt-2">
-          후속 슬러그(Slug E)에서 통합 스토리 작성 예정
-        </Typography>
-        <p className="mt-3 text-sm leading-6 text-gray-700">
-          ui_kits/web/index.html (Babel standalone)에 해당하는 통합 데모는
-          Storybook 기반의 별도 슬러그(Slug E:
-          storybook-guide-stories)에서 다룹니다. 본 페이지에서는 위 섹션의
-          토큰·컴포넌트 데모로 대체합니다.
+        <p className="text-sm leading-6 text-gray-700">
+          전체 화면으로 열기 → README .tsx · Babel standalone
         </p>
       </CardContent>
     </Card>
@@ -956,9 +1068,8 @@ const UIKitSection = () => (
 
 const Guide = () => {
   const [sliderValue, setSliderValue] = useState<number[]>([50]);
-  const [date, setDate] = useState<Date | undefined>();
+  const [rangeValue, setRangeValue] = useState<number[]>([20, 80]);
   const [activeTab, setActiveTab] = useState("Tab 1");
-  const [page, setPage] = useState(1);
 
   return (
     <div className="flex w-full gap-8 py-10">
@@ -973,12 +1084,10 @@ const Guide = () => {
         <ComponentsSection
           sliderValue={sliderValue}
           onSliderChange={setSliderValue}
-          date={date}
-          onDateChange={setDate}
+          rangeValue={rangeValue}
+          onRangeChange={setRangeValue}
           activeTab={activeTab}
           onActiveTabChange={setActiveTab}
-          page={page}
-          onPageChange={setPage}
         />
         <BrandSection />
         <UIKitSection />
