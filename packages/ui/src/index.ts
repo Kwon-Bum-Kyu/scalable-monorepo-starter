@@ -1,6 +1,9 @@
 // ============================================================
 // Level 1 — shadcn 원본 (src/components/ui/*)
 // ============================================================
+export type { BadgeProps } from "./components/ui/badge";
+export { Badge } from "./components/ui/badge";
+export { badgeVariants } from "./components/ui/badge-variants";
 export {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -29,6 +32,18 @@ export {
   CarouselPrevious,
 } from "./components/ui/carousel";
 export { Checkbox } from "./components/ui/checkbox";
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+} from "./components/ui/dialog";
 export { Input } from "./components/ui/input";
 export { Label } from "./components/ui/label";
 export {
@@ -56,7 +71,21 @@ export {
   SelectTrigger,
   SelectValue,
 } from "./components/ui/select";
+export {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetOverlay,
+  SheetPortal,
+  SheetTitle,
+  SheetTrigger,
+} from "./components/ui/sheet";
 export { Slider } from "./components/ui/slider";
+export { Toaster } from "./components/ui/sonner";
+export { Switch } from "./components/ui/switch";
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
 export {
   Tooltip,
@@ -64,6 +93,7 @@ export {
   TooltipProvider,
   TooltipTrigger,
 } from "./components/ui/tooltip";
+export { toast } from "sonner";
 
 // ============================================================
 // Level 2 — wrapper (PascalCase, 프로젝트 기본 재사용 단위)
