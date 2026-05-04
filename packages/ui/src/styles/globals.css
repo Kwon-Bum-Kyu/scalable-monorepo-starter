@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -5,6 +6,7 @@
 
 @theme {
   --font-family-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: "Roboto Mono", ui-monospace, SFMono-Regular, monospace;
 
   /* Font sizes */
   --font-size-xs: 12px;
@@ -122,6 +124,20 @@
   --shadow-4-overlay: 0 8px 12px -2px rgba(22,22,19,0.1),
                       0 20px 36px -8px rgba(225,233,239,0.75);
 }
+
+/* ───────── Open Sans 12 face — 본 모노레포 동봉 (apps/web/public/fonts/) ───────── */
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-Light.ttf") format("truetype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-LightItalic.ttf") format("truetype"); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-MediumItalic.ttf") format("truetype"); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-SemiBoldItalic.ttf") format("truetype"); font-weight: 600; font-style: italic; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-ExtraBold.ttf") format("truetype"); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-ExtraBoldItalic.ttf") format("truetype"); font-weight: 800; font-style: italic; font-display: swap; }
 
 /* ───────── :root: shadcn semantic 토큰 ───────── */
 :root {

@@ -13,6 +13,10 @@ const config: StorybookConfig = {
   // stories 경로: apps/storybook/stories 및 apps/web/src 컴포넌트 참조
   stories: ["../stories/**/*.stories.@(ts|tsx|js|jsx|mdx)"],
 
+  // 정적 자산 dev 서버 매핑 — apps/web/public 을 SSOT 로 사용
+  // (font-family-extension 슬러그 FR-FF-5 + Q-FF-B = 1, .claude/rules/monorepo-invariants.md §1 staticDirs 예외)
+  staticDirs: ["../../web/public"],
+
   addons: ["@storybook/addon-docs", "@storybook/addon-a11y"],
 
   core: {
