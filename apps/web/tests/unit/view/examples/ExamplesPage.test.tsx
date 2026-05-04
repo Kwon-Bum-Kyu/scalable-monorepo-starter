@@ -135,11 +135,12 @@ describe("ExamplesPage", () => {
   });
 
   it("마운트 시 목록이 자동 로드되고 aria-busy가 true→false로 전환된다", async () => {
-    let resolveList: ((value: { items: ReturnType<typeof sampleItems> }) => void) | null = null;
+    type ListResolve = (value: { items: ReturnType<typeof sampleItems> }) => void;
+    let resolveList: ListResolve | null = null;
     (fetchExamplesList as ReturnType<typeof vi.fn>).mockImplementationOnce(
       () =>
-        new Promise((resolve) => {
-          resolveList = resolve as typeof resolveList;
+        new Promise<{ items: ReturnType<typeof sampleItems> }>((resolve) => {
+          resolveList = resolve;
         }),
     );
 
@@ -150,7 +151,7 @@ describe("ExamplesPage", () => {
     expect(section).not.toBeNull();
     expect(section).toHaveAttribute("aria-busy", "true");
 
-    resolveList?.({ items: sampleItems(2) });
+    (resolveList as ListResolve | null)?.({ items: sampleItems(2) });
 
     await waitFor(() => {
       expect(section).toHaveAttribute("aria-busy", "false");
@@ -276,12 +277,12 @@ describe("ExamplesPage", () => {
   it("mutation 진행 중에는 두 번째 제출이 무시된다", async () => {
     const user = userEvent.setup();
 
-    let resolveCreate: ((value: ReturnType<typeof detailFixture>) => void) | null =
-      null;
+    type CreateResolve = (value: ReturnType<typeof detailFixture>) => void;
+    let resolveCreate: CreateResolve | null = null;
     (createExample as ReturnType<typeof vi.fn>).mockImplementationOnce(
       () =>
-        new Promise((resolve) => {
-          resolveCreate = resolve as typeof resolveCreate;
+        new Promise<ReturnType<typeof detailFixture>>((resolve) => {
+          resolveCreate = resolve;
         }),
     );
 
@@ -300,7 +301,7 @@ describe("ExamplesPage", () => {
 
     expect(createExample).toHaveBeenCalledTimes(1);
 
-    resolveCreate?.(detailFixture({ id: "new-id", title: "이중 클릭" }));
+    (resolveCreate as CreateResolve | null)?.(detailFixture({ id: "new-id", title: "이중 클릭" }));
 
     await waitFor(() => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
