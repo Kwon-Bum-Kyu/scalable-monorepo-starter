@@ -307,10 +307,10 @@ const RADIUS_SCALE: ReadonlyArray<{
   className: string;
 }> = [
   { token: "--radius-none", size: "0", className: "rounded-none" },
-  { token: "--radius-sm", size: "8px", className: "rounded-sm" },
-  { token: "--radius-md", size: "10px", className: "rounded-md" },
-  { token: "--radius-lg", size: "12px", className: "rounded-lg" },
-  { token: "--radius-xl", size: "16px", className: "rounded-xl" },
+  { token: "--radius-sm", size: "4px", className: "rounded-sm" },
+  { token: "--radius-md", size: "6px", className: "rounded-md" },
+  { token: "--radius-lg", size: "8px", className: "rounded-lg" },
+  { token: "--radius-xl", size: "12px", className: "rounded-xl" },
   { token: "--radius-2xl", size: "24px", className: "rounded-2xl" },
   { token: "--radius-full", size: "9999px", className: "rounded-full" },
 ];
@@ -444,7 +444,7 @@ const TokenCard = ({
   children: React.ReactNode;
   frameClassName?: string;
 }) => (
-  <Card className="overflow-hidden shadow-2-default">
+  <Card variant="subtle" className="overflow-hidden rounded-xl">
     <CardContent
       data-testid="card-frame"
       className={`min-w-0 max-w-full bg-gray-50 p-6 ${frameClassName ?? ""}`}
