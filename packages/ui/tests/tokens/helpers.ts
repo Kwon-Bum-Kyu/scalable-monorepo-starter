@@ -103,3 +103,27 @@ export function getThemeBlockSource(): string {
 export function clearGlobalsCache(): void {
   cachedSource = null;
 }
+
+/**
+ * font-family 토큰의 첫 번째 패밀리가 기대값과 일치하는지 단언.
+ *
+ * `--font-family-*` 토큰은 fallback chain(쉼표 구분)을 가질 수 있으므로,
+ * 첫 번째 패밀리만 잘라내 따옴표/공백을 제거한 후 비교한다.
+ *
+ * @param name 토큰 이름 (예: "--font-family-mono")
+ * @param expectedFirstFamily 기대하는 첫 번째 패밀리 이름 (예: "Roboto Mono")
+ */
+export function assertFontFamilyToken(
+  name: string,
+  expectedFirstFamily: string,
+): void {
+  const value = getCssVar(name);
+  const firstFamily = value
+    .split(",")[0]
+    .replace(/^["']|["']$/g, "")
+    .trim();
+  expect(
+    firstFamily,
+    `${name} 첫 번째 패밀리가 ${expectedFirstFamily}이어야 하지만 ${firstFamily}였습니다`,
+  ).toBe(expectedFirstFamily);
+}
