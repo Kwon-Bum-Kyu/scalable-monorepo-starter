@@ -437,21 +437,39 @@ const TokenCard = ({
   title,
   hint,
   children,
+  frameClassName,
 }: {
   title: string;
   hint?: string;
   children: React.ReactNode;
+  frameClassName?: string;
 }) => (
-  <Card className="shadow-2-default">
-    <CardHeader className="flex flex-row items-baseline justify-between gap-3">
-      <CardTitle className="text-base font-semibold">{title}</CardTitle>
+  <Card className="overflow-hidden shadow-2-default">
+    <CardContent
+      data-testid="card-frame"
+      className={`min-w-0 max-w-full bg-gray-50 p-6 ${frameClassName ?? ""}`}
+    >
+      {children}
+    </CardContent>
+    <CardFooter
+      data-testid="card-meta"
+      className="flex items-baseline justify-between gap-3 border-t border-gray-50 px-4 py-3.5"
+    >
+      <CardTitle
+        data-testid="card-meta-title"
+        className="text-sm font-semibold"
+      >
+        {title}
+      </CardTitle>
       {hint ? (
-        <CardDescription className="font-mono text-xs text-gray-400">
+        <CardDescription
+          data-testid="card-meta-hint"
+          className="font-mono text-xs text-gray-400"
+        >
           {hint}
         </CardDescription>
       ) : null}
-    </CardHeader>
-    <CardContent>{children}</CardContent>
+    </CardFooter>
   </Card>
 );
 
