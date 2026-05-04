@@ -163,7 +163,8 @@ const SYSTEM_COLORS: ReadonlyArray<ColorRow> = [
 const FONT_FAMILIES: ReadonlyArray<{
   token: string;
   family: string;
-  className: string;
+  className?: string;
+  inlineFamilyVar?: string;
   sample: string;
 }> = [
   {
@@ -177,6 +178,18 @@ const FONT_FAMILIES: ReadonlyArray<{
     family: "Roboto Mono (400/500/700)",
     className: "font-mono",
     sample: "const tokens = { sans: 'Open Sans' };",
+  },
+  {
+    token: "--font-family-display",
+    family: "Roboto Mono (display)",
+    inlineFamilyVar: "--font-family-display",
+    sample: "Display · KBK Monorepo Design",
+  },
+  {
+    token: "--font-family-body-alt",
+    family: "PT Sans (body-alt)",
+    inlineFamilyVar: "--font-family-body-alt",
+    sample: "본문 보조 패밀리. 긴 본문이나 기사 톤 콘텐츠에 사용한다.",
   },
 ];
 
@@ -299,6 +312,7 @@ const RADIUS_SCALE: ReadonlyArray<{
   { token: "--radius-lg", size: "12px", className: "rounded-lg" },
   { token: "--radius-xl", size: "16px", className: "rounded-xl" },
   { token: "--radius-2xl", size: "24px", className: "rounded-2xl" },
+  { token: "--radius-full", size: "9999px", className: "rounded-full" },
 ];
 
 const SHADOW_SCALE: ReadonlyArray<{
@@ -579,7 +593,7 @@ const TypographySection = () => (
     id="type"
     eyebrow="Tokens · Typography"
     title="타이포그래피"
-    description="Open Sans (sans, 로컬 .ttf 12 face), Roboto Mono (mono, CDN)."
+    description="Open Sans (sans, 로컬 .ttf 12 face) · Roboto Mono (mono · display, CDN) · PT Sans (body-alt, CDN)."
   >
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <TokenCard title="Families" hint="--font-family-*">
@@ -594,7 +608,14 @@ const TypographySection = () => (
                   {f.family}
                 </span>
               </div>
-              <p className={`${f.className} mt-2 text-base text-gray-900`}>
+              <p
+                className={`${f.className ?? ""} mt-2 text-base text-gray-900`}
+                style={
+                  f.inlineFamilyVar
+                    ? { fontFamily: `var(${f.inlineFamilyVar})` }
+                    : undefined
+                }
+              >
                 {f.sample}
               </p>
             </li>
