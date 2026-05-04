@@ -21,6 +21,7 @@ export interface SimpleTabsProps {
   onValueChange?: (value: string) => void;
   className?: string;
   listClassName?: string;
+  variant?: "underline" | "pill" | "boxed";
 }
 
 function SimpleTabs({
@@ -30,6 +31,7 @@ function SimpleTabs({
   onValueChange,
   className,
   listClassName,
+  variant,
 }: SimpleTabsProps): React.JSX.Element {
   return (
     <Tabs
@@ -38,7 +40,7 @@ function SimpleTabs({
       onValueChange={onValueChange}
       className={cn(className)}
     >
-      <TabsList className={cn(listClassName)}>
+      <TabsList variant={variant} className={cn(listClassName)}>
         {items.map((item) => (
           <TabsTrigger
             key={item.value}

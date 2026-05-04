@@ -1022,7 +1022,7 @@ const ComponentsSection = ({
       <TokenCard title="Tabs · nav" hint="underline · pill">
         <div className="flex flex-col gap-4">
           <Tabs defaultValue="a">
-            <TabsList>
+            <TabsList variant="underline">
               <TabsTrigger value="a">Underline A</TabsTrigger>
               <TabsTrigger value="b">Underline B</TabsTrigger>
             </TabsList>
@@ -1034,6 +1034,7 @@ const ComponentsSection = ({
             </TabsContent>
           </Tabs>
           <SimpleTabs
+            variant="pill"
             items={[
               { value: "Tab 1", label: "Pill 1", content: "Pill 콘텐츠 1" },
               { value: "Tab 2", label: "Pill 2", content: "Pill 콘텐츠 2" },
