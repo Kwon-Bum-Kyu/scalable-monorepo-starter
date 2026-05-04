@@ -1,6 +1,6 @@
 import "./App.css";
 
-import { Typography } from "@repo/ui";
+import { Toaster, Typography } from "@repo/ui";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 
@@ -10,6 +10,7 @@ function App() {
       <div className="min-h-screen">
         <Outlet />
       </div>
+      <Toaster />
     </Suspense>
   );
 }
