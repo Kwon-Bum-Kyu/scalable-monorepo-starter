@@ -152,7 +152,7 @@ describe("Roboto Mono CDN @import (FR-FF-3)", () => {
     ).toBe(true);
   });
 
-  it("PT Sans는 @import에 포함되지 않는다 (D-FF-3 보류)", () => {
+  it("PT Sans도 별도 @import 라인으로 포함된다 (D-FF-3 뒤집힘 — 2026-05-05)", () => {
     const source = readGlobalsRaw();
     const importMatches = source.match(/@import\s+url\([^)]+\)\s*;?/g) ?? [];
     const ptSansImport = importMatches.find((line) =>
@@ -160,8 +160,8 @@ describe("Roboto Mono CDN @import (FR-FF-3)", () => {
     );
     expect(
       ptSansImport,
-      "PT Sans는 D-FF-3 결정에 따라 @import 대상이 아닙니다 (실제: 발견됨)",
-    ).toBeUndefined();
+      "PT Sans는 D-FF-3 뒤집힘(claude-design-page-alignment ralph R1)에 따라 별도 @import 대상입니다",
+    ).toBeDefined();
   });
 });
 
