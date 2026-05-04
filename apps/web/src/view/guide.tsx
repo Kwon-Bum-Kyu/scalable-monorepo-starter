@@ -71,10 +71,6 @@ const SIDEBAR_GROUPS: ReadonlyArray<SidebarGroup> = [
     ],
   },
   {
-    title: "UI Kit",
-    links: [{ href: "#uikit", label: "웹 UI Kit" }],
-  },
-  {
     title: "참고",
     links: [
       { href: "#overview", label: "README" },
@@ -1089,23 +1085,6 @@ const BrandSection = () => (
   </Section>
 );
 
-const UIKitSection = () => (
-  <Section
-    id="uikit"
-    eyebrow="UI Kit"
-    title="웹 UI Kit (TypeScript)"
-    description="토큰과 컴포넌트를 조합한 실제 화면. 랜딩 → 인증 → 대시보드 플로우 포함."
-  >
-    <Card className="shadow-1-subtle">
-      <CardContent className="pt-6">
-        <p className="text-sm leading-6 text-gray-700">
-          전체 화면으로 열기 → README .tsx · Babel standalone
-        </p>
-      </CardContent>
-    </Card>
-  </Section>
-);
-
 const Guide = () => {
   const [sliderValue, setSliderValue] = useState<number[]>([50]);
   const [rangeValue, setRangeValue] = useState<number[]>([20, 80]);
@@ -1130,7 +1109,6 @@ const Guide = () => {
           onActiveTabChange={setActiveTab}
         />
         <BrandSection />
-        <UIKitSection />
       </div>
     </div>
   );

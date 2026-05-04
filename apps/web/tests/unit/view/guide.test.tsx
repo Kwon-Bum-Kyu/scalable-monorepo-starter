@@ -48,7 +48,6 @@ describe("Guide 페이지 — Claude Design system guide", () => {
         "브레이크포인트",
         "기본 컴포넌트",
         "로고 · 아이콘",
-        "웹 UI Kit",
       ];
       for (const label of expected) {
         expect(within(nav).getByRole("link", { name: label })).toHaveAttribute(
@@ -76,7 +75,7 @@ describe("Guide 페이지 — Claude Design system guide", () => {
     });
   });
 
-  describe("9개 섹션 헤딩", () => {
+  describe("8개 섹션 헤딩", () => {
     it.each([
       ["디자인 시스템 한눈에 보기", 1],
       ["5가지 원칙", 2],
@@ -86,7 +85,6 @@ describe("Guide 페이지 — Claude Design system guide", () => {
       ["브레이크포인트", 2],
       ["기본 컴포넌트", 2],
       ["로고 · 아이콘", 2],
-      ["웹 UI Kit (TypeScript)", 2],
     ] as const)("'%s' 헤딩이 level %i로 렌더링된다", (name, level) => {
       renderGuide();
       expect(screen.getByRole("heading", { name, level })).toBeInTheDocument();
@@ -253,7 +251,7 @@ describe("Guide 페이지 — Claude Design system guide", () => {
       const badgeTitles = screen.getAllByText("Badge");
       expect(badgeTitles.length).toBeGreaterThan(0);
       const badgeCard = badgeTitles[0]?.closest(
-        ".rounded-lg.border",
+        "[data-slot='card'], .rounded-xl, .rounded-lg",
       ) as HTMLElement | null;
       expect(badgeCard).not.toBeNull();
       const labels = ["Default", "Secondary", "Outline", "Destructive", "Success"];
@@ -275,25 +273,4 @@ describe("Guide 페이지 — Claude Design system guide", () => {
     });
   });
 
-  describe("UI Kit 섹션", () => {
-    it("후속 슬러그 placeholder는 더 이상 노출되지 않는다", () => {
-      renderGuide();
-      expect(
-        screen.queryByText(/후속 슬러그\(Slug E\)에서 통합 스토리 작성 예정/),
-      ).not.toBeInTheDocument();
-    });
-
-    it("정본 표기 '전체 화면으로 열기 → README .tsx · Babel standalone'가 노출된다", () => {
-      renderGuide();
-      const uikit = document.getElementById("uikit");
-      expect(uikit).not.toBeNull();
-      expect(
-        within(uikit!).getByText(/전체 화면으로 열기/),
-      ).toBeInTheDocument();
-      expect(within(uikit!).getByText(/README/)).toBeInTheDocument();
-      expect(
-        within(uikit!).getByText(/Babel standalone/),
-      ).toBeInTheDocument();
-    });
-  });
 });
