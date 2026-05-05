@@ -13,6 +13,8 @@ import { expect, test } from "@playwright/test";
  *  - 목록/생성/수정/삭제 응답이 `{ success, data }` envelope으로 들어와도
  *    UI 상에서 행이 정확히 렌더링되어야 한다 (ApiClient 단일 언래핑).
  */
+const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 test.describe("Examples CRUD 흐름", () => {
   const uniqueSuffix = () => `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
@@ -42,7 +44,9 @@ test.describe("Examples CRUD 흐름", () => {
 
     // 다이얼로그 닫힘 + 새 행 노출
     await expect(dialog).toBeHidden();
-    const createdRow = page.getByRole("row", { name: new RegExp(initialTitle) });
+    const createdRow = page.getByRole("row", {
+      name: new RegExp(escapeRegex(initialTitle)),
+    });
     await expect(createdRow).toBeVisible();
 
     // 3) 수정: Edit 버튼 -> 제목 갱신 -> Save
@@ -62,7 +66,7 @@ test.describe("Examples CRUD 흐름", () => {
 
     await expect(editDialog).toBeHidden();
     await expect(
-      page.getByRole("row", { name: new RegExp(updatedTitle) }),
+      page.getByRole("row", { name: new RegExp(escapeRegex(updatedTitle)) }),
     ).toBeVisible();
 
     // 4) 삭제: Delete 버튼 -> 행이 목록에서 사라짐
@@ -75,7 +79,7 @@ test.describe("Examples CRUD 흐름", () => {
       .click();
 
     await expect(
-      page.getByRole("row", { name: new RegExp(updatedTitle) }),
+      page.getByRole("row", { name: new RegExp(escapeRegex(updatedTitle)) }),
     ).toHaveCount(0);
   });
 });

@@ -11,6 +11,10 @@
     "./globals.css": "./src/styles/globals.css",
     "./lib/*": "./src/lib/*.ts",
     "./hooks/*": "./src/hooks/*.ts",
+    "./components/badge-variants": "./src/components/ui/badge-variants.ts",
+    "./components/button-variants": "./src/components/ui/button-variants.ts",
+    "./components/card-variants": "./src/components/ui/card-variants.ts",
+    "./components/tabs-variants": "./src/components/ui/tabs-variants.ts",
     "./components/*": "./src/components/ui/*.tsx"
   },
   "scripts": {

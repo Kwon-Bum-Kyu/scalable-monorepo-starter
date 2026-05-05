@@ -174,6 +174,12 @@ export class ApiClient {
     response: Response,
   ): Promise<UnwrappedResponse<T>> {
     const requestId = response.headers.get("X-Request-Id") ?? undefined;
+
+    if (response.status === 204) {
+      const emptyResult: UnwrappedResponse<T> = { data: null as T };
+      return this.applyResponseInterceptors(emptyResult);
+    }
+
     const body = await this.parseBody(response);
 
     if (!isApiResponseEnvelope(body)) {

@@ -29,14 +29,17 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+      testIgnore: /visual-regression\.spec\.ts/,
     },
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
+      testIgnore: /visual-regression\.spec\.ts/,
     },
     {
       name: "webkit",
       use: { ...devices["Desktop Safari"] },
+      testIgnore: /visual-regression\.spec\.ts/,
     },
     /* Visual regression matrix — 4 viewport × 5 라우트 = 20 스냅샷 (claude-design-system-migration) */
     {

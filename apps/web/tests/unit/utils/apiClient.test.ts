@@ -115,6 +115,18 @@ describe("ApiClient envelope 언래핑", () => {
     });
   });
 
+  it("apiClient가 204 No Content 응답을 받을 때 정상 결과를 반환한다", async () => {
+    const client = new ApiClient({ ...DEFAULT_CONFIG, retryCount: 0 });
+    (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+      new Response(null, { status: 204 }),
+    );
+
+    const result = await client.delete<null>("examples/1");
+
+    expect(result.data).toBeNull();
+    expect(result.meta).toBeUndefined();
+  });
+
   it("apiClient가 5xx HTTP status일 때 retry 후에도 실패하면 throw한다", async () => {
     const client = new ApiClient({
       ...DEFAULT_CONFIG,
