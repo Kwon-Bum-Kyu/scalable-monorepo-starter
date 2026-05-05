@@ -39,27 +39,17 @@ cd <workspace> && npx eslint . --fix --max-warnings=0
 
 `--max-warnings=0`은 최종 판정용이며, `--fix`는 수정 가능한 규칙(import sort·prettier·no-var 등)만 처리한다.
 
-### 4단계: 재실행 및 위임 분배
+### 4단계: 재실행 및 잔여 위반 정리
 
 ```bash
 turbo run lint
 ```
 
-잔여 위반을 워크스페이스별로 모아 개발자에게 SendMessage:
-
-| 워크스페이스 | 담당 에이전트 |
-| ---- | ---- |
-| `apps/web` | fe-developer |
-| `apps/api` | be-developer |
-| `packages/ui` | fe-developer |
-| `apps/storybook` | fe-developer |
-| `packages/shared-types` | shared-types-coordinator |
-
-메시지 포함 항목: 파일 경로, 줄 번호, 규칙명, 메시지, 스니펫(±2줄).
+자동 수정으로 해소되지 않은 잔여 위반을 워크스페이스별로 묶어 호출자(또는 사용자)에게 보고한다. 보고 항목: 파일 경로, 줄 번호, 규칙명, 메시지, 스니펫(±2줄). 코드 작성자가 직접 수정해야 하므로, 잔여 위반은 본 스킬이 아닌 코드를 만든 곳(`fe-implementation` / `be-implementation` / 사용자)으로 돌려보낸다.
 
 ### 5단계: 재시도 루프
 
-개발자가 수정 완료 메시지를 보내면 1단계부터 재실행. **3회 초과 시 중단**하고 사용자에게 보고.
+수정 완료 후 1단계부터 재실행. **3회 초과 시 중단**하고 사용자에게 보고한다.
 
 ## 금지 사항
 
@@ -95,7 +85,7 @@ turbo run lint
 | packages/ui | 0 | 3 | react-hooks/exhaustive-deps(3) |
 
 - `--fix`로 자동 해결: N건
-- 위임 대상: be-developer(7), fe-developer(3)
+- 자동 수정 불가 잔여: apps/api 7건, packages/ui 3건
 
 ## 잔여 위반
 - `apps/api/src/services/user.service.ts:22` — `@typescript-eslint/no-unused-vars` — `'email' is defined but never used.`

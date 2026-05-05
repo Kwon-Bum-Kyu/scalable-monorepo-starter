@@ -224,7 +224,7 @@ it("비밀번호가 틀리면 로그인에 실패한다", async () => {
 ## 완료 보고 포맷
 
 ```
-[be-developer] T-01 완료
+[BE] T-01 완료
 - 변경 파일:
   - prisma/schema.prisma (Session 추가)
   - prisma/migrations/20260419_add_session/migration.sql (신규)

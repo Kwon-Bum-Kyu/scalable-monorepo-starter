@@ -201,6 +201,6 @@ Grep pattern: props\.[a-zA-Z_]+\s*=\s
 - [ ] Grep·Bash만 사용, 코드 수정 금지
 - [ ] 8 불변 + shadcn 보강 3종 모두 스캔
 - [ ] P0/P1/P2 분류 명시
-- [ ] 위반 수정은 fe/be-developer에 위임
+- [ ] 위반은 본 스킬에서 직접 수정하지 않고 호출자(또는 사용자)에 보고
 - [ ] arch-guard.md append (덮어쓰기 금지)
 - [ ] PASS 시에도 리포트 생성 (감사 추적)
