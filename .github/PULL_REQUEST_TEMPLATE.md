@@ -36,7 +36,7 @@ npm run dev
 - [ ] `npm run build` 통과
 - [ ] (해당 시) Playwright E2E 통과
 - [ ] TDD 흐름 준수 (Red → Green → Refactor)
-- [ ] 9가지 변경 불가 규칙 위반 없음
+- [ ] 프로젝트 규칙 준수 (루트 [CLAUDE.md](../CLAUDE.md) 의 변경 불가 규칙)
 - [ ] 커밋 메시지가 Conventional Commits + 한국어 단문
 
 ## 스크린샷 / GIF (UI 변경 시)
