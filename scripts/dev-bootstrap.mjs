@@ -5,6 +5,7 @@
  * 1) docker compose up -d  — Postgres 컨테이너 기동
  * 2) pg_isready 폴링       — DB가 connection을 받을 준비가 될 때까지 대기
  * 3) prisma migrate deploy — 최신 마이그레이션 적용
+ * 4) prisma generate       — Prisma Client 생성 (gitignore된 generated/prisma)
  *
  * 이 스크립트는 root 의 `npm run predev` 에서 호출되며, 모든 단계가 끝나면 종료한다.
  * 이후 turbo run dev 가 web/api/storybook + Prisma Studio 를 동시 구동한다.
@@ -60,13 +61,13 @@ async function probePgReady() {
 }
 
 async function main() {
-  console.log("[dev-bootstrap] 1/3 docker compose up -d");
+  console.log("[dev-bootstrap] 1/4 docker compose up -d");
   const up = await run("docker", ["compose", "up", "-d"]);
   if (up.code !== 0) {
     throw new Error(`docker compose up 실패 (exit=${up.code})`);
   }
 
-  console.log("[dev-bootstrap] 2/3 Postgres 준비 대기");
+  console.log("[dev-bootstrap] 2/4 Postgres 준비 대기");
   const result = await waitForPostgres({
     exec: probePgReady,
     maxAttempts: 30,
@@ -75,10 +76,16 @@ async function main() {
   });
   console.log(`[dev-bootstrap]   준비 완료 (시도 ${result.attempts}회)`);
 
-  console.log("[dev-bootstrap] 3/3 prisma migrate deploy");
+  console.log("[dev-bootstrap] 3/4 prisma migrate deploy");
   const migrate = await run("npx", ["prisma", "migrate", "deploy"]);
   if (migrate.code !== 0) {
     throw new Error(`prisma migrate deploy 실패 (exit=${migrate.code})`);
+  }
+
+  console.log("[dev-bootstrap] 4/4 prisma generate");
+  const generate = await run("npx", ["prisma", "generate"]);
+  if (generate.code !== 0) {
+    throw new Error(`prisma generate 실패 (exit=${generate.code})`);
   }
 
   console.log("[dev-bootstrap] 완료");
