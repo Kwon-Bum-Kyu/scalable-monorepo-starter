@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "_comment": "Add MCP servers as needed. Example below — replace with your actual setup. Copy this file to .mcp.json (gitignored) and edit.",
+    "_example_obsidian": {
+      "command": "npx",
+      "args": ["mcp-remote", "http://localhost:22360/sse"]
+    }
+  }
+}
