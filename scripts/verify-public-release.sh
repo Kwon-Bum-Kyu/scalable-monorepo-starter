@@ -19,10 +19,12 @@ if [ "$symlinks_in_index" != "0" ]; then
 fi
 
 echo "[2/9] 개인 식별자 검사 (kbk·missing107·gwonbeomgyu·GoogleDrive·Obsidian Vault·로컬 경로)"
-# 회귀 테스트 파일은 'missing107' 같은 패턴을 부재 검증용으로 보유할 수 있어 제외.
-# 대신 해당 테스트가 실제 코드 회귀 가드 역할을 하므로 단계 검증의 신뢰는 유지된다.
+# 다음 파일은 검사 패턴을 부재 검증·문서 목적으로 보유해 false positive 발생 → 제외.
+#   - package-lock.json: 외부 식별자가 아닌 내부 의존 메타
+#   - rootLayout.test.tsx: 회귀 테스트가 패턴 부재를 assert
+#   - scripts/verify-public-release.sh: 본 스크립트 자체가 검사 키워드 포함
 hits=$(git ls-files \
-  | grep -vE '^(package-lock\.json|.*tests?/.*rootLayout\.test\.tsx)$' \
+  | grep -vE '^(package-lock\.json|.*tests?/.*rootLayout\.test\.tsx|scripts/verify-public-release\.sh)$' \
   | xargs grep -lE "(kbk|missing107|gwonbeomgyu|GoogleDrive|Obsidian Vault|shortcut-targets|/Users/gwonbeomgyu)" 2>/dev/null || true)
 if [ -n "$hits" ]; then
   echo "FAIL: personal identifiers found in:"
