@@ -14,9 +14,9 @@ describe("radius 토큰 (FR-7)", () => {
   });
 
   describe("기본 --radius 값", () => {
-    it("--radius 가 0.75rem (=12px) 일 때 디자인 명세와 정렬된다", () => {
+    it("--radius 가 0.5rem (=8px) 일 때 디자인 명세와 정렬된다", () => {
       const value = getCssVar("--radius");
-      assertRemValue(value, 0.75);
+      assertRemValue(value, 0.5);
     });
   });
 
@@ -32,18 +32,18 @@ describe("radius 토큰 (FR-7)", () => {
       expect(value).toBe("calc(var(--radius) - 4px)");
     });
 
-    it("--radius-md 는 calc(var(--radius) - 2px) 패턴이고 --radius=0.75rem 기준 결과 10px 이다", () => {
+    it("--radius-md 는 calc(var(--radius) - 2px) 패턴이고 --radius=0.5rem 기준 결과 6px 이다", () => {
       const value = getCssVar("--radius-md");
       expect(value).toBe("calc(var(--radius) - 2px)");
-      // 0.75rem = 12px, calc(12px - 2px) = 10px
+      // 0.5rem = 8px, calc(8px - 2px) = 6px
     });
 
-    it("--radius-lg 는 var(--radius) 별칭으로 12px 에 매핑된다", () => {
+    it("--radius-lg 는 var(--radius) 별칭으로 8px 에 매핑된다", () => {
       const value = getCssVar("--radius-lg");
       expect(value).toBe("var(--radius)");
     });
 
-    it("--radius-xl 은 calc(var(--radius) + 4px) 패턴이고 결과 16px 이다", () => {
+    it("--radius-xl 은 calc(var(--radius) + 4px) 패턴이고 결과 12px 이다", () => {
       const value = getCssVar("--radius-xl");
       expect(value).toBe("calc(var(--radius) + 4px)");
     });
@@ -55,16 +55,16 @@ describe("radius 토큰 (FR-7)", () => {
     });
   });
 
-  describe("calc 패턴 결과 검증 (--radius=0.75rem 기준)", () => {
+  describe("calc 패턴 결과 검증 (--radius=0.5rem 기준)", () => {
     it.each([
-      { token: "--radius-md", expectedPx: 10, formula: "12 - 2" },
-      { token: "--radius-lg", expectedPx: 12, formula: "12" },
-      { token: "--radius-xl", expectedPx: 16, formula: "12 + 4" },
+      { token: "--radius-md", expectedPx: 6, formula: "8 - 2" },
+      { token: "--radius-lg", expectedPx: 8, formula: "8" },
+      { token: "--radius-xl", expectedPx: 12, formula: "8 + 4" },
     ])(
-      "$token 은 0.75rem 기준 $expectedPx px ($formula) 로 평가된다",
+      "$token 은 0.5rem 기준 $expectedPx px ($formula) 로 평가된다",
       ({ token, expectedPx }) => {
         const raw = getCssVar(token);
-        const baseRem = 0.75;
+        const baseRem = 0.5;
         const baseRemPx = baseRem * 16;
 
         if (raw === "var(--radius)") {

@@ -8,9 +8,9 @@ describe("Badge", () => {
     expect(screen.getByText("New")).toBeInTheDocument();
   });
 
-  it("variant가 default일 때 primary 배경 클래스가 적용된다", () => {
+  it("variant가 default일 때 neutral 톤(bg-gray-50) 배경 클래스가 적용된다", () => {
     render(<Badge data-testid="badge">Default</Badge>);
-    expect(screen.getByTestId("badge").className).toContain("bg-primary");
+    expect(screen.getByTestId("badge").className).toContain("bg-gray-50");
   });
 
   it("variant가 destructive일 때 destructive 배경 클래스가 적용된다", () => {
