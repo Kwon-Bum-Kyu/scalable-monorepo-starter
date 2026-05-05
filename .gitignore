@@ -45,6 +45,9 @@ storybook-static/
 .mcp.json
 !.mcp.json.example
 
+# Vite cache
+.vite/
+
 # Misc
 *.tsbuildinfo
 *.eslintcache
