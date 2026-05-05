@@ -94,4 +94,4 @@ export async function createUser(input: CreateUserInput): Promise<User> {
 
 ## 디렉터리별 규칙
 
-- `src/components/` → 이 파일의 "공유 UI" 항목 참조. 승격 기준은 루트 [CLAUDE.local.md](../../CLAUDE.local.md).
+- `src/components/` → 이 파일의 "공유 UI" 항목 참조. 승격 기준은 루트 [CLAUDE.md](../../CLAUDE.md).
