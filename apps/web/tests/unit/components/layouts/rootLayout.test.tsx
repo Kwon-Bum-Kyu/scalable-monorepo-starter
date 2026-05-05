@@ -52,4 +52,23 @@ describe("RootLayout", () => {
     expect(container?.className).toContain("px-page-x");
     expect(container?.className).toContain("mx-auto");
   });
+
+  it("푸터 카피라이트가 일반화된 표기를 사용하고 개인 식별자를 포함하지 않는다", () => {
+    renderWithRouter(<div data-testid="outlet">x</div>);
+
+    const footer = screen.getByRole("contentinfo");
+    expect(footer.textContent ?? "").not.toMatch(/DEV KBK/);
+    expect(footer.textContent ?? "").toMatch(
+      /scalable-monorepo-starter contributors/,
+    );
+  });
+
+  it("이메일 링크가 placeholder 를 사용하고 개인 메일 주소를 노출하지 않는다", () => {
+    renderWithRouter(<div data-testid="outlet">x</div>);
+
+    const emailLink = screen.getByRole("link", { name: /Email/i });
+    const href = emailLink.getAttribute("href") ?? "";
+    expect(href).not.toMatch(/missing107/);
+    expect(href).not.toMatch(/@gmail\.com/);
+  });
 });

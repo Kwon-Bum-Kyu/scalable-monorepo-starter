@@ -34,7 +34,7 @@ const socialIcons: {
   },
   {
     name: "envelope-outline",
-    href: "mailto:missing107@gmail.com",
+    href: "#contact",
     label: "Email",
   },
 ];
@@ -100,7 +100,7 @@ const footerBottom = (
         </a>
       ))}
     </div>
-    <span>© DEV KBK 2025</span>
+    <span>© scalable-monorepo-starter contributors</span>
   </div>
 );
 
