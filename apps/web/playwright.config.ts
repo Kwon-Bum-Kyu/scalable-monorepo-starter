@@ -66,27 +66,24 @@ export default defineConfig({
 
   /*
    * Run dependent dev servers before starting the tests.
-   * The /examples flow hits apps/api (4000), so we boot both apps via
-   * the root turbo `dev` task. `reuseExistingServer` keeps developers'
-   * locally running `npm run dev` intact.
-   *
-   * Note: the second entry only re-checks readiness for the API on
-   * http://localhost:4000/api/v1/health and reuses the same root server
-   * spawned by the first entry (no second process is started because
-   * `reuseExistingServer: true` short-circuits when the URL is reachable).
+   * The /examples flow hits apps/api (4000), so we boot web과 api 를 각각 직접 띄운다.
+   * 루트 `npm run dev` 는 prisma studio 를 동반 기동하는데 CI 환경에서 studio 가 즉시 종료되면
+   * concurrently --kill-others-on-fail 로 api dev:server 까지 함께 죽기 때문에, E2E 환경에서는
+   * api 의 `dev:server` 만 호출한다. `reuseExistingServer` 는 로컬 `npm run dev` 를 그대로 재사용한다.
    */
   webServer: [
     {
-      command: "npm run dev -- --filter=web --filter=api",
+      command: "npm run dev --workspace=web",
       cwd: "../..",
       url: "http://localhost:3000",
       reuseExistingServer: !process.env.CI,
       timeout: 180_000,
     },
     {
-      command: "echo 'api readiness probe'",
+      command: "npm run dev:server --workspace=api",
+      cwd: "../..",
       url: "http://localhost:4000/health/live",
-      reuseExistingServer: true,
+      reuseExistingServer: !process.env.CI,
       timeout: 180_000,
     },
   ],
