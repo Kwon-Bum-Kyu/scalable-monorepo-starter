@@ -1,6 +1,10 @@
-import helmet, { type HelmetOptions } from "helmet";
+import type { HelmetOptions } from "helmet";
+import * as helmetModule from "helmet";
 
 import { env } from "../config/env";
+
+const helmet = ((helmetModule as { default?: typeof helmetModule.default })
+  .default ?? (helmetModule as unknown)) as typeof helmetModule.default;
 
 const HSTS_MAX_AGE_SECONDS = 31_536_000; // 365일
 
