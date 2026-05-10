@@ -1,7 +1,4 @@
 {
-  "enabledPlugins": {
-    "everything-claude-code@everything-claude-code": false
-  },
   "permissions": {
     "allow": ["Bash(*)", "Read(*)", "Edit(*)", "Write(*)", "Glob(*)", "Grep(*)"]
   }
