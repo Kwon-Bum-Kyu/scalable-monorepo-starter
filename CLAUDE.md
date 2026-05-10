@@ -38,9 +38,9 @@
 | 런타임 | Node.js | >= 22.13.0 |
 | 패키지 매니저 | npm | >= 10.0.0 |
 | 모노레포 | Turborepo | ^2.9 |
-| 언어 | TypeScript | ~5.8 |
+| 언어 | TypeScript | ^6.0 |
 | Frontend | React + Vite + Tailwind CSS | 19 / 7 / 4 |
-| Backend | Express + Prisma | 4 / 7 |
+| Backend | Express + Prisma | 5 / 7 |
 | DB | PostgreSQL (로컬: Docker / 배포: Neon) | 18 |
 | 테스트 | Vitest + Testing Library + Playwright | ^4.1 / ^16 / ^1.59 |
 | 컴포넌트 문서 | Storybook | 10 |
