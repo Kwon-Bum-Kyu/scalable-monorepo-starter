@@ -25,7 +25,10 @@ export default mergeConfig(
           "src/config/**",
           "src/routes/**",
           "src/utils/api.ts",
+          // guide는 비즈니스 로직 없는 정적 디자인 시스템 카탈로그 — 행동 테스트는 guide.test로 충분, 커버리지 강제 대상에서 제외
+          "src/view/guide/**",
         ],
+        // 목표 100% (필요 이상의 테스트는 작성하지 않음). CI 게이트는 80%로 유지해 점진적으로 수렴.
         thresholds: {
           lines: 80,
           statements: 80,

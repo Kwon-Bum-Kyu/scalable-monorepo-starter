@@ -79,6 +79,42 @@ describe("services/examples", () => {
       expect(url).toContain("status=published");
     });
 
+    it("page만 주어지면 page만 query string으로 직렬화한다", async () => {
+      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+        successEnvelope({ data: [] }),
+      );
+
+      await fetchExamplesList({ page: 3 });
+
+      const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+      expect(url).toContain("page=3");
+      expect(url).not.toContain("pageSize");
+      expect(url).not.toContain("status");
+    });
+
+    it("status만 주어지면 status만 query string으로 직렬화한다", async () => {
+      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+        successEnvelope({ data: [] }),
+      );
+
+      await fetchExamplesList({ status: "draft" });
+
+      const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+      expect(url).toContain("status=draft");
+      expect(url).not.toContain("page");
+    });
+
+    it("빈 query 객체가 주어지면 query string 없이 요청한다", async () => {
+      (fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+        successEnvelope({ data: [] }),
+      );
+
+      await fetchExamplesList({});
+
+      const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+      expect(url).toBe("http://localhost:4000/api/v1/examples");
+    });
+
     it("BE가 success+meta envelope를 반환할 때 {items, meta}로 언래핑한다", async () => {
       const items = [
         { id: "x1", title: "첫 항목" },
