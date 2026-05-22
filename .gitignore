@@ -10,6 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+
+# 공개/비공개 구분 — 스타터킷 개발용(메인테이너 전용) 자산 분리
+# `*.local` 접미사가 붙은 파일·디렉터리는 git 미추적.
+# 공개 배포 대상이 아닌 하네스 룰·에이전트·스킬·설정을 외부 노출 없이 보존한다.
+# 예: CLAUDE.local.md, .claude/rules/*.local.md, .claude/skills/*.local/, .mcp.json
 *.local.*
 *.local
 
