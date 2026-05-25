@@ -43,6 +43,7 @@ export default defineConfig({
         "src/styles/**",
         "src/components/Navigation/**",
       ],
+      // 목표 100% (필요 이상의 테스트는 작성하지 않음). CI 게이트는 80%로 유지해 점진적으로 수렴.
       thresholds: {
         lines: 80,
         statements: 80,
