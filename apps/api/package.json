@@ -7,7 +7,7 @@
     "dev": "concurrently --kill-others-on-fail --names api,studio --prefix-colors blue,magenta \"npm run dev:server\" \"npm run studio\"",
     "dev:server": "prisma generate && tsx watch src/index.ts",
     "studio": "prisma studio --port 5555 --browser none",
-    "build": "prisma generate && tsc && tsc-alias",
+    "build": "prisma generate && tsup",
     "start": "node dist/index.js",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "prisma generate && tsc --noEmit",
@@ -50,6 +50,7 @@
     "prisma": "^7.7.0",
     "supertest": "^7.2.2",
     "tsc-alias": "^1.8.16",
+    "tsup": "^8.5.1",
     "tsx": "^4.19.2",
     "typescript": "^6.0.3",
     "vitest": "4.1.4"

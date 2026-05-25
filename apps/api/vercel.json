@@ -1,9 +1,11 @@
 {
   "installCommand": "npm install --include=dev",
-  "buildCommand": "npx prisma generate",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "functions": {
     "api/index.ts": {
-      "includeFiles": "src/**/*.ts,generated/prisma/**"
+      "includeFiles": "dist/**,generated/prisma/**",
+      "excludeFiles": "src/**"
     }
   },
   "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
