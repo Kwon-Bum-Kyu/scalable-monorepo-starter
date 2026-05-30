@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+out
 
 # 공개/비공개 구분 — 스타터킷 개발용(메인테이너 전용) 자산 분리
 # `*.local` 접미사가 붙은 파일·디렉터리는 git 미추적.
