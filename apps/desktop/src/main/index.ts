@@ -1,40 +1,14 @@
-import { join } from "node:path";
+import { app, BrowserWindow, ipcMain } from "electron";
 
-import { app, BrowserWindow, shell } from "electron";
+import { registerIpcHandlers } from "./ipc";
+import { applyApplicationMenu } from "./menu";
+import { createWindow } from "./window";
 
-// 메인 프로세스: BrowserWindow 생성 후 dev는 electron-vite dev server URL을,
-// 패키징/프로덕션은 빌드된 renderer index.html(file://)을 로드한다.
-function createWindow(): void {
-  const mainWindow = new BrowserWindow({
-    width: 1280,
-    height: 800,
-    show: false,
-    autoHideMenuBar: true,
-    webPreferences: {
-      preload: join(__dirname, "../preload/index.js"),
-      sandbox: true,
-      contextIsolation: true,
-    },
-  });
-
-  mainWindow.on("ready-to-show", () => {
-    mainWindow.show();
-  });
-
-  // 외부 링크는 OS 기본 브라우저로 연다 (앱 창 내 임의 네비게이션 차단).
-  mainWindow.webContents.setWindowOpenHandler((details) => {
-    void shell.openExternal(details.url);
-    return { action: "deny" };
-  });
-
-  if (!app.isPackaged && process.env["ELECTRON_RENDERER_URL"]) {
-    void mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
-  } else {
-    void mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
-  }
-}
-
+// 메인 프로세스 엔트리: 애플리케이션 메뉴와 IPC 핸들러를 등록한 뒤
+// 창을 생성하고 앱 생명주기를 관리한다. 세부 동작은 window/menu/ipc 모듈에 위임한다.
 void app.whenReady().then(() => {
+  applyApplicationMenu();
+  registerIpcHandlers(ipcMain);
   createWindow();
 
   app.on("activate", () => {
