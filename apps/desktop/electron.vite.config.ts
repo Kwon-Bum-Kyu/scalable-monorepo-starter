@@ -9,9 +9,25 @@ import { defineConfig, externalizeDepsPlugin } from "electron-vite";
 export default defineConfig({
   main: {
     plugins: [externalizeDepsPlugin()],
+    resolve: {
+      alias: [
+        {
+          find: /^@shared\//,
+          replacement: `${resolve("src/shared")}/`,
+        },
+      ],
+    },
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
+    resolve: {
+      alias: [
+        {
+          find: /^@shared\//,
+          replacement: `${resolve("src/shared")}/`,
+        },
+      ],
+    },
   },
   renderer: {
     root: resolve("src/renderer"),
@@ -22,6 +38,11 @@ export default defineConfig({
         {
           find: /^@\//,
           replacement: `${resolve("src/renderer/src")}/`,
+        },
+        {
+          // main/preload와 공유하는 IPC 채널 타입(src/shared)을 renderer에서 참조한다.
+          find: /^@shared\//,
+          replacement: `${resolve("src/shared")}/`,
         },
       ],
     },

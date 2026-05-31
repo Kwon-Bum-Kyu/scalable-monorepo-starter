@@ -6,8 +6,9 @@
     "types": ["node", "vite/client", "vitest/globals", "@testing-library/jest-dom"],
     "paths": {
       "@/*": ["./src/renderer/src/*"],
-      "@/tests/*": ["./tests/*"]
+      "@/tests/*": ["./tests/*"],
+      "@shared/*": ["./src/shared/*"]
     }
   },
-  "include": ["src/renderer/src", "tests"]
+  "include": ["src/renderer/src", "src/shared", "tests"]
 }

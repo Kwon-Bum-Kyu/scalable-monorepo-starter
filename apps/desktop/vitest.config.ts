@@ -13,6 +13,10 @@ export default defineConfig({
         find: /^@\//,
         replacement: `${resolve(import.meta.dirname, "src/renderer/src")}/`,
       },
+      {
+        find: /^@shared\//,
+        replacement: `${resolve(import.meta.dirname, "src/shared")}/`,
+      },
     ],
   },
   test: {

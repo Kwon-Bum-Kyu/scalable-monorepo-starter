@@ -8,6 +8,7 @@ export default [
     files: [
       "src/main/**/*.ts",
       "src/preload/**/*.ts",
+      "src/shared/**/*.ts",
       "electron.vite.config.ts",
       "vitest.config.ts",
     ],
