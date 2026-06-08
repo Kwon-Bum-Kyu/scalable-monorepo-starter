@@ -58,6 +58,9 @@ storybook-static/
 *.tsbuildinfo
 *.eslintcache
 
+# prod 배포본 미리보기 산출 (npm run preview:public)
+.preview-public/
+
 # dmux
 .dmux/
 .dmux-hooks/
