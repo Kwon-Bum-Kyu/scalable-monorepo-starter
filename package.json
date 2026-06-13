@@ -23,9 +23,7 @@
     "test:api": "turbo run test --filter=api",
     "storybook": "turbo run dev --filter=storybook",
     "build-storybook": "turbo run build --filter=storybook",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check:public-release": "bash scripts/verify-public-release.sh",
-    "preview:public": "node scripts/preview-public.mjs"
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "@vitest/coverage-v8": "4.1.4",
