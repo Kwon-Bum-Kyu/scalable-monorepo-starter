@@ -13,13 +13,14 @@
     "RATE_LIMIT_MAX",
     "HEALTH_DB_TIMEOUT_MS",
     "ENABLE_EXAMPLES",
-    "SKIP_DEV_BOOTSTRAP"
+    "SKIP_DEV_BOOTSTRAP",
+    "ELECTRON_RENDERER_URL"
   ],
   "globalDependencies": ["**/.env"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "storybook-static/**"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "storybook-static/**", "out/**"],
       "env": ["NODE_ENV"]
     },
     "lint": {

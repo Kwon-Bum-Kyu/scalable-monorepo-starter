@@ -24,11 +24,13 @@
     "storybook": "turbo run dev --filter=storybook",
     "build-storybook": "turbo run build --filter=storybook",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check:public-release": "bash scripts/verify-public-release.sh"
+    "check:public-release": "bash scripts/verify-public-release.sh",
+    "preview:public": "node scripts/preview-public.mjs"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "4.1.4",
     "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.6.13",
     "turbo": "^2.9.6",
     "vitest": "4.1.4"
   },
