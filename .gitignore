@@ -57,6 +57,10 @@ storybook-static/
 *.tsbuildinfo
 *.eslintcache
 
+# 개발 파이프라인 중간 산출물 (감사 추적용, 커밋 대상 아님)
+_workspace/
+_workspace_archive_*/
+
 # dmux
 .dmux/
 .dmux-hooks/
