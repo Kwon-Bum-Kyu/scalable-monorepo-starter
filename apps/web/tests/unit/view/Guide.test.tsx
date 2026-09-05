@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
 import App from "@/App";
-import Guide from "@/view/guide";
+import Guide from "@/view/Guide";
 
 const renderGuide = () =>
   render(

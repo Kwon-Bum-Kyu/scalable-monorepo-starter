@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
-import RootLayout from "@/components/layouts/rootLayout";
+import RootLayout from "@/components/layouts/RootLayout";
 
 const renderWithRouter = (outlet: React.ReactElement) => {
   return render(

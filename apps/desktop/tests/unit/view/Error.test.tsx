@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
-import ErrorPage from "@/view/error";
+import ErrorPage from "@/view/Error";
 
 describe("ErrorPage 컴포넌트", () => {
   it("isError가 false일 때는 아무 것도 렌더링하지 않는다", () => {
