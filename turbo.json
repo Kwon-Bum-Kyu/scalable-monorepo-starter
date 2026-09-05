@@ -27,7 +27,7 @@
       "dependsOn": ["^lint"]
     },
     "typecheck": {
-      "dependsOn": ["^typecheck"],
+      "dependsOn": ["^typecheck", "@repo/vitest-config#build"],
       "outputs": []
     },
     "dev": {
