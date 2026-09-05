@@ -4,10 +4,10 @@ import {
 } from "react-router-dom";
 
 import App from "@/App.tsx";
-import Rootlayout from "@/components/layouts/rootLayout.tsx";
-import ErrorPage from "@/view/error.tsx";
+import RootLayout from "@/components/layouts/RootLayout.tsx";
+import ErrorPage from "@/view/Error.tsx";
 import ExamplesPage from "@/view/examples/ExamplesPage";
-import Guide from "@/view/guide.tsx";
+import Guide from "@/view/Guide.tsx";
 
 export const ROUTES = {
   root: "/",
@@ -32,7 +32,7 @@ export const buildRoutes = (isProd: boolean): RouteObject[] => {
       errorElement: <ErrorPage />,
       children: [
         {
-          element: <Rootlayout />,
+          element: <RootLayout />,
           children: layoutChildren,
         },
         { path: ROUTES.error, element: <ErrorPage /> },
