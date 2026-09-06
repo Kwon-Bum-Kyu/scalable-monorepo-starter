@@ -132,6 +132,18 @@ npx shadcn add button
 # 추가 후 packages/ui/src/index.ts에 수동으로 re-export
 ```
 
+### 디자인 검수 도구 (선택)
+
+UI 품질 검수에는 [Impeccable](https://impeccable.style/)을 권장한다. 레포에는 포함하지 않으므로 필요한 사람이 자기 환경에 설치한다. 설치하지 않아도 빌드·테스트·린트·가드 스킬에는 영향이 없다.
+
+```bash
+npx impeccable install --global --no-hooks
+# 설치기가 사용 중인 AI 코딩 도구(Claude Code, Cursor, Codex 등)를 감지한다
+# 이후 AI 코딩 도구 안에서 /impeccable audit apps/web/src/view/Guide.tsx 형태로 호출
+```
+
+제품 맥락과 디자인 토큰은 루트의 [PRODUCT.md](./PRODUCT.md)와 [DESIGN.md](./DESIGN.md)가 설명하며, 토큰 사용 규칙은 아래 변경 불가 규칙 8을 따른다.
+
 ## 변경 불가 규칙 (요약)
 
 위반 시 리뷰 반려. 상세는 [.claude/rules/monorepo-invariants.md](./.claude/rules/monorepo-invariants.md).
