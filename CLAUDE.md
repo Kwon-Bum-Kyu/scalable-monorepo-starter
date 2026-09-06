@@ -46,6 +46,11 @@
 | 컴포넌트 문서 | Storybook | 10 |
 | UI 컴포넌트 | shadcn/ui | latest |
 
+## 제품·디자인 맥락
+
+- [PRODUCT.md](./PRODUCT.md) — 사용자·목적·제약 등 제품 맥락. UI를 새로 만들거나 바꾸기 전에 읽는다.
+- [DESIGN.md](./DESIGN.md) — 디자인 토큰과 컴포넌트 규범. 색·타이포·간격·radius 값은 이 문서의 토큰만 쓴다. 토큰의 단일 출처는 `packages/ui/src/styles/globals.css`의 `@theme`.
+
 ## 주요 명령어
 
 ```bash
@@ -66,20 +71,6 @@ npm run dev | migrate | seed | test
 # shadcn/ui 컴포넌트 추가 (packages/ui에서)
 npx shadcn add <component>   # 추가 후 src/index.ts에 수동 re-export
 ```
-
-## 9가지 변경 불가 규칙 (요약)
-
-위반 시 PR 반려. 상세는 [.claude/rules/monorepo-invariants.md](./.claude/rules/monorepo-invariants.md).
-
-1. **앱 간 직접 import 금지** — `apps/*` 끼리 직접 import 금지. 공유 코드는 `packages/*` 경유.
-2. **shared-types 런타임 코드 금지** — 순수 TypeScript 타입만. Zod·class·function·상수 모두 금지.
-3. **SQL 격리** — Controllers·Services에 SQL 금지. Repository 계층에만 위치.
-4. **파라미터화 쿼리 필수** — Prisma Client 경유. Raw SQL 문자열 연결 금지.
-5. **마이그레이션 파일 불변** — `apps/api/prisma/migrations/` 의 기존 파일 수정 금지. 변경 필요 시 새 마이그레이션 생성.
-6. **`@/` 별칭 (apps/web)** — 내부 모듈 import는 `@/` 별칭 필수. 상대 경로 `../` 금지(같은 디렉터리 `./` 는 허용).
-7. **TDD 필수** — Red → Green → Refactor 사이클 강제. 한국어 BDD 네이밍. 상세는 [.claude/rules/tdd-korean-bdd.md](./.claude/rules/tdd-korean-bdd.md).
-8. **Tailwind `@theme` 토큰** — `packages/ui/src/styles/globals.css` 의 `@theme` 변수만 사용. `bg-[#...]` 같은 임의 값 금지. 상세는 [.claude/rules/tailwind-v4.md](./.claude/rules/tailwind-v4.md).
-9. **파일명 컨벤션** — React 컴포넌트 PascalCase, 훅·유틸 camelCase, API 레이어·shadcn 생성물 kebab-case, 프레임워크 강제 파일은 관례 그대로. 상세는 [.claude/rules/file-naming.md](./.claude/rules/file-naming.md).
 
 ## 워크스페이스별 CLAUDE.md
 
@@ -115,20 +106,7 @@ NODE_ENV=development
 
 커버리지 최소치는 80% (statements / branches / functions / lines). 미달 시 CI 실패.
 
-## 추가 프로젝트 제약
-
-- 코드·주석·문서에 이모지 금지
-- 프로덕션 코드에 `console.log` 금지
-- 입력 검증은 Zod 사용 (단, `packages/shared-types` 에는 금지)
-
 ## 라이선스 / 기여
 
 - 라이선스: [MIT](./LICENSE)
 - 기여 가이드: [CONTRIBUTING.md](./CONTRIBUTING.md)
-
-## 프로젝트 룰 인덱스
-
-- [.claude/rules/monorepo-invariants.md](./.claude/rules/monorepo-invariants.md) — 9가지 변경 불가 규칙 상세
-- [.claude/rules/tailwind-v4.md](./.claude/rules/tailwind-v4.md) — Tailwind CSS v4 테마·import·하드코딩 금지
-- [.claude/rules/tdd-korean-bdd.md](./.claude/rules/tdd-korean-bdd.md) — Red-Green-Refactor·BDD 네이밍·Mock·안티패턴
-- [.claude/rules/file-naming.md](./.claude/rules/file-naming.md) — 파일명 컨벤션

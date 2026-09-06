@@ -128,7 +128,7 @@ import { useApi } from "@/hooks/useApi";
 <div className="bg-blue-500 text-gray-900">  // @theme에 정의된 토큰
 ```
 
-상세: [tailwind-v4.md](./tailwind-v4.md)
+상세: [tailwind-v4.md](./tailwind-v4.md). 토큰 표와 컴포넌트 규범은 루트 [DESIGN.md](../../DESIGN.md)
 
 ## 9. 파일명 컨벤션
 
@@ -144,3 +144,11 @@ import { useApi } from "@/hooks/useApi";
 **이유:** 주니어는 업계 표준 학습, 시니어는 생태계 관례 기반의 빠른 파악·구축.
 
 상세: [file-naming.md](./file-naming.md)
+
+## 추가 제약
+
+9가지 규칙 외에 코드·주석·문서 전반에 적용한다. 위반 시 동일하게 리뷰 반려.
+
+- 코드·주석·문서에 이모지 금지
+- 프로덕션 코드에 `console.log` 금지
+- 입력 검증은 Zod 사용. 단 `packages/shared-types`에는 규칙 2(런타임 코드 금지)가 우선하므로 Zod 스키마를 두지 않는다
