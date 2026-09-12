@@ -10,7 +10,7 @@ web
 
 사이드 프로젝트나 소규모 서비스를 새로 시작하는 개발자다. 주니어와 시니어를 가리지 않는다. 상황은 "아이디어는 있는데 프로젝트 구조를 처음부터 다시 정하고 싶지 않다"이고, 해내려는 일은 저장소를 clone한 뒤 2시간 안에 개발 서버를 띄우고 1주 안에 첫 배포를 마치는 것이다.
 
-두 번째 사용자는 AI 코딩 어시스턴트(Claude Code 등)다. CLAUDE.md와 `.claude/rules/`를 읽고 같은 규칙으로 코드를 생성한다. (추정: README와 CLAUDE.md의 구성에서 유추했다.)
+두 번째 사용자는 AI 코딩 어시스턴트(Claude Code 등)다. CLAUDE.md와 `.claude/rules/`를 읽고 같은 규칙으로 코드를 생성한다.
 
 ## Product Purpose
 
@@ -18,7 +18,7 @@ Turborepo 기반의 풀스택 모노레포 스타터 템플릿이다. React 19 +
 
 ## Positioning
 
-명시적 설정을 암묵적 컨벤션보다, 문서화된 규칙을 구두 전수보다 우선한다. 9가지 변경 불가 규칙(앱 간 직접 import 금지, shared-types 런타임 코드 금지, SQL 격리, 파라미터화 쿼리, 마이그레이션 불변, `@/` 별칭, TDD, Tailwind `@theme` 토큰만 사용, 파일명 컨벤션)을 문서와 AI 가드 스킬(`architecture-guard`, `lint-enforcer`, `tdd-guide`)로 함께 강제한다. 한국어 문서와 한국어 BDD 테스트 네이밍을 기본으로 한다. (추정: 다른 스타터와의 차별점은 README의 의사결정 원칙에서 유추했다.)
+명시적 설정을 암묵적 컨벤션보다, 문서화된 규칙을 구두 전수보다 우선한다. 9가지 변경 불가 규칙(앱 간 직접 import 금지, shared-types 런타임 코드 금지, SQL 격리, 파라미터화 쿼리, 마이그레이션 불변, `@/` 별칭, TDD, Tailwind `@theme` 토큰만 사용, 파일명 컨벤션)을 문서와 AI 가드 스킬(`architecture-guard`, `lint-enforcer`, `tdd-guide`)로 함께 강제한다. 한국어 문서와 한국어 BDD 테스트 네이밍을 기본으로 한다.
 
 ## Operating Context
 
@@ -59,4 +59,4 @@ Turborepo 기반의 풀스택 모노레포 스타터 템플릿이다. React 19 +
 
 ## Accessibility & Inclusion
 
-디자인 검수 기준으로 WCAG AA를 채택한다. 텍스트 대비 4.5:1, UI 요소 대비 3:1, 키보드 내비게이션(Tab 순서와 Enter·Space 동작), `focus-visible` 포커스 표시, 시맨틱 HTML(div 대신 button·nav·main)을 필수 항목으로 본다. (추정: 이전 디자인 검수 스킬의 필수 항목을 제품 기준으로 승격했다.)
+디자인 검수 기준으로 WCAG AA를 채택한다. 텍스트 대비 4.5:1, UI 요소 대비 3:1, 키보드 내비게이션(Tab 순서와 Enter·Space 동작), `focus-visible` 포커스 표시, 시맨틱 HTML(div 대신 button·nav·main)을 필수 항목으로 본다.
