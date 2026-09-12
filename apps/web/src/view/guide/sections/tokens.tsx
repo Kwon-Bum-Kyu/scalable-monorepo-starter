@@ -10,8 +10,8 @@ import {
   BLUE_PALETTE,
   GRAY_PALETTE,
   SYSTEM_COLORS,
-} from "@/view/guide/color-data";
-import { BREAKPOINTS } from "@/view/guide/nav-data";
+} from "@/view/guide/colorData";
+import { BREAKPOINTS } from "@/view/guide/navData";
 import { Section, SwatchRow, TokenCard } from "@/view/guide/primitives";
 import {
   FONT_FAMILIES,
@@ -20,7 +20,7 @@ import {
   SHADOW_SCALE,
   SPACING_SCALE,
   TYPE_SCALE,
-} from "@/view/guide/scale-data";
+} from "@/view/guide/scaleData";
 
 export const ColorsSection = () => (
   <Section

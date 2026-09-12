@@ -1,5 +1,5 @@
 import { examplesRepository } from "../../repositories/examples/examples.repository";
-import { fetchExampleOrThrow } from "./_helpers";
+import { fetchExampleOrThrow } from "./helpers";
 
 export async function deleteExample(id: string): Promise<void> {
   await fetchExampleOrThrow(id);

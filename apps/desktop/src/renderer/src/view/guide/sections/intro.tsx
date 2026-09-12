@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@repo/ui";
 
-import { PRINCIPLES } from "@/view/guide/nav-data";
+import { PRINCIPLES } from "@/view/guide/navData";
 import { Section } from "@/view/guide/primitives";
 
 export const OverviewSection = () => (

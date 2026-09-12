@@ -7,8 +7,8 @@ import {
 } from "@repo/ui";
 import React from "react";
 
-import { type ColorRow } from "@/view/guide/color-data";
-import { SIDEBAR_GROUPS } from "@/view/guide/nav-data";
+import { type ColorRow } from "@/view/guide/colorData";
+import { SIDEBAR_GROUPS } from "@/view/guide/navData";
 
 const SECTION_TONE = {
   eyebrowClass:

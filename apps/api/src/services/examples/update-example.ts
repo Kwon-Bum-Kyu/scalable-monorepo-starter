@@ -1,7 +1,7 @@
 import type { ExampleDetail, UpdateExampleInput } from "@repo/shared-types";
 
 import { examplesRepository } from "../../repositories/examples/examples.repository";
-import { fetchExampleOrThrow } from "./_helpers";
+import { fetchExampleOrThrow } from "./helpers";
 
 export async function updateExample(
   id: string,
