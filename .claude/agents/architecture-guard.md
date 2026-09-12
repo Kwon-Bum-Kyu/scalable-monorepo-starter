@@ -1,6 +1,6 @@
 ---
 name: architecture-guard
-description: scalable-monorepo-starter의 8가지 아키텍처 불변 규칙(앱 간 import·shared-types 런타임·SQL 격리·파라미터화 쿼리·마이그레이션 불변·@/ 별칭·TDD·Tailwind 토큰)을 코드에서 정적으로 스캔·검증하는 가드.
+description: scalable-monorepo-starter의 9가지 아키텍처 불변 규칙(앱 간 import·shared-types 런타임·SQL 격리·파라미터화 쿼리·마이그레이션 불변·@/ 별칭·TDD·Tailwind 토큰·파일명 컨벤션)을 코드에서 정적으로 스캔·검증하는 가드.
 model: opus
 ---
 
@@ -18,7 +18,7 @@ model: opus
 4. **단일 사실 출처는 `.claude/rules/monorepo-invariants.md`** — 새 규칙이 필요하면 해당 룰부터 업데이트한다.
 5. **이모지·console.log 금지**.
 
-## 검증 체크리스트 (8 불변 규칙)
+## 검증 체크리스트 (9 불변 규칙)
 
 | 번호 | 규칙 | 검증 방법 |
 | ---- | ---- | ---- |
@@ -30,12 +30,13 @@ model: opus
 | 6 | `@/` 별칭 필수 (apps/web) | `apps/web/src/**`에서 `from "\.\./` 또는 `from '\.\./` grep. `./`는 허용 |
 | 7 | TDD 준수 | 신규 `src/**` 파일과 대응 테스트 파일 존재 대조 (`tests/unit/**`, `test/unit/**`). 없으면 P1 |
 | 8 | Tailwind 하드코딩 금지 | `apps/web/**`, `packages/ui/**`에서 `className="[^"]*\[#[0-9a-fA-F]`, `\[[0-9]+px\]`, `\[rgb`, `bg-\[`, `text-\[` grep |
+| 9 | 파일명 컨벤션 | 파일 경로 정규식 대조 — `apps/api/src` kebab-case, `apps/web/src/hooks` use+camelCase, default export `.tsx` PascalCase, `apps/web/src` 일반 `.ts` camelCase, `packages/ui/src/components/ui` kebab-case (상세: `.claude/rules/file-naming.md`) |
 
 추가 가드(shadcn 마이그레이션 관련):
 
-9. **packages/ui 배럴 export 검증** — 신규 `packages/ui/src/components/<Name>/` 디렉터리가 `src/index.ts`에 re-export되었는지 확인.
-10. **cn 유틸 사용** — `packages/ui/src/components/**/*.tsx`에서 조건부 `className` 사용 시 `cn(` 호출 존재 확인(템플릿 리터럴·단순 문자열은 제외).
-11. **React 단방향 데이터 흐름** — `apps/web/src/view/**`, `packages/ui/src/components/**`에서 prop mutation 패턴(`props.<x> =`) grep.
+10. **packages/ui 배럴 export 검증** — 신규 `packages/ui/src/components/<Name>/` 디렉터리가 `src/index.ts`에 re-export되었는지 확인.
+11. **cn 유틸 사용** — `packages/ui/src/components/**/*.tsx`에서 조건부 `className` 사용 시 `cn(` 호출 존재 확인(템플릿 리터럴·단순 문자열은 제외).
+12. **React 단방향 데이터 흐름** — `apps/web/src/view/**`, `packages/ui/src/components/**`에서 prop mutation 패턴(`props.<x> =`) grep.
 
 ## 입력/출력 프로토콜
 

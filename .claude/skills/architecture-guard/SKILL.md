@@ -1,6 +1,6 @@
 ---
 name: architecture-guard
-description: scalable-monorepo-starter의 8가지 아키텍처 불변 규칙 + shadcn 마이그레이션 보강 가드(배럴 export, cn 사용, prop mutation)를 정적 스캔으로 검증하는 스킬. 아키텍처 검증, 레이어 위반 확인, 불변 규칙 스캔, SQL 격리 점검, @/ 별칭 검증, Tailwind 하드코딩 탐지, shadcn 배럴 누락 확인, 모듈 완료 후 가드, QA 직전 가드 시 반드시 사용. "아키텍처 검증해줘", "레이어 위반 찾아줘", "불변 규칙 확인", "가드 돌려줘", "하드코딩 체크" 같은 표현에 트리거된다.
+description: scalable-monorepo-starter의 9가지 아키텍처 불변 규칙 + shadcn 마이그레이션 보강 가드(배럴 export, cn 사용, prop mutation)를 정적 스캔으로 검증하는 스킬. 아키텍처 검증, 레이어 위반 확인, 불변 규칙 스캔, SQL 격리 점검, @/ 별칭 검증, Tailwind 하드코딩 탐지, shadcn 배럴 누락 확인, 모듈 완료 후 가드, QA 직전 가드 시 반드시 사용. "아키텍처 검증해줘", "레이어 위반 찾아줘", "불변 규칙 확인", "가드 돌려줘", "하드코딩 체크" 같은 표현에 트리거된다.
 ---
 
 # architecture-guard
@@ -126,7 +126,24 @@ Grep pattern: className=['"][^'"]*text-\[(?!var)
 
 **P1** — 하드코딩 제거, 필요 시 @theme 토큰 추가 요청.
 
-### 9. packages/ui 배럴 export 검증 (shadcn 보강)
+### 9. 파일명 컨벤션
+
+```bash
+# (a) API 레이어(apps/api/src): kebab-case. 대문자·언더스코어 포함 시 위반 (`*.repository.ts` 같은 닷 suffix는 허용)
+Bash: find apps/api/src -name '*.ts' | grep -E '/[^/]*[A-Z_][^/]*\.ts$'
+# (b) React 훅(apps/web/src/hooks): use 접두 camelCase. 배럴 index.ts는 제외
+Bash: find apps/web/src/hooks -name '*.ts*' ! -name 'index.ts' | grep -vE '/use[A-Z][A-Za-z0-9]*\.tsx?$'
+# (c) React 컴포넌트(apps/web/src): default export가 있는 .tsx는 PascalCase. main.tsx·App.tsx·index.tsx는 제외
+Bash: grep -rlE '^export default' apps/web/src --include='*.tsx' | grep -vE '/(main|App|index)\.tsx$' | grep -vE '/[A-Z][A-Za-z0-9]*\.tsx$'
+# (d) 일반 유틸·모듈(apps/web/src의 .ts): camelCase. 하이픈·언더스코어 포함 시 위반 (*.d.ts·*.config.ts 제외)
+Bash: find apps/web/src -name '*.ts' ! -name '*.d.ts' ! -name '*.config.ts' | grep -E '/[^/]*[-_][^/]*\.ts$'
+# (e) shadcn 생성물(packages/ui/src/components/ui): kebab-case 유지. 대문자·언더스코어 포함 시 위반
+Bash: ls packages/ui/src/components/ui | grep -E '[A-Z_]'
+```
+
+**P1** — 출력이 있으면 각 행이 위반 후보. 케이스 매트릭스와 예외(프레임워크 강제 파일)는 `.claude/rules/file-naming.md`를 따른다.
+
+### 10. packages/ui 배럴 export 검증 (shadcn 보강)
 
 ```bash
 # 신규 디렉터리
@@ -137,7 +154,7 @@ Grep pattern: from\s+['"]\.\/components\/<Name>
 
 **P1** — 누락 시 index.ts 갱신 요청.
 
-### 10. cn 유틸 사용 (shadcn 보강)
+### 11. cn 유틸 사용 (shadcn 보강)
 
 ```bash
 path: packages/ui/src/components/**/*.tsx
@@ -149,7 +166,7 @@ Grep pattern: cn\(
 
 **P2** — 명시적 권고.
 
-### 11. React 단방향 데이터 흐름 (shadcn 보강)
+### 12. React 단방향 데이터 흐름 (shadcn 보강)
 
 ```bash
 path: apps/web/src/view/**/*.{ts,tsx}, packages/ui/src/components/**/*.tsx
