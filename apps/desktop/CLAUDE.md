@@ -1,6 +1,6 @@
 # apps/desktop
 
-React 19 + Vite 7 + Tailwind CSS v4 기반 Electron 데스크톱 앱 (renderer dev port 3100).
+React 19 + Vite 8 + Tailwind CSS v4 기반 Electron 데스크톱 앱 (renderer dev port 3100).
 electron-vite v5로 빌드하며, renderer는 [apps/web](../web)과 **동일한 환경**(같은 스택·공유 패키지·테스트·규칙)을 사용한다.
 
 ## 디렉터리 구조

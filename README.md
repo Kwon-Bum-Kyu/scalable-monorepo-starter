@@ -28,7 +28,7 @@
 | 패키지 매니저 | npm | >= 10.0.0 |
 | 모노레포 | Turborepo | ^2.9 |
 | 언어 | TypeScript | ^6.0 |
-| Frontend | React + Vite + Tailwind CSS | 19 / 7 / 4 |
+| Frontend | React + Vite + Tailwind CSS | 19 / 8 / 4 |
 | Backend | Express + Prisma | 5 / 7 |
 | DB | PostgreSQL (로컬: Docker / 배포: Neon) | 18 |
 | 테스트 | Vitest + Testing Library + Playwright | ^4.1 / ^16 / ^1.59 |
@@ -70,7 +70,7 @@ npm run dev
 루트 `npm run dev`는 다음을 자동 처리한다:
 
 1. `predev` — Docker Postgres 컨테이너 기동 + `pg_isready` 폴링 + Prisma 마이그레이션 적용
-2. `web`(3000) + `api`(4000) + `storybook`(6006) + Prisma Studio(5555) 동시 구동
+2. `web`(3000) + `api`(4000) + `storybook`(6006) + `desktop`(3100, Electron 창) + Prisma Studio(5555) 동시 구동
 
 > Docker가 없거나 외부 DB(Neon 등)를 사용하려면 `SKIP_DEV_BOOTSTRAP=1 npm run dev` 로 부트스트랩을 건너뛴다.
 
@@ -88,9 +88,10 @@ npm run dev
 ```
 scalable-monorepo-starter/
 ├── apps/
-│   ├── web/                    # React 19 + Vite 7 (port 3000)
+│   ├── web/                    # React 19 + Vite 8 (port 3000)
 │   ├── api/                    # Express + Prisma + PostgreSQL (port 4000)
-│   └── storybook/              # Storybook 10 (port 6006)
+│   ├── storybook/              # Storybook 10 (port 6006)
+│   └── desktop/                # Electron 데스크톱 앱 (electron-vite, renderer port 3100)
 ├── packages/
 │   ├── shared-types/           # FE/BE 공유 TypeScript 타입 (런타임 코드 금지)
 │   ├── ui/                     # 공유 UI 컴포넌트 (shadcn/ui)
@@ -105,7 +106,7 @@ scalable-monorepo-starter/
 
 | 명령 | 설명 |
 | ---- | ---- |
-| `npm run dev` | 전체 워크스페이스 동시 구동 (web + api + storybook) |
+| `npm run dev` | 전체 워크스페이스 동시 구동 (web + api + storybook + desktop) |
 | `npm run build` | 전체 빌드 (의존 순서 자동) |
 | `npm run typecheck` | 전체 타입 검사 |
 | `npm run lint` | 전체 ESLint (워크스페이스별) |
@@ -181,6 +182,7 @@ npx impeccable install --global --no-hooks
 | ----------- | ---------- | --------- |
 | `apps/web` | `tests/unit/**/*.test.{ts,tsx}` | `tests/e2e/**/*.spec.ts` (Playwright) |
 | `apps/api` | `test/unit/**/*.test.ts` | `test/integration/**/*.test.ts` (Supertest) |
+| `apps/desktop` | `tests/unit/**/*.test.{ts,tsx}` | — |
 | `packages/ui` | `tests/**/*.test.{ts,tsx}` | — |
 
 커버리지 임계치는 워크스페이스별 80% (statements/branches/functions/lines).

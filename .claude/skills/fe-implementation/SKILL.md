@@ -1,6 +1,6 @@
 ---
 name: fe-implementation
-description: apps/web + packages/ui 프론트엔드 구현 스킬. React 19 + Vite 7 + Tailwind CSS v4 + shadcn/ui 스택에서 FE 레이어 순서(types→services→hooks→view)와 @/ 별칭, Tailwind 토큰, shadcn/ui 추가 절차를 적용한다. FE 개발 시 반드시 사용.
+description: apps/web + packages/ui 프론트엔드 구현 스킬. React 19 + Vite 8 + Tailwind CSS v4 + shadcn/ui 스택에서 FE 레이어 순서(types→services→hooks→view)와 @/ 별칭, Tailwind 토큰, shadcn/ui 추가 절차를 적용한다. FE 개발 시 반드시 사용.
 ---
 
 # fe-implementation

@@ -22,9 +22,10 @@
 
 | Workspace | Description | Port |
 | --------- | ----------- | ---- |
-| `apps/web` | React 19 + Vite 7 frontend | 3000 |
+| `apps/web` | React 19 + Vite 8 frontend | 3000 |
 | `apps/api` | Express + Prisma + PostgreSQL backend | 4000 |
 | `apps/storybook` | Storybook 10 component docs | 6006 |
+| `apps/desktop` | Electron 데스크톱 앱 (electron-vite, renderer는 apps/web과 동일 환경) | 3100 |
 | `packages/shared-types` | FE/BE 공유 TypeScript 타입 (런타임 코드 금지) | — |
 | `packages/ui` | 공유 UI 컴포넌트 라이브러리 (shadcn/ui) | — |
 | `packages/eslint-config` | 공유 ESLint 설정 | — |
@@ -39,7 +40,7 @@
 | 패키지 매니저 | npm | >= 10.0.0 |
 | 모노레포 | Turborepo | ^2.9 |
 | 언어 | TypeScript | ^6.0 |
-| Frontend | React + Vite + Tailwind CSS | 19 / 7 / 4 |
+| Frontend | React + Vite + Tailwind CSS | 19 / 8 / 4 |
 | Backend | Express + Prisma | 5 / 7 |
 | DB | PostgreSQL (로컬: Docker / 배포: Neon) | 18 |
 | 테스트 | Vitest + Testing Library + Playwright | ^4.1 / ^16 / ^1.59 |
@@ -55,7 +56,7 @@
 
 ```bash
 # 루트 (전체 워크스페이스)
-npm run dev          # web(3000) + api(4000) + storybook(6006) 동시 구동
+npm run dev          # web(3000) + api(4000) + storybook(6006) + desktop(3100, Electron 창) 동시 구동
 npm run build        # 전체 빌드 (의존 순서 자동)
 npm run typecheck    # 전체 타입 검사
 npm run lint         # ESLint (--max-warnings=0)
@@ -63,7 +64,7 @@ npm run test         # Vitest + Playwright
 npm run format       # Prettier
 
 # 워크스페이스 필터
-turbo run <task> --filter=<web|api|storybook|ui>
+turbo run <task> --filter=<web|api|storybook|desktop|ui>
 
 # apps/api 내부
 npm run dev | migrate | seed | test
@@ -80,6 +81,7 @@ npx shadcn add <component>   # 추가 후 src/index.ts에 수동 re-export
 - [apps/api/CLAUDE.md](./apps/api/CLAUDE.md) — 레이어드 아키텍처, `sendSuccess`/`AppError`, 마이그레이션
   - [apps/api/src/services/CLAUDE.md](./apps/api/src/services/CLAUDE.md) — 비즈니스 로직 규칙
   - [apps/api/src/repositories/CLAUDE.md](./apps/api/src/repositories/CLAUDE.md) — SQL 격리 규칙
+- [apps/desktop/CLAUDE.md](./apps/desktop/CLAUDE.md) — Electron main/preload/renderer 구조, apps/web과의 차이, 테스트 경로
 - [packages/ui/CLAUDE.md](./packages/ui/CLAUDE.md) — 컴포넌트 추가·배럴 export·Tailwind
 - [packages/shared-types/CLAUDE.md](./packages/shared-types/CLAUDE.md) — 런타임 코드 금지
 
@@ -100,6 +102,7 @@ NODE_ENV=development
 | --------- | ---- | ----------------- |
 | `apps/web` | `tests/unit/**/*.test.{ts,tsx}` | `tests/e2e/**/*.spec.ts` |
 | `apps/api` | `test/unit/**/*.test.ts` | `test/integration/**/*.test.ts` |
+| `apps/desktop` | `tests/unit/**/*.test.{ts,tsx}` | — |
 | `packages/ui` | `tests/**/*.test.{ts,tsx}` | — |
 
 루트에서 `npm run test` 로 전체 실행. 워크스페이스 단위 실행은 `turbo run test --filter=<name>`.

@@ -1,6 +1,6 @@
 # apps/web
 
-React 19 + Vite 7 + Tailwind CSS v4 프런트엔드 (port 3000).
+React 19 + Vite 8 + Tailwind CSS v4 프런트엔드 (port 3000).
 
 ## 디렉터리 역할
 
