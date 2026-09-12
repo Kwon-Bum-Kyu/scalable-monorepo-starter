@@ -63,30 +63,33 @@ src/
 
 ### radius 비례 원칙 (FR-7)
 
-기준값 `--radius: 0.75rem`(12px). 컴포넌트 중첩 시 다음 비례를 따른다:
+기준값 `--radius: 0.5rem`(8px). 파생 토큰은 기준값에서 계산된다: `--radius-sm`(4px) / `--radius-md`(6px) / `--radius-lg`(8px, 기준값과 동일) / `--radius-xl`(12px) / `--radius-2xl`(24px) / `--radius-full`(9999px) / `--radius-none`(0). 컴포넌트 중첩 시 다음 비례를 따른다:
 
-- **컨테이너 레벨**: `rounded-md`(10px) — input, select trigger·content, popover content, tabs list, calendar, button(default·sm·lg)
-- **nested 요소**: `rounded-sm`(8px) — select item, tabs trigger, checkbox(4×4), 작은 inline 요소
+- **컨테이너 레벨**: `rounded-lg`(8px) — button, input, card, dialog content, sonner toast, tabs list(default variant)
+- **중간 레벨**: `rounded-md`(6px) — select trigger·content, popover content, tooltip content, calendar, header, tabs trigger(default variant)
+- **nested 요소**: `rounded-sm`(4px) — select item, checkbox, badge(sq), dialog·sheet close 버튼
+- **pill 형태**: `rounded-full` — badge(pill), switch, radio, slider, carousel 컨트롤, tabs(pill variant)
 - **range edge** (calendar 등): `rounded-l-md`/`rounded-r-md`로 컨테이너 곡률과 일치
-- **명세 외 변형**: `--radius-none`(0), `--radius-xl`(16px), `--radius-2xl`(24px) — 의도된 강조 표현에만 사용
+- **명세 외 변형**: `--radius-none`(0), `--radius-xl`(12px), `--radius-2xl`(24px) — 의도된 강조 표현에만 사용
 
 원칙: **자식 요소 radius ≤ 부모 요소 radius**. 그래야 corner blending이 자연스럽다.
 
 ### elevation 위계 매핑 (FR-8)
 
-shadow 토큰은 4단계 위계로 정의된다(`globals.css` `@theme`). 각 컴포넌트는 의도된 표면 위계에 따라 정확한 토큰만 사용한다.
+shadow 토큰은 0~4 5단계 위계로 정의된다(`globals.css` `@theme`). 각 컴포넌트는 의도된 표면 위계에 따라 정확한 토큰만 사용한다.
 
 | 토큰 | utility | 위계 | 용도 |
 | ---- | ------- | ---- | ---- |
-| `--shadow-1-subtle` | `shadow-1-subtle` | 1 (subtle) | 같은 평면 내 미세 강조 — `tabs trigger active`, `calendar dropdown_root` |
-| `--shadow-2-default` | `shadow-2-default` | 2 (default) | 컨텐츠 그룹화 default surface — `card` |
+| `--shadow-0-subtle` | `shadow-0-subtle` | 0 (subtle outline) | 테두리와 함께 쓰는 최소 그림자 — `card`(subtle variant) |
+| `--shadow-1-subtle` | `shadow-1-subtle` | 1 (subtle) | 같은 평면 내 미세 강조 — `tabs trigger active`(default variant), `calendar dropdown_root`, `switch` thumb |
+| `--shadow-2-default` | `shadow-2-default` | 2 (default) | 컨텐츠 그룹화 default surface — `card`(elev variant) |
 | `--shadow-3-raised` | `shadow-3-raised` | 3 (raised) | 사용자 트리거로 띄워지는 raised surface — `popover content`, `select content`, `tooltip content` |
-| `--shadow-4-overlay` | `shadow-4-overlay` | 4 (overlay) | 최상위 overlay — Dialog/Sheet/Drawer (해당 컴포넌트 추가 시 적용) |
+| `--shadow-4-overlay` | `shadow-4-overlay` | 4 (overlay) | 최상위 overlay — `dialog content`, `sheet content`, `sonner toast` |
 
 **원칙:**
 - **자식 위계 ≤ 부모 위계** — popover 안에 떠 있는 select은 부모(popover)와 같은 raised 또는 더 약한 위계만 허용.
 - **외부 override 가능**: `<Card className="shadow-3-raised">` 같이 호출부에서 위계 변경 가능 (Tailwind 우선순위로 자연 동작).
-- **하드코딩 금지**: `shadow-md`/`shadow-sm`/`shadow-xs` 등 Tailwind 기본 토큰 직접 사용 금지 — 4단계 토큰만 사용.
+- **하드코딩 금지**: `shadow-md`/`shadow-sm`/`shadow-xs` 등 Tailwind 기본 토큰 직접 사용 금지 — 5단계 토큰만 사용.
 
 ## 테스트
 
