@@ -19,6 +19,12 @@ const A1_IDENTITY_MAP: ReadonlyArray<{ slot: string; themeToken: string }> = [
   { slot: "--accent", themeToken: ACCENT_THEME_TOKEN },
 ];
 
+const STATUS_SLOT_MAP: ReadonlyArray<{ slot: string; themeToken: string }> = [
+  { slot: "--success", themeToken: "--color-system-green" },
+  { slot: "--warn", themeToken: "--color-system-warning" },
+  { slot: "--danger", themeToken: "--color-system-red" },
+];
+
 function readContractSource(): string {
   return readFileSync(CONTRACT_CSS_PATH, "utf-8");
 }
@@ -40,6 +46,16 @@ describe("open-design-contract 브리지 CSS", () => {
   });
 
   it.each(A1_IDENTITY_MAP)("$slot 슬롯 값이 대응 @theme 토큰 리터럴과 일치한다", ({ slot, themeToken }) => {
+    assertHexColor(getContractVar(slot), getCssVar(themeToken));
+  });
+
+  it("상태색 3슬롯이 모두 선언된다", () => {
+    for (const { slot } of STATUS_SLOT_MAP) {
+      expect(() => getContractVar(slot)).not.toThrow();
+    }
+  });
+
+  it.each(STATUS_SLOT_MAP)("$slot 슬롯 값이 대응 @theme 토큰 리터럴과 일치한다", ({ slot, themeToken }) => {
     assertHexColor(getContractVar(slot), getCssVar(themeToken));
   });
 
