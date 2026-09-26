@@ -21,7 +21,7 @@ interface TabsListProps
     VariantProps<typeof tabsListVariants> {}
 
 const TabsList = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.List>,
+  React.ComponentRef<typeof TabsPrimitive.List>,
   TabsListProps
 >(({ className, variant, ...props }, ref) => {
   const resolved = (variant ?? "boxed") as TabsListVariant;
@@ -43,7 +43,7 @@ interface TabsTriggerProps
     VariantProps<typeof tabsTriggerVariants> {}
 
 const TabsTrigger = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Trigger>,
+  React.ComponentRef<typeof TabsPrimitive.Trigger>,
   TabsTriggerProps
 >(({ className, variant, ...props }, ref) => {
   const ctx = React.useContext(TabsListContext);
@@ -61,7 +61,7 @@ const TabsTrigger = React.forwardRef<
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Content>,
+  React.ComponentRef<typeof TabsPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
