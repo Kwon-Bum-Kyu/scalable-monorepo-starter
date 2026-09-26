@@ -8,7 +8,7 @@ export const OverviewSection = () => (
     id="overview"
     eyebrow="KBK · Design System"
     title="디자인 시스템 한눈에 보기"
-    description="Claude Design 명세와 packages/ui (shadcn/ui 기반) 의 토큰을 단일 소스로 통합합니다. 모든 색·타입·스페이싱·컴포넌트는 packages/ui/src/styles/globals.css 의 @theme 토큰에서 직접 가져옵니다."
+    description="Claude Design 명세와 packages/ui (shadcn/ui 기반) 의 토큰을 단일 소스로 통합합니다. 토큰 값의 원천은 루트 DESIGN.md 이고, packages/ui/src/styles/globals.css 의 @theme 가 이를 구현합니다. 모든 색·타입·스페이싱·컴포넌트는 이 @theme 토큰을 사용합니다."
     headingLevel={1}
   >
     <div className="flex flex-wrap gap-2">
