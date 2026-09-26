@@ -70,6 +70,7 @@ describe("open-design-contract 브리지 CSS", () => {
     expect(source).toContain("단일 출처");
     expect(source).toContain("@theme");
     expect(source).toContain("값 수정 금지");
+    expect(source).toContain("DESIGN.md");
   });
 
   it("globals.css가 브리지 파일을 @import하지 않는다", () => {

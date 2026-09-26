@@ -4,7 +4,8 @@
 
 ## 테마 변수 정의 위치
 
-모든 디자인 토큰은 `packages/ui/src/styles/globals.css`의 `@theme` 블록에서 CSS 변수로 정의한다.
+디자인 토큰 값의 원천은 루트 `DESIGN.md`(frontmatter와 정규 섹션 토큰 표)다. `packages/ui/src/styles/globals.css`의 `@theme` 블록은 그 값을 CSS 변수로 구현하며, 코드는 `@theme` 토큰만 소비한다. 둘의 일치는 `packages/ui/tests/tokens/design-md-sync.test.ts`가 검증한다.
+`/impeccable document`를 코드 스캔 모드로 실행해 DESIGN.md를 다시 생성하거나 덮어쓰지 않는다 — 원천 방향이 뒤집힌다. 필요하면 `.impeccable/design.json`만 갱신한다.
 
 ```css
 /* packages/ui/src/styles/globals.css */
@@ -98,7 +99,7 @@ import "@repo/ui/globals.css";
 
 ## 하드코딩 금지
 
-임의 값(`[#3b82f6]`, `bg-[rgb(...)]`)·하드코딩 크기(`text-[14px]`) 사용 금지. 필요하면 `@theme`에 토큰을 먼저 추가한다.
+임의 값(`[#3b82f6]`, `bg-[rgb(...)]`)·하드코딩 크기(`text-[14px]`) 사용 금지. 필요하면 `DESIGN.md`에 토큰을 먼저 추가하고 같은 이름·값으로 `@theme`에 구현한다.
 
 ```tsx
 // BAD

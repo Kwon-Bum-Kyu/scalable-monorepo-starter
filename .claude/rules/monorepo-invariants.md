@@ -119,6 +119,7 @@ import { useApi } from "@/hooks/useApi";
 ## 8. Tailwind CSS 테마 변수
 
 색상·폰트·간격 등 디자인 토큰은 반드시 `packages/ui/src/styles/globals.css`의 `@theme` 변수를 사용. 하드코딩 금지.
+토큰 값의 원천은 루트 `DESIGN.md`이고 `@theme`는 그 구현체다. 새 토큰은 DESIGN.md → `@theme` → 가드 테스트(`packages/ui/tests/tokens/design-md-sync.test.ts`) 순서로 추가한다.
 
 ```tsx
 // BAD

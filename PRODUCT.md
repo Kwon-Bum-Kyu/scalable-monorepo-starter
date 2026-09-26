@@ -26,7 +26,7 @@ Turborepo 기반의 풀스택 모노레포 스타터 템플릿이다. React 19 +
 - 배포: Neon PostgreSQL, Vercel 등 플랫폼 환경변수.
 - 문서: README.md(사람 진입점), CLAUDE.md(AI 진입점), `.claude/rules/`(규칙 상세), 워크스페이스별 CLAUDE.md.
 - 검증 의식: TDD Red-Green-Refactor, 커버리지 80%, `turbo run lint --max-warnings=0`, CI에서 typecheck·lint·test·e2e.
-- 디자인 명세 소스: Claude Design(2026-05 이후). 디자인 토큰의 단일 출처는 `packages/ui/src/styles/globals.css`의 `@theme` 블록.
+- 디자인 명세 소스: Claude Design(2026-05 이후). 디자인 토큰의 단일 출처는 루트 `DESIGN.md`이고, `packages/ui/src/styles/globals.css`의 `@theme` 블록은 그 구현체다.
 
 ## Capabilities and Constraints
 
@@ -40,7 +40,7 @@ Turborepo 기반의 풀스택 모노레포 스타터 템플릿이다. React 19 +
 
 - 이름: scalable-monorepo-starter. 로고는 `apps/web/public/logo.png`.
 - 목소리: 한국어, 평서문, 이모지 없음. 기술 용어는 원어를 유지한다.
-- 구속력 있는 시각 제약: 색상·간격·폰트는 `@theme` 토큰만 사용하고 임의값(`bg-[#hex]`, `text-[14px]`)을 쓰지 않는다. shadcn/ui 생성 파일은 CLI 출력 그대로 유지한다.
+- 구속력 있는 시각 제약: 색상·간격·폰트는 `@theme` 토큰만 사용하고 임의값(`bg-[#hex]`, `text-[14px]`)을 쓰지 않는다. shadcn/ui 생성 파일은 CLI 출력 그대로 유지한다. 리네임 금지는 파일명 규칙이며, 파일 내용(코드)은 프로젝트 규칙(토큰 사용, deprecated 타입 치환 등)에 맞춰 수정할 수 있다.
 - 서체: Open Sans 12종을 `apps/web/public/fonts/`에 동봉한다.
 
 ## Evidence on Hand

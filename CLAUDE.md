@@ -50,7 +50,7 @@
 ## 제품·디자인 맥락
 
 - [PRODUCT.md](./PRODUCT.md) — 사용자·목적·제약 등 제품 맥락. UI를 새로 만들거나 바꾸기 전에 읽는다.
-- [DESIGN.md](./DESIGN.md) — 디자인 토큰과 컴포넌트 규범. 색·타이포·간격·radius 값은 이 문서의 토큰만 쓴다. 토큰의 단일 출처는 `packages/ui/src/styles/globals.css`의 `@theme`.
+- [DESIGN.md](./DESIGN.md) — 디자인 토큰과 컴포넌트 규범. 색·타이포·간격·radius 값은 이 문서의 토큰만 쓴다. 토큰의 단일 출처는 이 문서이고, `packages/ui/src/styles/globals.css`의 `@theme`는 그 구현체다(일치는 `packages/ui/tests/tokens/design-md-sync.test.ts`가 검증).
 
 ## 주요 명령어
 
