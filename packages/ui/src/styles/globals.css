@@ -37,8 +37,13 @@
 
   /* Font weights (FR-9) */
   --font-weight-regular: 400;
+  --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+
+  /* Letter spacing — 역할 이름 토큰 (Tailwind 기본 키와 겹치지 않음) */
+  --tracking-eyebrow: 0.08em;
+  --tracking-label: 0.06em;
 
   /* Blue color palette */
   --color-blue-50: #e1e9ef;
@@ -86,6 +91,7 @@
   --spacing-logo-h: 40px;
   --spacing-header: 64px;
   --spacing-page-x: 72px;
+  --spacing-sidebar-h: calc(100vh - 2rem);
 
   /* Breakpoints */
   --breakpoint-mobile: 640px;

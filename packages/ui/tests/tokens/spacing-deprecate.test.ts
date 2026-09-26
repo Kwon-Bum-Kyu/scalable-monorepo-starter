@@ -12,7 +12,7 @@ import {
  * 정책: Tailwind v4 의 4px-base 자동 utility 가 `p-1=4px`, `p-2=8px`, ..., `p-20=80px`,
  * `p-32=128px` 등을 모두 자동 생성하므로 풀세트 토큰화는 불필요.
  * 본 모노레포는 *의미적 별칭*(`--spacing-page-x`, `--spacing-header`,
- * `--spacing-logo-h`, `--spacing-16=64px`)만 유지한다.
+ * `--spacing-logo-h`, `--spacing-16=64px`, `--spacing-sidebar-h`)만 유지한다.
  */
 describe("spacing 정책 (FR-10)", () => {
   afterAll(() => {
@@ -41,7 +41,7 @@ describe("spacing 정책 (FR-10)", () => {
   });
 
   describe("@theme 블록 내 spacing 토큰 인벤토리", () => {
-    it("@theme 블록에 정의된 --spacing-* 토큰 목록이 의미적 별칭 4개로만 구성된다", () => {
+    it("@theme 블록에 정의된 --spacing-* 토큰 목록이 의미적 별칭 5개로만 구성된다", () => {
       const themeBody = getThemeBlockSource();
       const spacingTokens = [
         ...themeBody.matchAll(/^\s*(--spacing-[\w-]+)\s*:/gm),
@@ -52,6 +52,7 @@ describe("spacing 정책 (FR-10)", () => {
         "--spacing-logo-h",
         "--spacing-header",
         "--spacing-page-x",
+        "--spacing-sidebar-h",
       ]);
 
       for (const token of spacingTokens) {

@@ -24,4 +24,8 @@ describe("spacing tokens (FR-2)", () => {
   it("spacing-logo-h 토큰이 40px로 유지된다", () => {
     assertPxValue(getCssVar("--spacing-logo-h"), 40);
   });
+
+  it("spacing-sidebar-h 토큰이 calc(100vh - 2rem)으로 정의된다", () => {
+    expect(getCssVar("--spacing-sidebar-h")).toBe("calc(100vh - 2rem)");
+  });
 });
