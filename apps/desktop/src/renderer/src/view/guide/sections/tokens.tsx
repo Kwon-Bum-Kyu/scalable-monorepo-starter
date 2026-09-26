@@ -234,19 +234,19 @@ export const BreakpointsSection = () => (
       <table aria-label="Breakpoints" className="w-full text-sm">
         <thead>
           <tr className="border-b border-gray-50 bg-gray-50/40 text-left">
-            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.06em] text-gray-400">
+            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-label text-gray-400">
               이름
             </th>
-            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.06em] text-gray-400">
+            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-label text-gray-400">
               너비
             </th>
-            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.06em] text-gray-400">
+            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-label text-gray-400">
               컬럼
             </th>
-            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.06em] text-gray-400">
+            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-label text-gray-400">
               마진
             </th>
-            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.06em] text-gray-400">
+            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-label text-gray-400">
               거터
             </th>
           </tr>

@@ -12,7 +12,7 @@ import { SIDEBAR_GROUPS } from "@/view/guide/navData";
 
 const SECTION_TONE = {
   eyebrowClass:
-    "font-mono text-xs font-bold uppercase tracking-[0.08em] text-gray-400",
+    "font-mono text-xs font-bold uppercase tracking-eyebrow text-gray-400",
   titleClass: "mt-1 text-3xl font-bold tracking-tight text-gray-900",
   descClass: "mt-2 max-w-prose text-sm leading-6 text-gray-400",
 } as const;
@@ -107,7 +107,7 @@ export const Sidebar = () => (
   <aside className="hidden w-60 shrink-0 lg:block">
     <nav
       aria-label="Design System Guide"
-      className="sticky top-4 max-h-[calc(100vh-2rem)] overflow-auto border-r border-gray-50 pr-5"
+      className="sticky top-4 max-h-sidebar-h overflow-auto border-r border-gray-50 pr-5"
     >
       <div className="mb-6">
         <div className="text-base font-bold text-gray-900">Design System</div>
@@ -118,7 +118,7 @@ export const Sidebar = () => (
       <ul className="space-y-5">
         {SIDEBAR_GROUPS.map((group) => (
           <li key={group.title}>
-            <h4 className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-gray-300">
+            <h4 className="mb-2 font-mono text-xs font-bold uppercase tracking-eyebrow text-gray-300">
               {group.title}
             </h4>
             <ul className="space-y-1">
