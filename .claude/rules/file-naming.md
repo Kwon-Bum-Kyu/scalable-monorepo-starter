@@ -84,6 +84,8 @@ errors/AppError.ts
 
 `npx shadcn add` 로 생성된 `packages/ui/src/components/ui/*` 파일은 CLI 출력 그대로 유지한다.
 
+리네임 금지는 파일명 규칙이다. 파일 내용(코드)은 프로젝트 규칙(토큰 사용, deprecated 타입 치환 등)에 맞춰 수정할 수 있다.
+
 ```
 // 유지 (변경 금지)
 packages/ui/src/components/ui/button.tsx
@@ -126,7 +128,7 @@ tsconfig.json
 - [ ] `.tsx`이면서 default export가 React 컴포넌트인가? → PascalCase
 - [ ] `use`로 시작하는 훅인가? → camelCase
 - [ ] `apps/api/src/` 하위 레이어 파일인가? → kebab-case
-- [ ] `packages/ui/src/components/ui/` 내부인가? → shadcn 생성물 그대로, 변경 금지
+- [ ] `packages/ui/src/components/ui/` 내부인가? → shadcn 생성물 파일명 그대로(리네임 금지), 내용은 프로젝트 규칙에 맞춰 수정 가능
 - [ ] 프레임워크가 인식하는 특수 파일인가? → 도구 관례 준수
 - [ ] 그 외 `.ts` 파일인가? → camelCase
 

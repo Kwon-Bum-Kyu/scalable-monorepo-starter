@@ -18,7 +18,7 @@
 
   --breakpoint-mobile: 640px;
   --breakpoint-tablet: 768px;
-  --breakpoint-desktop: 1440px;
+  --breakpoint-desktop: 1280px;
 }
 ```
 
@@ -34,12 +34,14 @@ Tailwind v4는 `@theme` 토큰의 **네임스페이스 prefix** 로 utility 클�
 | 네임스페이스          | 자동 생성되는 utility                                                                       | 예시                                                          |
 | --------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
 | `--color-*`           | `bg-*`, `text-*`, `border-*`, `ring-*`, `outline-*`, `divide-*`, `from-*`/`via-*`/`to-*`    | `--color-blue-500` → `bg-blue-500`                            |
-| `--spacing-*`         | `p-*`, `m-*`, `w-*`, `h-*`, `min-w-*`, `min-h-*`, `max-w-*`, `max-h-*`, `gap-*`, `inset-*`  | `--spacing-page-x: 72px` → `px-page-x` / `--spacing-header: 88px` → `min-h-header` |
+| `--spacing-*`         | `p-*`, `m-*`, `w-*`, `h-*`, `min-w-*`, `min-h-*`, `max-w-*`, `max-h-*`, `gap-*`, `inset-*`  | `--spacing-page-x: 72px` → `px-page-x` / `--spacing-header: 64px` → `min-h-header` |
 | `--container-*`       | `max-w-*`, `@container` 컨테이너 쿼리 변형                                                   | `--container-app: 1280px` → `max-w-app`                       |
 | `--font-family-*`     | `font-*`                                                                                    | `--font-family-sans` → `font-sans`                            |
 | `--font-size-*`       | `text-*` (크기)                                                                             | `--font-size-xl: 20px` → `text-xl`                            |
 | `--line-height-*`     | `leading-*`                                                                                 | `--line-height-32: 32px` → `leading-32`                       |
-| `--breakpoint-*`      | 반응형 변형 prefix                                                                          | `--breakpoint-desktop: 1440px` → `desktop:flex`               |
+| `--font-weight-*`     | `font-*` (굵기)                                                                             | `--font-weight-medium: 500` → `font-medium`                  |
+| `--tracking-*`        | `tracking-*` (자간)                                                                         | `--tracking-label: 0.06em` → `tracking-label`                |
+| `--breakpoint-*`      | 반응형 변형 prefix                                                                          | `--breakpoint-desktop: 1280px` → `desktop:flex`               |
 | `--radius-*`          | `rounded-*`                                                                                 | `--radius-lg` → `rounded-lg`                                  |
 | `--shadow-*`          | `shadow-*`                                                                                  | `--shadow-md` → `shadow-md`                                   |
 
@@ -52,7 +54,7 @@ Tailwind v4는 `@theme` 토큰의 **네임스페이스 prefix** 로 utility 클�
 ```css
 /* GOOD — utility 자동 생성 */
 @theme {
-  --spacing-header: 88px;       /* → min-h-header, h-header, p-header 등 */
+  --spacing-header: 64px;       /* → min-h-header, h-header, p-header 등 */
   --spacing-page-x: 72px;       /* → px-page-x, mx-page-x 등 */
   --container-app: 1280px;      /* → max-w-app */
   --container-content: 1280px;  /* → max-w-content */
