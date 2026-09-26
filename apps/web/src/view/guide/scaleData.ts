@@ -109,6 +109,7 @@ export const FONT_WEIGHTS: ReadonlyArray<{
     value: "400",
     className: "font-normal",
   },
+  { token: "--font-weight-medium", value: "500", className: "font-medium" },
   {
     token: "--font-weight-semibold",
     value: "600",

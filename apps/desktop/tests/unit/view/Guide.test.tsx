@@ -132,6 +132,13 @@ describe("Guide 페이지 — Claude Design system guide", () => {
       expect(screen.getByText("--font-family-sans")).toBeInTheDocument();
       expect(screen.getByText("--font-family-mono")).toBeInTheDocument();
     });
+
+    it("Weights 카드에 400·500·600·700 네 단계가 노출된다", () => {
+      renderGuide();
+      for (const value of ["400", "500", "600", "700"]) {
+        expect(screen.getByText(`Weight ${value}`)).toBeInTheDocument();
+      }
+    });
   });
 
   describe("Spacing · Radius · Elevation 섹션", () => {
