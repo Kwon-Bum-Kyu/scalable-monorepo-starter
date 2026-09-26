@@ -1,6 +1,6 @@
 ---
 name: scalable-monorepo-starter
-description: Turborepo 모노레포의 단일 출처 디자인 토큰(packages/ui/src/styles/globals.css)과 shadcn/ui 기반 컴포넌트를 정리한 디자인 시스템 문서.
+description: 이 레포 디자인 토큰의 단일 출처(원천). packages/ui/src/styles/globals.css의 @theme가 이 문서를 구현하고 가드 테스트가 둘의 일치를 검증한다. shadcn/ui 기반 컴포넌트 규범을 함께 정리한다.
 colors:
   # Brand · Blue 10단계
   blue-50: "#e1e9ef"
@@ -30,7 +30,7 @@ colors:
   system-warning: "#f9a80a"
   system-info: "#2196f3"
   system-white: "#ffffff"
-  # 프로젝트 시맨틱 별칭 (globals.css @theme 선언 — 참고용, 실제 유틸리티 소비는 아래 shadcn 레이어 참조)
+  # 프로젝트 시맨틱 별칭 (@theme에 구현 — 유틸리티로 직접 소비하지 않음, 실제 소비는 아래 shadcn 레이어 참조)
   text-primary: "#161613"
   text-secondary: "#535350"
   text-placeholder: "#9a9a98"
@@ -93,6 +93,7 @@ typography:
     fontSize: "12px"
     fontWeight: 700
     lineHeight: "16px"
+    letterSpacing: "0.06em"
 rounded:
   none: "0"
   sm: "4px"
@@ -191,7 +192,7 @@ components:
 
 **Creative North Star: "청사진 (The Blueprint)"**
 
-이 시스템의 단일 출처는 `packages/ui/src/styles/globals.css`의 `@theme` 블록이다. 여기서 정의된 토큰이 `packages/ui/src/components/ui/`의 shadcn/ui 기반 컴포넌트 약 40종으로 흘러가고, 그 결과가 `apps/web/src/view/Guide.tsx`(및 `guide/sections/*`)에서 살아있는 카탈로그로 그대로 렌더링된다. 컴포넌트는 세 계층으로 조립된다 — L1(shadcn CLI 원본 그대로), L2(프로젝트 커스텀 wrapper), L3(`Simple*` 프리셋). 새 화면을 만들 때는 이 계층 중 어디에 놓일 컴포넌트인지부터 정한다.
+이 시스템의 단일 출처는 이 문서다 — frontmatter와 각 섹션의 토큰 표가 값의 원천이고, `packages/ui/src/styles/globals.css`의 `@theme` 블록이 그 값을 구현하며, `packages/ui/tests/tokens/design-md-sync.test.ts`가 둘의 일치를 검증한다. `@theme`의 토큰이 `packages/ui/src/components/ui/`의 shadcn/ui 기반 컴포넌트 약 40종으로 흘러가고, 그 결과가 `apps/web/src/view/Guide.tsx`(및 `guide/sections/*`)에서 살아있는 카탈로그로 그대로 렌더링된다. 컴포넌트는 세 계층으로 조립된다 — L1(shadcn CLI 원본 그대로), L2(프로젝트 커스텀 wrapper), L3(`Simple*` 프리셋). 새 화면을 만들 때는 이 계층 중 어디에 놓일 컴포넌트인지부터 정한다.
 
 성격은 편집적이지 않고 계기판적이다. 인터랙티브 액센트는 짙은 네이비 블루(blue-500, `#084777`) 하나뿐이고, 나머지는 살짝 웜톤이 도는 뉴트럴 그레이 스케일이 떠받친다. 서체는 본문용 Open Sans와, 라벨·강조·코드 성격 텍스트에만 쓰는 모노스페이스 Roboto Mono로 명확히 이원화된다. 색·폰트 크기·행간이 모두 10단계 스케일로 선언 순서까지 나란히 맞춰져 있어(`--color-blue-50…900`, `--font-size-xs…6xl`, `--line-height-16…72`), 무드보드보다는 사양서(spec sheet)에 가깝게 읽힌다.
 
@@ -207,7 +208,7 @@ components:
 
 ## Colors
 
-팔레트는 단일 블루 액센트 + 웜 그레이 스케일 + 5종 시스템 색으로 구성되며, 전량 `packages/ui/src/styles/globals.css`의 `@theme`/`:root`/`.dark`에서 나온다.
+팔레트는 단일 블루 액센트 + 웜 그레이 스케일 + 5종 시스템 색으로 구성된다. 라이트 기준 값의 원천은 이 문서의 frontmatter `colors`이고, `packages/ui/src/styles/globals.css`의 `@theme`·`@theme inline`·`:root`가 이를 구현한다. 다크 모드 값(`.dark`)은 `globals.css`에만 둔다(이 문서는 라이트 기준).
 
 ### Primary
 - **Blue 500** (`#084777`): `interactive-default` / shadcn `primary`. 기본 버튼·링크·포커스 링에 쓰는 유일한 브랜드 액센트.
@@ -238,19 +239,75 @@ components:
 
 ## Typography
 
-**Display Font:** `'Roboto Mono', ui-monospace, monospace` (`--font-family-display`)
-**Body Font:** `'Open Sans', ui-sans-serif, system-ui, sans-serif` (`--font-family-sans`, 자체 호스팅 12 face, `apps/web/public/fonts/`)
-**Label/Mono Font:** `'Roboto Mono', ui-monospace, SFMono-Regular, monospace` (`--font-family-mono`)
-**보조 본문 Font:** `'PT Sans', 'Open Sans', sans-serif` (`--font-family-body-alt`) — "긴 본문이나 기사 톤 콘텐츠"용으로 문서화된 보조 패밀리(Guide 원문 설명 그대로).
+**Display Font:** Roboto Mono (`--font-family-display`)
+**Body Font:** Open Sans (`--font-family-sans`, 자체 호스팅 12 face, `apps/web/public/fonts/`)
+**Label/Mono Font:** Roboto Mono (`--font-family-mono`)
+**보조 본문 Font:** PT Sans (`--font-family-body-alt`) — "긴 본문이나 기사 톤 콘텐츠"용으로 문서화된 보조 패밀리(Guide 원문 설명 그대로).
 
 **Character:** 본문은 Open Sans의 인문적인 산세리프로 읽히고, 라벨·디스플레이·코드 성격 텍스트는 Roboto Mono로 전환되어 "본문 대 계기판 표기"를 서체 자체로 분리한다.
+
+### Font Family Tokens
+| 토큰 | 값 | 용도 |
+| ---- | -- | ---- |
+| `--font-family-sans` | `"Open Sans", ui-sans-serif, system-ui, sans-serif` | 본문 |
+| `--font-family-mono` | `"Roboto Mono", ui-monospace, SFMono-Regular, monospace` | 라벨·코드 |
+| `--font-family-display` | `"Roboto Mono", ui-monospace, monospace` | 디스플레이 |
+| `--font-family-body-alt` | `"PT Sans", "Open Sans", sans-serif` | 보조 본문(기사 톤) |
+
+### Font Size Tokens
+| 토큰 | 값 | 용도 |
+| ---- | -- | ---- |
+| `--font-size-xs` | `12px` | 짝 `--line-height-16` |
+| `--font-size-sm` | `14px` | 짝 `--line-height-20` |
+| `--font-size-base` | `16px` | 짝 `--line-height-24` |
+| `--font-size-lg` | `18px` | 짝 `--line-height-28` |
+| `--font-size-xl` | `20px` | 짝 `--line-height-32` |
+| `--font-size-2xl` | `24px` | 짝 `--line-height-40` |
+| `--font-size-3xl` | `32px` | 짝 `--line-height-48` |
+| `--font-size-4xl` | `40px` | 짝 `--line-height-56` |
+| `--font-size-5xl` | `48px` | 짝 `--line-height-64` |
+| `--font-size-6xl` | `56px` | 짝 `--line-height-72` |
+
+### Line Height Tokens
+| 토큰 | 값 | 용도 |
+| ---- | -- | ---- |
+| `--line-height-16` | `16px` | 짝 `--font-size-xs` |
+| `--line-height-20` | `20px` | 짝 `--font-size-sm` |
+| `--line-height-24` | `24px` | 짝 `--font-size-base` |
+| `--line-height-28` | `28px` | 짝 `--font-size-lg` |
+| `--line-height-32` | `32px` | 짝 `--font-size-xl` |
+| `--line-height-40` | `40px` | 짝 `--font-size-2xl` |
+| `--line-height-48` | `48px` | 짝 `--font-size-3xl` |
+| `--line-height-56` | `56px` | 짝 `--font-size-4xl` |
+| `--line-height-64` | `64px` | 짝 `--font-size-5xl` |
+| `--line-height-72` | `72px` | 짝 `--font-size-6xl` |
+
+> **알려진 문제 (Tailwind 유틸리티 미반영):** 위 Font Family·Font Size·Line Height 표의 토큰 24개(`--font-family-*` 4개, `--font-size-*` 10개, `--line-height-*` 10개)는 이 문서가 정한 값의 원천이고 `packages/ui/src/styles/globals.css`의 `@theme`에도 같은 값으로 선언되어 있지만, 현재 Tailwind CSS v4 유틸리티에는 반영되지 않는다. Tailwind v4가 글꼴·글자 크기·행간 유틸리티를 만들 때 읽는 네임스페이스는 `--font-*`·`--text-*`·`--leading-*`이고, 이 토큰들은 이름이 달라 읽히지 않기 때문이다. 그래서 `font-sans`(본문 기본 글꼴)는 Open Sans가 아니라 Tailwind 기본 시스템 글꼴로, `text-3xl`은 32px가 아니라 Tailwind 기본값 30px로 렌더링되고, `leading-32` 같은 클래스는 만들어지지 않는다. 네임스페이스 이주는 후속 작업이다. 그 전까지도 이 표가 값의 원천이며, 가드 테스트(`packages/ui/tests/tokens/design-md-sync.test.ts`)는 이 표와 `@theme` 선언 값의 일치만 검증하고 유틸리티 생성 여부는 검증하지 않는다.
+
+굵기 체계는 4단계다.
+
+### Font Weight Tokens
+| 토큰 | 값 | 용도 |
+| ---- | -- | ---- |
+| `--font-weight-regular` | `400` | Tailwind 기본 `font-normal`과 같은 값 |
+| `--font-weight-medium` | `500` | |
+| `--font-weight-semibold` | `600` | |
+| `--font-weight-bold` | `700` | |
+
+**알려진 예외:** `Typography` h1(`packages/ui/src/components/ui/typography.tsx`)은 4단계 굵기 체계의 알려진 예외로 Tailwind 기본 `font-extrabold`(800)을 유지한다. 이 값을 위한 `@theme` 토큰은 두지 않는다.
+
+### Letter Spacing Tokens
+| 토큰 | 값 | 용도 |
+| ---- | -- | ---- |
+| `--tracking-eyebrow` | `0.08em` | 섹션 eyebrow·사이드바 그룹 제목 |
+| `--tracking-label` | `0.06em` | 테이블 헤더, frontmatter `typography.label.letterSpacing`과 같은 값 |
 
 ### Hierarchy
 - **Display** (700, 56px, line-height 72px): 최상위 노출용 스케일 상단값. 코드베이스에 구체적인 사용 컴포넌트는 아직 없고 `text-6xl` 스케일 정의로만 존재한다.
 - **Headline** (700, 40px, line-height 56px): 섹션 대제목급.
 - **Title** (600, 24px, line-height 40px — 페어드 스케일 기준값): `CardTitle`이 실제로 24px/600을 쓰지만, line-height는 `leading-none`(1)을 써서 이 페어링을 따르지 않는다. `DialogTitle`은 18px/600/leading-none.
 - **Body** (400, 14px, line-height 20px): `CardDescription`/`DialogDescription`이 쓰는 `text-sm text-muted-foreground` 그대로.
-- **Label** (700, 12px, line-height 16px, Roboto Mono): 테이블 헤더·eyebrow 텍스트(대문자 + 자간). Badge는 같은 12px에서 600(semibold)·Open Sans로 변주한다.
+- **Label** (700, 12px, line-height 16px, Roboto Mono): 테이블 헤더(`tracking-label`)·eyebrow 텍스트(`tracking-eyebrow`), 대문자. Badge는 같은 12px에서 600(semibold)·Open Sans로 변주한다.
 
 ### Named Rules
 
@@ -258,7 +315,7 @@ components:
 
 ## Layout
 
-그리드는 Mobile 4열 / Tablet 8열 / Desktop 12열이며, 각 구간의 마진·거터가 `apps/web/src/view/guide/nav-data.ts`의 `BREAKPOINTS`에 명시되어 있다.
+그리드는 Mobile 4열 / Tablet 8열 / Desktop 12열이며, 각 구간의 마진·거터가 `apps/web/src/view/guide/navData.ts`의 `BREAKPOINTS`에 명시되어 있다.
 
 | 구간 | 너비 | 컬럼 | 마진 | 거터 |
 | ---- | ---- | ---- | ---- | ---- |
@@ -268,18 +325,34 @@ components:
 
 페이지 컨테이너는 `max-w-app`(`--container-app: 1280px`)을 공통 폭으로 쓰고, 좌우 여백은 `px-page-x`(`--spacing-page-x: 72px`)로 고정한다(`RootLayout.tsx`: `mx-auto w-full max-w-app px-page-x`). 헤더 높이는 `min-h-header`(`--spacing-header: 64px`). 4px 베이스의 전체 스페이싱 스케일(`p-1=4px` … `p-20=80px`)은 Tailwind v4 표준 자동 유틸리티에 의존하며, 이 값들을 위한 별도 토큰은 추가하지 않는다(FR-10, `packages/ui/CLAUDE.md`).
 
-브레이크포인트 토큰은 `--breakpoint-mobile`(640px) / `--breakpoint-tablet`(768px) / `--breakpoint-desktop`(1280px) / `--breakpoint-wide`(1920px) 4단계다. 위 그리드 표의 컷오프(768px, 1280px)는 tablet·desktop 토큰과 일치하지만, 그리드 표가 말하는 "Mobile < 768px"의 하한은 `--breakpoint-mobile` 토큰값(640px)과 서술이 갈린다 — 발견된 사실이며 본 문서에서 임의로 통일하지 않는다.
+### Breakpoint Tokens
+| 토큰 | 값 | 용도 |
+| ---- | -- | ---- |
+| `--breakpoint-mobile` | `640px` | `mobile:` 반응형 변형 |
+| `--breakpoint-tablet` | `768px` | `tablet:` 반응형 변형 |
+| `--breakpoint-desktop` | `1280px` | `desktop:` 반응형 변형 |
+| `--breakpoint-wide` | `1920px` | `wide:` 반응형 변형 |
+
+### Layout Size Tokens
+| 토큰 | 값 | 용도 |
+| ---- | -- | ---- |
+| `--spacing-sidebar-h` | `calc(100vh - 2rem)` | 가이드 사이드바 최대 높이(`max-h-sidebar-h`, `sticky top-4`와 짝) |
+
+그리드 표의 구간(Mobile < 768px / Tablet / Desktop)은 열·여백을 설계하는 레이아웃 구간이고, `--breakpoint-mobile`(`mobile:` 변형)은 반응형 변형이 켜지는 기준점이다. 두 값은 역할이 달라 서로 맞추지 않는다.
 
 ## Elevation & Depth
 
 완전한 플랫은 아니다. shadow는 0~4 5단계뿐이고, 표면 위계에 역할 기반(role-bound)으로 엄격히 매핑된다. 그림자는 장식이 아니라 "이 표면이 어떤 레이어에 떠 있는가"를 알려주는 신호다.
 
 ### Shadow Vocabulary
-- **Level 0 · subtle** (`box-shadow: 0 1px 2px 0 rgba(22,22,19,0.04)`, `--shadow-0-subtle`): 같은 평면 위 미세한 아웃라인 대체.
-- **Level 1 · subtle** (`0 1px 2px 0 rgba(22,22,19,0.05), 0 1px 3px 0 rgba(181,200,214,0.4)`, `--shadow-1-subtle`): 탭 활성 pill, 캘린더 드롭다운.
-- **Level 2 · default** (`0 2px 4px -1px rgba(22,22,19,0.06), 0 4px 8px -2px rgba(181,200,214,0.4)`, `--shadow-2-default`): 카드 기본 표면.
-- **Level 3 · raised** (`0 4px 6px -1px rgba(22,22,19,0.08), 0 10px 20px -4px rgba(181,200,214,0.7)`, `--shadow-3-raised`): 팝오버·셀렉트·툴팁처럼 사용자 조작으로 떠오르는 표면.
-- **Level 4 · overlay** (`0 8px 12px -2px rgba(22,22,19,0.1), 0 20px 36px -8px rgba(225,233,239,0.75)`, `--shadow-4-overlay`): Dialog/Sheet 같은 최상위 오버레이.
+
+| 토큰 | 값 | 용도 |
+| ---- | -- | ---- |
+| `--shadow-0-subtle` | `0 1px 2px 0 rgba(22,22,19,0.04)` | 같은 평면 위 미세한 아웃라인 대체 |
+| `--shadow-1-subtle` | `0 1px 2px 0 rgba(22,22,19,0.05), 0 1px 3px 0 rgba(181,200,214,0.4)` | 탭 활성 pill, 캘린더 드롭다운 |
+| `--shadow-2-default` | `0 2px 4px -1px rgba(22,22,19,0.06), 0 4px 8px -2px rgba(181,200,214,0.4)` | 카드 기본 표면 |
+| `--shadow-3-raised` | `0 4px 6px -1px rgba(22,22,19,0.08), 0 10px 20px -4px rgba(181,200,214,0.7)` | 팝오버·셀렉트·툴팁처럼 사용자 조작으로 떠오르는 표면 |
+| `--shadow-4-overlay` | `0 8px 12px -2px rgba(22,22,19,0.1), 0 20px 36px -8px rgba(225,233,239,0.75)` | Dialog/Sheet 같은 최상위 오버레이 |
 
 ### Named Rules
 
@@ -297,7 +370,7 @@ components:
 
 ### Named Rules
 
-**The Child Radius ≤ Parent Radius Rule.** 중첩 컴포넌트의 radius는 부모의 radius 이하여야 코너가 자연스럽게 겹친다. (근거: `packages/ui/CLAUDE.md` FR-7 — 다만 그 문서가 명시한 기준값 `0.75rem`(12px)은 실제 `globals.css`의 `0.5rem`(8px)과 다르다. 본 DESIGN.md는 `globals.css` 실측값을 채택했다.)
+**The Child Radius ≤ Parent Radius Rule.** 중첩 컴포넌트의 radius는 부모의 radius 이하여야 코너가 자연스럽게 겹친다. (근거: `packages/ui/CLAUDE.md` FR-7)
 
 ## Components
 
@@ -312,7 +385,7 @@ components:
 - **Destructive:** `bg-destructive`(`#c2050b`)/`text-destructive-foreground`(`#ffffff`).
 - **Link:** 배경 없음, `text-primary`(`#084777`) + `underline-offset-4`, hover 시 밑줄만 나타난다.
 - **Hover/Focus:** hover는 대부분 같은 배경색의 90%/80% 불투명도(`hover:bg-primary/90`, `hover:bg-secondary/80`)로 표현하고 새 색을 만들지 않는다. `focus-visible`은 `ring-2 ring-ring`(`#084777`) + `ring-offset-2`로 통일.
-- **발견 사항:** 버튼 텍스트는 `font-medium`(500)을 쓰는데, 이는 프로젝트의 3단계 굵기 토큰(regular 400 / semibold 600 / bold 700)에 없는 값이다.
+- **Weight:** 버튼 텍스트는 `font-medium`(`--font-weight-medium`)을 쓴다. 굵기 체계는 4단계(regular 400/medium 500/semibold 600/bold 700)다.
 
 ### Badges
 - **Style:** 기본 `rounded-full`(pill), `shape="sq"`일 때만 `rounded-sm`(4px). 텍스트는 12px/600(semibold).
@@ -346,14 +419,14 @@ components:
 ## Do's and Don'ts
 
 ### Do:
-- **Do** 모든 색·간격·폰트·라운드·그림자를 `packages/ui/src/styles/globals.css`의 `@theme` 토큰과 `:root`/`.dark` 시맨틱 변수에서만 가져온다. (`.claude/rules/tailwind-v4.md`)
+- **Do** 모든 색·간격·폰트·라운드·그림자를 `packages/ui/src/styles/globals.css`의 `@theme` 토큰과 `:root`/`.dark` 시맨틱 변수에서만 가져온다. (`.claude/rules/tailwind-v4.md`) 그 값의 원천은 이 문서다.
 - **Do** 새 컴포넌트는 shadcn 시맨틱 레이어(`bg-primary`, `bg-secondary`, `bg-accent`, `text-foreground` 등)를 1순위로 쓴다 — 다크 모드 전환(`.dark` 블록)과 실제로 연결되는 레이어다.
 - **Do** 그림자는 표면 위계(card=2, popover/select/tooltip=3, dialog/sheet=4)에 맞는 정확한 레벨만 쓴다.
 - **Do** 중첩 컴포넌트의 radius는 부모 radius 이하로 한 단계 좁힌다(예: `rounded-md` 팝오버 안의 아이템은 `rounded-sm`).
 - **Do** 강조·라벨·코드성 텍스트에는 Roboto Mono(`--font-family-mono`/`--font-family-display`)를, 본문에는 Open Sans를 쓴다.
 
 ### Don't:
-- **Don't** `bg-[#hex]`, `text-[14px]` 같은 임의 값을 쓰지 않는다 — 필요한 값이 없으면 `@theme`에 토큰을 먼저 추가한다. (`.claude/rules/tailwind-v4.md`)
+- **Don't** `bg-[#hex]`, `text-[14px]` 같은 임의 값을 쓰지 않는다 — 필요한 값이 없으면 이 문서(frontmatter 또는 토큰 표)에 토큰을 먼저 추가하고, 같은 이름·값으로 `@theme`에 구현한 뒤 `npm run test`로 가드를 통과시킨다. (`.claude/rules/tailwind-v4.md`)
 - **Don't** blue-200(`#84a3bb`)을 옅은 배경 위 본문 텍스트로 쓰지 않는다 — WCAG AA 대비 기준(4.5:1)에 미달한다.
 - **Don't** `shadow-sm`/`shadow-md` 같은 Tailwind 기본 그림자 유틸리티를 쓰지 않는다 — 반드시 `shadow-0-subtle`~`shadow-4-overlay` 5단계만 쓴다.
 - **Don't** `packages/ui/src/components/ui/` 안의 shadcn 생성 파일명을 리네임하지 않는다 — CLI 산출물을 그대로 유지해야 이후 업데이트와 충돌하지 않는다.
