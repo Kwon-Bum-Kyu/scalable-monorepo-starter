@@ -16,7 +16,7 @@
     "SKIP_DEV_BOOTSTRAP",
     "ELECTRON_RENDERER_URL"
   ],
-  "globalDependencies": ["**/.env"],
+  "globalDependencies": ["**/.env", "DESIGN.md"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
