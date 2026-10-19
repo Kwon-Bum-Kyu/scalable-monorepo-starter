@@ -1,0 +1,36 @@
+{
+  "name": "storybook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build",
+    "lint": "eslint . --max-warnings 0"
+  },
+  "dependencies": {
+    "@repo/ui": "*",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@storybook/addon-a11y": "10.1.9",
+    "@storybook/addon-docs": "10.1.9",
+    "@storybook/builder-vite": "10.1.9",
+    "@storybook/react": "10.1.9",
+    "@storybook/react-vite": "10.1.9",
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.6.0",
+    "eslint-plugin-storybook": "10.1.9",
+    "react-router-dom": "^7.14.1",
+    "storybook": "10.1.9",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.3",
+    "vite": "^8.2.2",
+    "vite-tsconfig-paths": "^6.0.3"
+  }
+}

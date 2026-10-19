@@ -1,0 +1,61 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "DATABASE_URL",
+    "npm_package_version",
+    "DEV",
+    "PROD",
+    "PORT",
+    "LOG_LEVEL",
+    "LOG_PRETTY",
+    "CORS_ALLOWED_ORIGINS",
+    "RATE_LIMIT_WINDOW_MS",
+    "RATE_LIMIT_MAX",
+    "HEALTH_DB_TIMEOUT_MS",
+    "ENABLE_EXAMPLES",
+    "SKIP_DEV_BOOTSTRAP",
+    "ELECTRON_RENDERER_URL"
+  ],
+  "globalDependencies": ["**/.env", "DESIGN.md", ".claude/rules/tailwind-v4.md"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**", "storybook-static/**", "out/**"],
+      "env": ["NODE_ENV"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck", "@repo/vitest-config#build"],
+      "outputs": []
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^build", "@repo/vitest-config#build"],
+      "outputs": ["coverage/**"],
+      "inputs": ["src/**", "test/**", "tests/**", "**/*.test.ts", "**/*.test.tsx", "vitest.config.ts"],
+      "passThroughEnv": ["PLAYWRIGHT_*", "CI"]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
+    },
+    "migrate": {
+      "inputs": ["prisma/schema.prisma", "prisma/migrations/**"],
+      "cache": false
+    },
+    "db:generate": {
+      "inputs": ["prisma/schema.prisma"],
+      "outputs": ["generated/prisma/**"],
+      "cache": false
+    }
+  },
+  "remoteCache": {
+    "enabled": true,
+    "signature": true
+  }
+}

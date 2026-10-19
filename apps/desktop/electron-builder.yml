@@ -1,0 +1,21 @@
+# electron-builder 패키징 설정 (골격).
+# 실제 배포 빌드(.dmg/.exe/AppImage 산출)는 현재 범위가 아니며, 패키징 도입 시
+# devDependencies에 electron-builder를 추가하고 dist 스크립트를 연결한다.
+# 아이콘은 별도 디자인 없이 apps/web/public/logo.png를 복사한 assets/icon.png를 사용한다.
+appId: com.scalable-monorepo-starter.desktop
+productName: Desktop
+directories:
+  output: release/build
+  buildResources: assets
+files:
+  - out/**
+  - package.json
+mac:
+  target: dmg
+  icon: assets/icon.png
+win:
+  target: nsis
+  icon: assets/icon.png
+linux:
+  target: AppImage
+  icon: assets/icon.png

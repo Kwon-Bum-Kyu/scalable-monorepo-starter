@@ -1,0 +1,258 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Roboto Mono", ui-monospace, monospace;
+  --font-body-alt: "PT Sans", "Open Sans", sans-serif;
+
+  /* 글자 크기와 짝 행간 (DESIGN.md Typography, Paired Scale Rule) */
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-lg: 18px;
+  --text-lg--line-height: 28px;
+  --text-xl: 20px;
+  --text-xl--line-height: 32px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 40px;
+  --text-3xl: 32px;
+  --text-3xl--line-height: 48px;
+  --text-4xl: 40px;
+  --text-4xl--line-height: 56px;
+  --text-5xl: 48px;
+  --text-5xl--line-height: 64px;
+  --text-6xl: 56px;
+  --text-6xl--line-height: 72px;
+
+  /* Font weights (FR-9) */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Letter spacing — 역할 이름 토큰 (Tailwind 기본 키와 겹치지 않음) */
+  --tracking-eyebrow: 0.08em;
+  --tracking-label: 0.06em;
+
+  /* Blue color palette */
+  --color-blue-50: #e1e9ef;
+  --color-blue-100: #b5c8d6;
+  --color-blue-200: #84a3bb;
+  --color-blue-300: #527ea0;
+  --color-blue-400: #2d638b;
+  --color-blue-500: #084777;
+  --color-blue-600: #07406f;
+  --color-blue-700: #063764;
+  --color-blue-800: #042f5a;
+  --color-blue-900: #022047;
+
+  /* Gray color palette */
+  --color-gray-50: #e7e7e6;
+  --color-gray-100: #c2c2c1;
+  --color-gray-200: #9a9a98;
+  --color-gray-300: #72726f;
+  --color-gray-400: #535350;
+  --color-gray-500: #353531;
+  --color-gray-600: #30302c;
+  --color-gray-700: #282825;
+  --color-gray-800: #22221f;
+  --color-gray-900: #161613;
+
+  /* System colors */
+  --color-system-red: #c2050b;
+  --color-system-green: #07b46f;
+  --color-system-warning: #f9a80a;
+  --color-system-info: #2196f3;
+  --color-system-white: #ffffff;
+
+  /* Spacing — 의미적 별칭(Tailwind 4px-base 표준에 추가). FR-2: 16 단계는 64px(Tailwind 표준 p-16).
+     4px-base 풀세트(p-1=4, p-2=8, ..., p-20=80, p-32=128 등)는 Tailwind v4 표준 자동
+     utility 에 의존하며 본 @theme 블록에는 별도 토큰을 정의하지 않는다 (FR-10 deprecate). */
+  --spacing-16: 64px;
+
+  /* Semantic container widths (max-w-*, w-*) */
+  --container-content: 1280px;
+  --container-error-text: 480px;
+  --container-datepicker: 240px;
+  --container-logo: 160px;
+
+  /* Semantic spacing tokens (h-*, min-h-*, w-*, p*-*) */
+  --spacing-logo-h: 40px;
+  --spacing-header: 64px;
+  --spacing-page-x: 72px;
+  --spacing-sidebar-h: calc(100vh - 2rem);
+
+  /* Breakpoints */
+  --breakpoint-mobile: 640px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1280px;
+  --breakpoint-wide: 1920px;
+
+  /* Layout container */
+  --container-app: 1280px;
+
+  /* Semantic color aliases (기존 유지) */
+  --color-text-primary:        var(--color-gray-900);
+  --color-text-secondary:      var(--color-gray-400);
+  --color-text-placeholder:    var(--color-gray-200);
+  --color-border:              var(--color-gray-100);
+  --color-bg-primary:          var(--color-system-white);
+  --color-bg-secondary:        var(--color-gray-50);
+  --color-interactive-default: var(--color-blue-500);
+  --color-interactive-hover:   var(--color-blue-600);
+  --color-interactive-active:  var(--color-blue-800);
+  --color-state-error:         var(--color-system-red);
+  --color-state-success:       var(--color-system-green);
+  --color-state-warning:       var(--color-system-warning);
+  --color-state-info:          var(--color-system-info);
+
+  /* Semantic alias 4건 (FR-12) */
+  --color-text-inverse:        var(--color-system-white);
+  --color-bg-accent:           var(--color-blue-50);
+  --color-border-strong:       var(--color-gray-300);
+  --color-focus-ring:          var(--color-blue-500);
+
+  /* Elevation shadow 5단계 — level 0 (subtle outline) 추가 */
+  --shadow-0-subtle:  0 1px 2px 0 rgba(22,22,19,0.04);
+  --shadow-1-subtle:  0 1px 2px 0 rgba(22,22,19,0.05),
+                      0 1px 3px 0 rgba(181,200,214,0.4);
+  --shadow-2-default: 0 2px 4px -1px rgba(22,22,19,0.06),
+                      0 4px 8px -2px rgba(181,200,214,0.4);
+  --shadow-3-raised:  0 4px 6px -1px rgba(22,22,19,0.08),
+                      0 10px 20px -4px rgba(181,200,214,0.7);
+  --shadow-4-overlay: 0 8px 12px -2px rgba(22,22,19,0.1),
+                      0 20px 36px -8px rgba(225,233,239,0.75);
+}
+
+/* ───────── Open Sans 12 face — 본 모노레포 동봉 (apps/web/public/fonts/) ───────── */
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-Light.ttf") format("truetype"); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-LightItalic.ttf") format("truetype"); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-Italic.ttf") format("truetype"); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-MediumItalic.ttf") format("truetype"); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-SemiBold.ttf") format("truetype"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-SemiBoldItalic.ttf") format("truetype"); font-weight: 600; font-style: italic; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-Bold.ttf") format("truetype"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-BoldItalic.ttf") format("truetype"); font-weight: 700; font-style: italic; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-ExtraBold.ttf") format("truetype"); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Open Sans"; src: url("/fonts/OpenSans-ExtraBoldItalic.ttf") format("truetype"); font-weight: 800; font-style: italic; font-display: swap; }
+
+/* ───────── :root: shadcn semantic 토큰 ───────── */
+:root {
+  --background:             var(--color-system-white);
+  --foreground:             var(--color-gray-900);
+  --card:                   var(--color-system-white);
+  --card-foreground:        var(--color-gray-900);
+  --popover:                var(--color-system-white);
+  --popover-foreground:     var(--color-gray-900);
+
+  --primary:                var(--color-blue-500);
+  --primary-foreground:     var(--color-system-white);
+
+  --secondary:              var(--color-gray-50);
+  --secondary-foreground:   var(--color-gray-900);
+
+  --muted:                  var(--color-gray-50);
+  --muted-foreground:       var(--color-gray-400);
+
+  --accent:                 var(--color-blue-50);
+  --accent-foreground:      var(--color-blue-700);
+
+  --destructive:            var(--color-system-red);
+  --destructive-foreground: var(--color-system-white);
+
+  --border:                 var(--color-gray-100);
+  --input:                  var(--color-gray-100);
+  --ring:                   var(--color-focus-ring);
+
+  --radius: 0.5rem;
+
+  --chart-1: var(--color-blue-500);
+  --chart-2: var(--color-blue-300);
+  --chart-3: var(--color-blue-700);
+  --chart-4: var(--color-gray-400);
+  --chart-5: var(--color-gray-600);
+}
+
+/* ───────── .dark: 다크모드 토큰 (구조만 준비) ───────── */
+.dark {
+  --background:             var(--color-gray-900);
+  --foreground:             var(--color-system-white);
+  --card:                   var(--color-gray-800);
+  --card-foreground:        var(--color-system-white);
+  --popover:                var(--color-gray-800);
+  --popover-foreground:     var(--color-system-white);
+
+  --primary:                var(--color-blue-400);
+  --primary-foreground:     var(--color-gray-900);
+
+  --secondary:              var(--color-gray-800);
+  --secondary-foreground:   var(--color-system-white);
+
+  --muted:                  var(--color-gray-700);
+  --muted-foreground:       var(--color-gray-200);
+
+  --accent:                 var(--color-blue-800);
+  --accent-foreground:      var(--color-system-white);
+
+  --destructive:            var(--color-system-red);
+  --destructive-foreground: var(--color-system-white);
+
+  --border:                 var(--color-gray-700);
+  --input:                  var(--color-gray-700);
+  --ring:                   var(--color-blue-400);
+}
+
+/* ───────── @theme inline: CSS 변수 → Tailwind utility 매핑 ───────── */
+@theme inline {
+  --color-background:             var(--background);
+  --color-foreground:             var(--foreground);
+  --color-card:                   var(--card);
+  --color-card-foreground:        var(--card-foreground);
+  --color-popover:                var(--popover);
+  --color-popover-foreground:     var(--popover-foreground);
+  --color-primary:                var(--primary);
+  --color-primary-foreground:     var(--primary-foreground);
+  --color-secondary:              var(--secondary);
+  --color-secondary-foreground:   var(--secondary-foreground);
+  --color-muted:                  var(--muted);
+  --color-muted-foreground:       var(--muted-foreground);
+  --color-accent:                 var(--accent);
+  --color-accent-foreground:      var(--accent-foreground);
+  --color-destructive:            var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-input:                  var(--input);
+  --color-ring:                   var(--ring);
+
+  --radius-none: 0;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+}
+
+/* ───────── @layer base ───────── */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "name": "scalable-monorepo-starter",
+  "private": true,
+  "author": "",
+  "license": "MIT",
+  "packageManager": "npm@10.9.2",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=22.13.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "predev": "node scripts/dev-bootstrap.mjs",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "test:coverage": "turbo run test -- --coverage",
+    "test:workspace": "vitest run",
+    "test:workspace:watch": "vitest",
+    "test:watch": "turbo run test:watch",
+    "test:web": "turbo run test --filter=web",
+    "test:api": "turbo run test --filter=api",
+    "storybook": "turbo run dev --filter=storybook",
+    "build-storybook": "turbo run build --filter=storybook",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "4.1.4",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "^0.6.13",
+    "turbo": "^2.9.6",
+    "vitest": "4.1.4"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

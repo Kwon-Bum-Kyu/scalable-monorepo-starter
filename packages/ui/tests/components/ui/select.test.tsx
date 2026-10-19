@@ -1,0 +1,56 @@
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@repo/ui/components/select";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
+
+describe("Select", () => {
+  it("기본 trigger가 렌더된다", () => {
+    render(
+      <Select>
+        <SelectTrigger aria-label="국가">
+          <SelectValue placeholder="선택하세요" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="kr">한국</SelectItem>
+        </SelectContent>
+      </Select>,
+    );
+    expect(screen.getByRole("combobox", { name: "국가" })).toBeInTheDocument();
+  });
+
+  it("placeholder 텍스트가 노출된다", () => {
+    render(
+      <Select>
+        <SelectTrigger>
+          <SelectValue placeholder="선택하세요" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="kr">한국</SelectItem>
+        </SelectContent>
+      </Select>,
+    );
+    expect(screen.getByText("선택하세요")).toBeInTheDocument();
+  });
+
+  it("열린 상태의 content는 elevation 3단계(raised) 토큰을 적용한다", () => {
+    render(
+      <Select defaultOpen>
+        <SelectTrigger aria-label="국가">
+          <SelectValue placeholder="선택하세요" />
+        </SelectTrigger>
+        <SelectContent data-testid="select-content">
+          <SelectItem value="kr">한국</SelectItem>
+        </SelectContent>
+      </Select>,
+    );
+
+    const content = screen.getByTestId("select-content");
+    expect(content.className).toContain("shadow-3-raised");
+    expect(content.className).not.toContain("shadow-md");
+  });
+});

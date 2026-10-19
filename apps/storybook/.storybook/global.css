@@ -1,0 +1,5 @@
+@import "@repo/ui/globals.css";
+
+@source "../../stories/**/*.{ts,tsx}";
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+@source "../../../apps/web/src/**/*.{ts,tsx}";

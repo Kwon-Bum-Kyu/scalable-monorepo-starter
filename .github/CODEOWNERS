@@ -1,0 +1,13 @@
+# CODEOWNERS — replace `<repo-owner>` with actual GitHub handles after fork.
+# Lines that begin with `#` are comments. The last matching pattern wins.
+#
+# Reference: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repo.
+* @<repo-owner>
+
+# Workspace-specific owners (uncomment and edit as needed).
+# /apps/web/        @<frontend-team>
+# /apps/api/        @<backend-team>
+# /packages/ui/     @<design-systems-team>
+# /apps/api/prisma/ @<dba-team>
