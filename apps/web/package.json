@@ -11,6 +11,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest --watch",
+    "capture:hero": "node scripts/capture-hero.mjs",
     "clean": "rm -rf dist .next"
   },
   "dependencies": {
