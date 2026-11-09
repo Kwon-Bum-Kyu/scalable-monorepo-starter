@@ -91,6 +91,7 @@ describe("CodeBlock", () => {
   it("[넘치는 코드 블록]이 키보드 포커스를 받을 때 어두운 장면 포커스 링을 표시한다", () => {
     const { container } = render(<CodeBlock segments={segments} />);
     expect(container.querySelector("pre")).toHaveClass(
+      "focus-visible:outline-none",
       "focus-visible:ring-2",
       "focus-visible:ring-system-white",
       "focus-visible:ring-offset-2",

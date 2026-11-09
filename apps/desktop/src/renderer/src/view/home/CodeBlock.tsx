@@ -47,7 +47,7 @@ export default function CodeBlock({ segments }: CodeBlockProps): React.JSX.Eleme
       </div>
       <pre
         id={codeId}
-        className="overflow-x-auto p-4 text-sm focus-visible:ring-2 focus-visible:ring-system-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+        className="overflow-x-auto p-4 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-system-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
       >
         <code className="font-mono">
           {segments.map((segment, index) => (
