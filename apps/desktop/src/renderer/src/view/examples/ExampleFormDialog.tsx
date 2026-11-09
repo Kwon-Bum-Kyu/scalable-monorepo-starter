@@ -23,6 +23,8 @@ interface ExampleFormDialogProps {
   open: boolean;
   mode: Mode;
   value: ExampleFormState;
+  disabled?: boolean;
+  loading?: boolean;
   onChange: (next: ExampleFormState) => void;
   onSubmit: () => void;
   onClose: () => void;
@@ -41,13 +43,21 @@ const SUBMIT_LABEL_BY_MODE: Record<Mode, string> = {
 
 type FormBodyProps = Pick<
   ExampleFormDialogProps,
-  "mode" | "value" | "onChange" | "onSubmit" | "onClose"
+  | "mode"
+  | "value"
+  | "disabled"
+  | "loading"
+  | "onChange"
+  | "onSubmit"
+  | "onClose"
 >;
 
 // DialogContent가 닫히면 언마운트되므로 titleTouched는 열릴 때마다 false로 시작한다.
 const ExampleFormBody = ({
   mode,
   value,
+  disabled = false,
+  loading = false,
   onChange,
   onSubmit,
   onClose,
@@ -64,6 +74,7 @@ const ExampleFormBody = ({
       <form
         id="example-form"
         noValidate
+        aria-busy={loading}
         onSubmit={(event) => {
           event.preventDefault();
           if (!isTitleEmpty) {
@@ -83,6 +94,7 @@ const ExampleFormBody = ({
             aria-required="true"
             aria-invalid={titleInvalid}
             aria-describedby="example-title-help"
+            disabled={disabled}
             value={value.title}
             onChange={(event) =>
               onChange({ ...value, title: event.target.value })
@@ -104,6 +116,7 @@ const ExampleFormBody = ({
           <textarea
             id="example-description"
             rows={3}
+            disabled={disabled}
             value={value.description}
             onChange={(event) =>
               onChange({ ...value, description: event.target.value })
@@ -114,6 +127,7 @@ const ExampleFormBody = ({
         <fieldset className="grid gap-2">
           <legend className="text-sm font-semibold">Status</legend>
           <RadioGroup
+            disabled={disabled}
             value={value.status}
             onValueChange={(status) =>
               onChange({ ...value, status: status as ExampleStatus })
@@ -146,7 +160,7 @@ const ExampleFormBody = ({
           form="example-form"
           size="lg"
           className={PAGE_ACTION_CLASS}
-          disabled={isTitleEmpty}
+          disabled={disabled || isTitleEmpty}
         >
           {SUBMIT_LABEL_BY_MODE[mode]}
         </Button>

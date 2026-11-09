@@ -12,6 +12,7 @@ import {
   useExamplesList,
   useUpdateExample,
 } from "@/hooks/useExamples";
+import { fetchExampleDetail } from "@/services/examples";
 import type { ApiError } from "@/types/api";
 import { ErrorHandler } from "@/utils/errorHandler";
 
@@ -48,11 +49,14 @@ const ExamplesPage = () => {
   const [dialogMode, setDialogMode] = useState<DialogMode>("create");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<ExampleFormState>(EMPTY_EXAMPLE_FORM);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [editReady, setEditReady] = useState(true);
   const [deleteTarget, setDeleteTarget] = useState<DeleteExampleTarget | null>(
     null,
   );
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
+  const editRequestRef = useRef<string | null>(null);
 
   const items = useMemo(() => list.data?.items ?? [], [list.data]);
   const submitting = createMutation.isLoading || updateMutation.isLoading;
@@ -70,15 +74,19 @@ const ExamplesPage = () => {
     setDialogMode("create");
     setEditingId(null);
     setForm(EMPTY_EXAMPLE_FORM);
+    setDetailLoading(false);
+    setEditReady(true);
     setDialogOpen(true);
   }, [rememberFocus]);
 
   const closeDialog = useCallback(() => {
+    editRequestRef.current = null;
+    setDetailLoading(false);
     setDialogOpen(false);
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (submitting) {
+    if (submitting || !editReady) {
       return;
     }
     try {
@@ -105,6 +113,7 @@ const ExamplesPage = () => {
     void list.refetch().catch(() => {});
   }, [
     submitting,
+    editReady,
     dialogMode,
     editingId,
     form,
@@ -144,7 +153,7 @@ const ExamplesPage = () => {
   );
 
   const handleEdit = useCallback(
-    (id: string) => {
+    async (id: string) => {
       const target = items.find((item) => item.id === id);
       if (!target) {
         return;
@@ -157,7 +166,31 @@ const ExamplesPage = () => {
         description: "",
         status: target.status,
       });
+      setDetailLoading(true);
+      setEditReady(false);
       setDialogOpen(true);
+      editRequestRef.current = id;
+
+      try {
+        const detail = await fetchExampleDetail(id);
+        if (editRequestRef.current !== id) {
+          return;
+        }
+        setForm({
+          title: detail.title,
+          description: detail.description ?? "",
+          status: detail.status,
+        });
+        setEditReady(true);
+      } catch (error) {
+        if (editRequestRef.current === id) {
+          toast.error(formatToast(error));
+        }
+      } finally {
+        if (editRequestRef.current === id) {
+          setDetailLoading(false);
+        }
+      }
     },
     [items, rememberFocus],
   );
@@ -235,6 +268,8 @@ const ExamplesPage = () => {
         open={dialogOpen}
         mode={dialogMode}
         value={form}
+        disabled={!editReady}
+        loading={detailLoading}
         onChange={setForm}
         onSubmit={handleSubmit}
         onClose={closeDialog}

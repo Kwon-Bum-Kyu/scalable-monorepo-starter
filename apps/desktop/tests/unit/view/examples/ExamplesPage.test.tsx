@@ -7,6 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createExample,
   deleteExample,
+  fetchExampleDetail,
   fetchExamplesList,
   updateExample,
 } from "@/services/examples";
@@ -57,6 +58,13 @@ describe("ExamplesPage", () => {
     (fetchExamplesList as ReturnType<typeof vi.fn>).mockResolvedValue({
       items: sampleItems(5),
     });
+    (fetchExampleDetail as ReturnType<typeof vi.fn>).mockResolvedValue(
+      detailFixture({
+        id: "id-1",
+        title: "Example 1",
+        description: "기존 설명",
+      }),
+    );
     (createExample as ReturnType<typeof vi.fn>).mockResolvedValue(
       detailFixture(),
     );
@@ -236,8 +244,16 @@ describe("ExamplesPage", () => {
     expect(await screen.findByText(/\(req: ab12cd34\)/)).toBeInTheDocument();
   });
 
-  it("Edit 클릭 시 title/status가 prefill되고 description은 빈 문자열로 시작한다", async () => {
+  it("[수정 다이얼로그]가 [설명이 있는 예제로 열릴 때] [기존 설명을 표시한다]", async () => {
     const user = userEvent.setup();
+    (fetchExampleDetail as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      detailFixture({
+        id: "id-2",
+        title: "Example 2",
+        description: "보존할 설명",
+        status: "published",
+      }),
+    );
     renderPage();
 
     await screen.findByText("Example 2");
@@ -256,15 +272,86 @@ describe("ExamplesPage", () => {
     const descriptionInput = within(dialog).getByLabelText(
       /Description/,
     ) as HTMLTextAreaElement;
-    expect(descriptionInput.value).toBe("");
+    await waitFor(() => expect(descriptionInput.value).toBe("보존할 설명"));
 
     expect(
       within(dialog).getByRole("radio", { name: /published/i }),
     ).toHaveAttribute("aria-checked", "true");
   });
 
+  it("[수정 저장]이 [제목만 바뀔 때] [기존 설명을 그대로 전달한다]", async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await screen.findByText("Example 1");
+    await user.click(screen.getByRole("button", { name: "Edit Example 1" }));
+
+    const dialog = await screen.findByRole("dialog");
+    const title = within(dialog).getByLabelText(/Title/);
+    await waitFor(() =>
+      expect(within(dialog).getByLabelText("Description")).toHaveValue(
+        "기존 설명",
+      ),
+    );
+    await user.clear(title);
+    await user.type(title, "바뀐 제목");
+    await user.click(within(dialog).getByRole("button", { name: "Save" }));
+
+    await waitFor(() =>
+      expect(updateExample).toHaveBeenCalledWith("id-1", {
+        title: "바뀐 제목",
+        description: "기존 설명",
+        status: "draft",
+      }),
+    );
+  });
+
+  it("[수정 다이얼로그]가 [상세 조회 중일 때] [폼을 비활성화한다]", async () => {
+    const user = userEvent.setup();
+    (fetchExampleDetail as ReturnType<typeof vi.fn>).mockReturnValueOnce(
+      new Promise(() => {}),
+    );
+    renderPage();
+
+    await screen.findByText("Example 1");
+    await user.click(screen.getByRole("button", { name: "Edit Example 1" }));
+
+    const dialog = await screen.findByRole("dialog");
+    expect(dialog.querySelector("form")).toHaveAttribute("aria-busy", "true");
+    expect(within(dialog).getByLabelText(/Title/)).toBeDisabled();
+    expect(within(dialog).getByLabelText("Description")).toBeDisabled();
+    expect(within(dialog).getByRole("button", { name: "Save" })).toBeDisabled();
+  });
+
+  it("[수정 다이얼로그]가 [상세 조회에 실패할 때] [토스트를 표시하고 열린 채로 유지된다]", async () => {
+    const user = userEvent.setup();
+    (fetchExampleDetail as ReturnType<typeof vi.fn>).mockRejectedValueOnce({
+      message: "상세 조회 실패",
+      code: "500",
+      timestamp: "2026-11-09T00:00:00.000Z",
+      requestId: "ef123456-0000-0000-0000-000000000000",
+    });
+    renderPage();
+
+    await screen.findByText("Example 1");
+    await user.click(screen.getByRole("button", { name: "Edit Example 1" }));
+
+    const dialog = await screen.findByRole("dialog");
+    expect(await screen.findByText(/\(req: ef123456\)/)).toBeInTheDocument();
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByRole("button", { name: "Save" })).toBeDisabled();
+  });
+
   it("[수정 다이얼로그]가 닫히는 동안 기존 제목과 입력값을 빈 생성 폼으로 바꿀 수 없다", async () => {
     const user = userEvent.setup();
+    (fetchExampleDetail as ReturnType<typeof vi.fn>).mockResolvedValueOnce(
+      detailFixture({
+        id: "id-2",
+        title: "Example 2",
+        description: "기존 설명",
+        status: "published",
+      }),
+    );
     renderPage();
     await screen.findByText("Example 2");
     await user.click(screen.getByRole("button", { name: "Edit Example 2" }));
