@@ -43,6 +43,10 @@ describe("isOriginAllowed", () => {
 });
 
 describe("corsOptions.origin", () => {
+  it("[CORS 설정]이 [교차 출처 응답 헤더를 구성할 때] [X-Request-Id를 노출한다]", () => {
+    expect(corsOptions.exposedHeaders).toContain("X-Request-Id");
+  });
+
   it("허용 origin이면 origin callback이 (null, true)로 호출된다", () => {
     const callback = vi.fn();
     const originFn = corsOptions.origin as (

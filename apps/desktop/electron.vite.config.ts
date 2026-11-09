@@ -19,6 +19,14 @@ export default defineConfig({
     },
   },
   preload: {
+    build: {
+      rollupOptions: {
+        output: {
+          format: "cjs",
+          entryFileNames: "[name].js",
+        },
+      },
+    },
     plugins: [externalizeDepsPlugin()],
     resolve: {
       alias: [

@@ -20,6 +20,7 @@ export function isOriginAllowed(
 const allowedOrigins = parseAllowedOrigins(env.CORS_ALLOWED_ORIGINS);
 
 export const corsOptions: CorsOptions = {
+  exposedHeaders: ["X-Request-Id"],
   origin: (origin, callback) => {
     if (!origin) {
       callback(null, true);

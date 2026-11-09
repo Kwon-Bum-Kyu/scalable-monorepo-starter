@@ -30,6 +30,16 @@ describe("보안 미들웨어 통합", () => {
       );
     });
 
+    it("[교차 출처 응답]이 [허용 origin에서 반환될 때] [X-Request-Id를 노출한다]", async () => {
+      const response = await request(app)
+        .get("/health")
+        .set("Origin", "http://localhost:3000");
+
+      expect(response.headers["access-control-expose-headers"]).toContain(
+        "X-Request-Id",
+      );
+    });
+
     it("허용되지 않은 origin이면 403 CORS_ORIGIN_DENIED를 반환한다", async () => {
       const response = await request(app)
         .get("/health")
