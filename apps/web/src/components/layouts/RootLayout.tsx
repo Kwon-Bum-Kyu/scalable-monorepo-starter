@@ -1,124 +1,92 @@
 import { Footer, type FooterColumn, Header, Logo, SystemIcon } from "@repo/ui";
-import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 
-const navLinks = [
-  { to: "/link1", label: "Nav Link" },
-  { to: "/link2", label: "Nav Link" },
-  { to: "/link3", label: "Nav Link" },
+import MainNav, { GitHubLink } from "@/components/layouts/MainNav";
+import { AUTHOR_LINKS, REPO_URL } from "@/config/links";
+
+const FOOTER_COLUMNS: FooterColumn[] = [
+  {
+    title: "문서",
+    links: [
+      { label: "README", href: `${REPO_URL}/blob/main/README.md`, external: true },
+      {
+        label: "CONTRIBUTING",
+        href: `${REPO_URL}/blob/main/CONTRIBUTING.md`,
+        external: true,
+      },
+      {
+        label: "CLAUDE.md",
+        href: `${REPO_URL}/blob/main/CLAUDE.md`,
+        external: true,
+      },
+    ],
+  },
+  {
+    title: "워크스페이스",
+    links: ["web", "api", "storybook", "desktop"].map((name) => ({
+      label: `apps/${name}`,
+      href: `${REPO_URL}/tree/main/apps/${name}`,
+      external: true,
+      className: "font-mono",
+    })),
+  },
+  {
+    title: "저장소",
+    links: [
+      { label: "GitHub", href: REPO_URL, external: true },
+      { label: "Issues", href: `${REPO_URL}/issues`, external: true },
+    ],
+  },
+  {
+    title: "라이선스",
+    links: [
+      { label: "MIT", href: `${REPO_URL}/blob/main/LICENSE`, external: true },
+    ],
+  },
 ];
 
-const footerColumns: FooterColumn[] = [1, 2, 3, 4].map((n) => ({
-  title: `Title ${n}`,
-  links: [
-    { label: `Nav Link ${n}-1`, href: "#1" },
-    { label: `Nav Link ${n}-2`, href: "#2" },
-    { label: `Nav Link ${n}-3`, href: "#3" },
-  ],
-}));
+const SOCIAL_LINKS = [
+  { label: "LinkedIn", href: AUTHOR_LINKS.linkedin, icon: "linkedin" },
+  { label: "GitHub", href: AUTHOR_LINKS.github, icon: "github" },
+  { label: "Email", href: AUTHOR_LINKS.email, icon: "envelope-outline" },
+] as const;
 
-const socialIcons: {
-  label: string;
-  href: string;
-  name: "linkedin" | "github" | "envelope-outline";
-}[] = [
-  {
-    name: "linkedin",
-    href: "https://www.linkedin.com/in/bumkyu98/",
-    label: "LinkedIn",
-  },
-  {
-    name: "github",
-    href: "https://github.com/Kwon-Bum-Kyu",
-    label: "GitHub",
-  },
-  {
-    name: "envelope-outline",
-    href: "#contact",
-    label: "Email",
-  },
-];
-
-const headerNav = (
-  <>
-    {navLinks.map((link) => (
-      <Link
-        key={link.to}
-        to={link.to}
-        className="text-muted-foreground hover:text-foreground text-sm"
-      >
-        {link.label}
-      </Link>
-    ))}
-  </>
-);
-
-const headerActions = (
-  <>
-    <Link
-      to="/login"
-      className="bg-primary text-primary-foreground rounded px-4 py-2 text-sm"
-    >
-      Log in
-    </Link>
-    <Link
-      to="/register"
-      className="bg-secondary text-secondary-foreground rounded px-4 py-2 text-sm"
-    >
-      Register
-    </Link>
-  </>
-);
-
-const mobileMenu = (
-  <nav aria-label="Mobile" className="flex flex-col gap-2 p-4">
-    {navLinks.map((link) => (
-      <Link
-        key={link.to}
-        to={link.to}
-        className="text-muted-foreground hover:text-foreground text-sm"
-      >
-        {link.label}
-      </Link>
-    ))}
-  </nav>
-);
-
-const footerBottom = (
-  <div className="flex items-center justify-between">
-    <div className="flex items-center gap-3">
-      {socialIcons.map((icon) => (
-        <a
-          key={icon.name}
-          href={icon.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={icon.label}
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <SystemIcon name={icon.name} size={20} />
-        </a>
-      ))}
+function FooterBottom(): React.JSX.Element {
+  return (
+    <div className="flex flex-col items-start gap-2 tablet:flex-row tablet:items-center tablet:justify-between tablet:gap-4">
+      <div className="-ml-3 flex items-center gap-1">
+        {SOCIAL_LINKS.map(({ label, href, icon }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            <SystemIcon name={icon} size={20} aria-hidden />
+          </a>
+        ))}
+      </div>
+      <p>© scalable-monorepo-starter contributors</p>
     </div>
-    <span>© scalable-monorepo-starter contributors</span>
-  </div>
-);
+  );
+}
 
-const RootLayout: React.FC = () => {
+export default function RootLayout(): React.JSX.Element {
   return (
     <>
       <Header
-        logo={<Logo />}
-        nav={headerNav}
-        actions={headerActions}
-        mobileMenu={mobileMenu}
+        logo={<Logo imgClassName="w-50 desktop:w-62.5" />}
+        nav={<MainNav variant="bar" />}
+        actions={<GitHubLink />}
+        mobileMenu={<MainNav variant="menu" />}
       />
-      <main className="mx-auto w-full max-w-app px-page-x">
+      <main>
         <Outlet />
       </main>
-      <Footer columns={footerColumns} bottom={footerBottom} />
+      <Footer columns={FOOTER_COLUMNS} bottom={<FooterBottom />} />
+      <ScrollRestoration />
     </>
   );
-};
-
-export default RootLayout;
+}

@@ -246,6 +246,8 @@ components:
 
 **Character:** 본문은 Open Sans의 인문적인 산세리프로 읽히고 라벨·디스플레이·코드 성격 텍스트는 Roboto Mono로 전환된다. 본문과 표기 텍스트는 서체 자체로 분리된다.
 
+한국어 본문은 낱말 단위로 줄을 바꾼다(`word-break: keep-all`, 긴 URL·코드는 `overflow-wrap: break-word`).
+
 ### Font Family Tokens
 | 토큰 | 값 | 용도 |
 | ---- | -- | ---- |
