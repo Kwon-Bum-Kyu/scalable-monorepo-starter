@@ -26,20 +26,20 @@ function Header({
       className={cn("w-full border-b border-border bg-background", className)}
       {...props}
     >
-      <div className="mx-auto flex w-full min-h-header max-w-app items-center justify-between px-page-x">
+      <div className="mx-auto flex min-h-header w-full max-w-app items-center justify-between gap-6 px-4 tablet:px-8 desktop:px-page-x">
         {logo && <div className="flex items-center">{logo}</div>}
 
         {nav && (
           <nav
-            aria-label="Primary"
-            className="hidden items-center gap-6 md:flex"
+            aria-label="주 메뉴"
+            className="hidden items-center gap-6 self-stretch tablet:flex"
           >
             {nav}
           </nav>
         )}
 
         {actions && (
-          <div className="hidden items-center gap-3 md:flex">{actions}</div>
+          <div className="hidden items-center gap-3 tablet:flex">{actions}</div>
         )}
 
         {hasMobileMenu && (
@@ -49,7 +49,7 @@ function Header({
             aria-expanded={isOpen}
             aria-label={isOpen ? "메뉴 닫기" : "메뉴 열기"}
             onClick={() => setIsOpen((prev) => !prev)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md md:hidden"
+            className="-mr-1 inline-flex h-11 w-11 items-center justify-center rounded-md text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 tablet:hidden"
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -59,7 +59,7 @@ function Header({
       {hasMobileMenu && isOpen && (
         <div
           id={menuId}
-          className="border-t border-border bg-background md:hidden"
+          className="border-t border-border bg-background tablet:hidden"
         >
           {mobileMenu}
         </div>

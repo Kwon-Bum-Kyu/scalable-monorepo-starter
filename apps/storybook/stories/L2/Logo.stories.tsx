@@ -18,5 +18,6 @@ const meta: Meta<typeof Logo> = {
 export default meta;
 type Story = StoryObj<typeof Logo>;
 
-export const Default: Story = { args: {} };
+export const Default: Story = {};
+export const Mobile: Story = { args: { imgClassName: "w-50" } };
 export const CustomAlt: Story = { args: { alt: "MY BRAND" } };

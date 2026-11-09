@@ -21,9 +21,31 @@ type Story = StoryObj<typeof Header>;
 
 const nav = (
   <>
-    <Link to="/">Home</Link>
-    <Link to="/guide">Guide</Link>
-    <Link to="/about">About</Link>
+    <Link
+      to="/"
+      className="inline-flex items-center self-stretch border-y-2 border-transparent text-sm text-muted-foreground"
+    >
+      시작하기
+    </Link>
+    <Link
+      to="/structure"
+      className="inline-flex items-center self-stretch border-y-2 border-transparent text-sm text-muted-foreground"
+    >
+      구조
+    </Link>
+    <Link
+      to="/guide"
+      aria-current="page"
+      className="inline-flex items-center self-stretch border-y-2 border-b-foreground border-t-transparent text-sm font-semibold text-foreground"
+    >
+      디자인 시스템
+    </Link>
+    <Link
+      to="/examples"
+      className="inline-flex items-center self-stretch border-y-2 border-transparent text-sm text-muted-foreground"
+    >
+      Examples
+    </Link>
   </>
 );
 
@@ -37,10 +59,19 @@ const actions = (
 );
 
 const mobileMenu = (
-  <div className="flex flex-col gap-2 p-4">
-    <Link to="/">Home</Link>
-    <Link to="/guide">Guide</Link>
-    <Link to="/about">About</Link>
+  <div className="grid px-4 pb-4 pt-2">
+    <Link to="/" className="flex min-h-11 items-center text-base">
+      시작하기
+    </Link>
+    <Link to="/structure" className="flex min-h-11 items-center text-base">
+      구조
+    </Link>
+    <Link to="/guide" className="flex min-h-11 items-center text-base font-semibold">
+      디자인 시스템
+    </Link>
+    <Link to="/examples" className="flex min-h-11 items-center text-base">
+      Examples
+    </Link>
   </div>
 );
 

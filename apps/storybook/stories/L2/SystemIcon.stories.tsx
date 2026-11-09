@@ -16,3 +16,7 @@ export const Close: Story = {
 };
 export const Check: Story = { args: { name: "check-circle", size: 24 } };
 export const Menu: Story = { args: { name: "bars", size: 24 } };
+export const Copy: Story = { args: { name: "copy", size: 24 } };
+export const OctagonX: Story = {
+  args: { name: "octagon-x", size: 24, className: "text-destructive" },
+};
