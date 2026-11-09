@@ -9,6 +9,11 @@ describe("Empty", () => {
     expect(screen.getByText("데이터가 없습니다")).toBeInTheDocument();
   });
 
+  it("description은 최대 폭 max-w-120을 가진다", () => {
+    render(<Empty title="비었음" description="데이터가 없습니다" />);
+    expect(screen.getByText("데이터가 없습니다")).toHaveClass("max-w-120");
+  });
+
   it("action 슬롯이 렌더된다", () => {
     render(
       <Empty
