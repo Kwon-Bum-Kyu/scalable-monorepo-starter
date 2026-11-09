@@ -85,8 +85,32 @@ describe("MainNav", () => {
 
     await user.click(screen.getByRole("button", { name: "시작하기" }));
 
-    expect(scrollIntoView).toHaveBeenCalledWith({ block: "start" });
+    await waitFor(() =>
+      expect(scrollIntoView).toHaveBeenCalledWith({ block: "start" }),
+    );
     expect(window.location.hash).toBe(beforeHash);
+  });
+
+  it("[섹션 메뉴]가 홈에서 클릭될 때 한 프레임이 지난 뒤에야 스크롤한다", async () => {
+    vi.stubEnv("PROD", true);
+    const user = userEvent.setup();
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      '<section id="quickstart" />',
+    );
+    const frames: FrameRequestCallback[] = [];
+    vi.spyOn(window, "requestAnimationFrame").mockImplementation((cb) => {
+      frames.push(cb);
+      return frames.length;
+    });
+    const scrollIntoView = vi.spyOn(Element.prototype, "scrollIntoView");
+    renderNav("/", "menu");
+
+    await user.click(screen.getByRole("button", { name: "시작하기" }));
+
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    frames.forEach((cb) => cb(0));
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: "start" });
   });
 
   it("[섹션 메뉴]가 다른 화면에서 클릭될 때 홈 이동 후 대상에 스크롤한다", async () => {

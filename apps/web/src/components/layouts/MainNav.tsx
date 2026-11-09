@@ -73,7 +73,7 @@ export default function MainNav({ variant }: MainNavProps): React.JSX.Element {
           className={itemClass}
           onClick={() => {
             if (pathname === ROUTES.root) {
-              scrollToSection(item.sectionId);
+              requestAnimationFrame(() => scrollToSection(item.sectionId));
             } else {
               navigate(ROUTES.root, {
                 state: { scrollTo: item.sectionId } satisfies HomeScrollState,
