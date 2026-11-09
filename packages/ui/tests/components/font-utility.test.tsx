@@ -47,6 +47,20 @@ async function compileThemeUtilities(): Promise<string> {
   return compiler.build(CANDIDATES);
 }
 
+async function compileBaseStyles(): Promise<string> {
+  const source = readFileSync(THEME_PATH, "utf-8");
+  const { theme } = readTheme(source);
+  const declarations = [...theme]
+    .map(([token, value]) => `  ${token}: ${value};`)
+    .join("\n");
+  const utilities = /body\s*\{\s*@apply\s+([^;]+);/.exec(source)?.[1] ?? "";
+  const compiler = await compile(
+    `@import "tailwindcss";\n@theme {\n${declarations}\n}\n@layer base { body { @apply ${utilities}; } }`,
+    { base: dirname(THEME_PATH), loadStylesheet },
+  );
+  return compiler.build([]);
+}
+
 function utilityRule(compiledCss: string, className: string): string {
   const escaped = className.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
   return (
@@ -71,8 +85,19 @@ function firstFamily(value: string): string {
 }
 
 let css = "";
+let baseCss = "";
 beforeAll(async () => {
-  css = await compileThemeUtilities();
+  [css, baseCss] = await Promise.all([
+    compileThemeUtilities(),
+    compileBaseStyles(),
+  ]);
+});
+
+describe("body base style", () => {
+  it("[한국어 본문]이 렌더될 때 낱말 단위 줄바꿈과 긴 문자열 보호를 적용한다", () => {
+    expect(baseCss).toContain("word-break: keep-all");
+    expect(baseCss).toContain("overflow-wrap: break-word");
+  });
 });
 
 describe("font-mono utility (FR-FF-7)", () => {

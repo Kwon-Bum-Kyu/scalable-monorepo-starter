@@ -1,55 +1,83 @@
-import { cn } from "@repo/ui";
-import { isRouteErrorResponse, useRouteError } from "react-router-dom";
+import { Button, cn } from "@repo/ui";
+import {
+  isRouteErrorResponse,
+  Link,
+  useRouteError,
+} from "react-router-dom";
 
-type Error = {
-  status: number;
-  statusText: string;
-  internal: boolean;
-  data: string;
-  error: object;
-};
+import PageContainer from "@/components/layouts/PageContainer";
 
-// const render = (error: Error) => {
-//   const { status, statusText } = error;
+export type ErrorPageVariant = "not-found" | "route-error";
 
-//   switch (status) {
-//     case 404:
-//       return <div>{statusText}</div>;
-//     default:
-//       return <div>{statusText}</div>;
-//   }
-// };
-
-type ErrorPageProps = {
-  isError?: boolean;
-  text?: string;
+export interface ErrorPageProps {
+  variant?: ErrorPageVariant;
   className?: string;
-};
+}
 
-/**
- * 라우팅 에러를 처리하는 페이지
- */
-const ErrorPage = ({ isError, className }: ErrorPageProps) => {
-  const error = useRouteError() as Error;
-  isError = isError || isRouteErrorResponse(error);
+const CONTENT = {
+  "not-found": {
+    label: "404",
+    title: "페이지를 찾을 수 없습니다.",
+    description:
+      "페이지가 삭제되었거나 주소가 바뀌었습니다. 입력하신 주소가 정확한지 확인해 주세요.",
+  },
+  "route-error": {
+    label: "오류",
+    title: "페이지를 표시하지 못했습니다.",
+    description:
+      "페이지를 불러오는 중에 문제가 생겼습니다. 다시 시도해도 같은 화면이 보이면 홈으로 이동해 주세요.",
+  },
+} as const;
 
-  if (!isError) return;
+export default function ErrorPage({
+  variant,
+  className,
+}: ErrorPageProps): React.JSX.Element {
+  const error = useRouteError();
+  const resolved =
+    variant ??
+    (isRouteErrorResponse(error) && error.status === 404
+      ? "not-found"
+      : "route-error");
+  const content = CONTENT[resolved];
 
   return (
-    <main
-      id="error-page"
-      className={cn(
-        "flex h-screen w-screen flex-col items-center justify-center text-center",
-        className,
-      )}
-    >
-      <h3 className="mt-7 text-lg font-bold">찾으시는 페이지가 없습니다.</h3>
-      <p className="c-b2 w-container-error-text mt-4 text-gray-700">
-        페이지가 삭제되었거나 주소가 변경되어 요청하신 페이지를 찾을 수
-        없습니다. 입력하신 주소가 정확한지 다시 한번 확인해 주시기 바랍니다.
-      </p>
-    </main>
+    <PageContainer>
+      <div
+        id="error-page"
+        role={resolved === "route-error" ? "alert" : undefined}
+        className={cn(
+          "mx-auto grid max-w-error-text justify-items-center gap-4 py-20 text-center tablet:py-32",
+          className,
+        )}
+      >
+        <p
+          className={cn(
+            "text-sm font-bold tracking-eyebrow text-muted-foreground",
+            resolved === "not-found" ? "font-display" : "font-sans",
+          )}
+        >
+          {content.label}
+        </p>
+        <h1 className="text-2xl font-bold tablet:text-3xl">{content.title}</h1>
+        <p className="text-muted-foreground">{content.description}</p>
+        <div className="mt-4 flex w-full flex-col gap-3 tablet:w-auto tablet:flex-row tablet:flex-wrap tablet:justify-center">
+          {resolved === "not-found" ? (
+            <Button asChild size="lg">
+              <Link to="/">홈으로</Link>
+            </Button>
+          ) : (
+            <>
+              <Button size="lg" onClick={() => window.location.reload()}>
+                다시 시도
+              </Button>
+              <Button asChild variant="outline" size="lg">
+                <Link to="/">홈으로</Link>
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+    </PageContainer>
   );
-};
-
-export default ErrorPage;
+}
