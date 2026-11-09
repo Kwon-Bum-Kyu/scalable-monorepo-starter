@@ -59,8 +59,8 @@ function FooterBottom(): React.JSX.Element {
           <a
             key={label}
             href={href}
-            target="_blank"
-            rel="noopener noreferrer"
+            target={href.startsWith("mailto:") ? undefined : "_blank"}
+            rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
             aria-label={label}
             className="inline-flex h-11 w-11 items-center justify-center rounded-md text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >

@@ -135,6 +135,7 @@ const ExampleFormBody = ({
         <Button
           type="button"
           variant="outline"
+          size="lg"
           className={PAGE_ACTION_CLASS}
           onClick={onClose}
         >
@@ -143,6 +144,7 @@ const ExampleFormBody = ({
         <Button
           type="submit"
           form="example-form"
+          size="lg"
           className={PAGE_ACTION_CLASS}
           disabled={isTitleEmpty}
         >

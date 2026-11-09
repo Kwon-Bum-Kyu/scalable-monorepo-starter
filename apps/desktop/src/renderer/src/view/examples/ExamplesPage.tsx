@@ -75,9 +75,6 @@ const ExamplesPage = () => {
 
   const closeDialog = useCallback(() => {
     setDialogOpen(false);
-    setDialogMode("create");
-    setEditingId(null);
-    setForm(EMPTY_EXAMPLE_FORM);
   }, []);
 
   const handleSubmit = useCallback(async () => {
@@ -101,10 +98,11 @@ const ExamplesPage = () => {
         await createMutation.mutate(payload);
       }
       closeDialog();
-      await list.refetch();
     } catch (error) {
       toast.error(formatToast(error));
+      return;
     }
+    void list.refetch().catch(() => {});
   }, [
     submitting,
     dialogMode,
@@ -136,10 +134,11 @@ const ExamplesPage = () => {
         // 삭제된 행 버튼은 사라지므로 다이얼로그 닫힘 포커스 복귀 대상을 h1로 바꾼다.
         returnFocusRef.current = headingRef.current;
         headingRef.current?.focus();
-        await list.refetch();
       } catch (error) {
         toast.error(formatToast(error));
+        return;
       }
+      void list.refetch().catch(() => {});
     },
     [deleteMutation, list],
   );
@@ -193,6 +192,7 @@ const ExamplesPage = () => {
         {view === "empty" ? null : (
           <Button
             type="button"
+            size="lg"
             className={PAGE_ACTION_CLASS}
             onClick={openCreateDialog}
           >
@@ -211,6 +211,7 @@ const ExamplesPage = () => {
             action={
               <Button
                 type="button"
+                size="lg"
                 className={PAGE_ACTION_CLASS}
                 onClick={openCreateDialog}
               >

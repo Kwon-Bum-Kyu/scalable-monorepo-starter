@@ -44,13 +44,13 @@ describe("resolveListView", () => {
 describe("액션 클래스 상수", () => {
   it("페이지 액션은 Mobile 44px 전폭, Tablet부터 40px 자동 폭이다", () => {
     expect(PAGE_ACTION_CLASS).toBe(
-      "h-11 w-full px-8 text-base tablet:h-10 tablet:w-auto tablet:px-4 tablet:text-sm",
+      "w-full tablet:h-10 tablet:w-auto tablet:px-4 tablet:text-sm",
     );
   });
 
   it("행 액션은 Mobile 44px, Tablet부터 32px이다", () => {
     expect(ROW_ACTION_CLASS).toBe(
-      "h-11 px-8 text-base tablet:h-8 tablet:px-3 tablet:text-sm",
+      "tablet:h-8 tablet:px-3 tablet:text-sm",
     );
   });
 });

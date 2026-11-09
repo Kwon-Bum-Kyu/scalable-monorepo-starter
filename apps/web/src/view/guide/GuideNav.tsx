@@ -27,28 +27,22 @@ export function GuideSidebar({ activeId, onSelect }: GuideNavProps): React.JSX.E
       {GUIDE_NAV_GROUPS.map((group) => (
         <div key={group.title} className="grid gap-1">
           <p className="mb-1 pl-3 text-xs font-bold tracking-eyebrow text-muted-foreground">{group.title}</p>
-          {group.items.map((item) =>
-            item.id === activeId ? (
-              <button
-                key={item.id}
-                type="button"
-                aria-current="true"
-                onClick={() => onSelect(item.id)}
-                className={cn(ITEM_BASE, "border-foreground font-semibold text-foreground")}
-              >
-                {item.label}
-              </button>
-            ) : (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => onSelect(item.id)}
-                className={cn(ITEM_BASE, "border-transparent text-muted-foreground hover:text-foreground")}
-              >
-                {item.label}
-              </button>
-            ),
-          )}
+          {group.items.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              aria-current={item.id === activeId ? "true" : undefined}
+              onClick={() => onSelect(item.id)}
+              className={cn(
+                ITEM_BASE,
+                item.id === activeId
+                  ? "border-foreground font-semibold text-foreground"
+                  : "border-transparent text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
       ))}
     </nav>

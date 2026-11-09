@@ -128,12 +128,14 @@ describe("RootLayout", () => {
 
     const externalLinks = screen
       .getAllByRole("link")
-      .filter((link) => /^(https:|mailto:)/.test(link.getAttribute("href") ?? ""));
+      .filter((link) => /^https:/.test(link.getAttribute("href") ?? ""));
     expect(externalLinks.length).toBeGreaterThan(0);
     for (const link of externalLinks) {
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
     }
+    expect(screen.getByRole("link", { name: "Email" })).not.toHaveAttribute("target");
+    expect(screen.getByRole("link", { name: "Email" })).not.toHaveAttribute("rel");
   });
 
   it("[푸터 저작권]이 렌더될 때 프로젝트 기여자 표기를 사용한다", () => {

@@ -8,7 +8,8 @@ import {
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import RootLayout from "@/components/layouts/RootLayout";
-import { buildRoutes, ROUTES } from "@/routes/index";
+import { buildRoutes } from "@/routes/index";
+import { ROUTES } from "@/routes/paths";
 // >>> EXAMPLES_START
 import ExamplesPage from "@/view/examples/ExamplesPage";
 // <<< EXAMPLES_END

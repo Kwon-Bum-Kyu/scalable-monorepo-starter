@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import Home from "@/view/Home";
@@ -14,6 +14,10 @@ const sectionContracts = [
     "토큰과 컴포넌트, 브랜드 규칙은 가이드에서 확인합니다.",
   ],
 ] as const;
+
+const LocationState = () => (
+  <output aria-label="location-state">{JSON.stringify(useLocation().state)}</output>
+);
 
 describe("Home", () => {
   afterEach(() => vi.restoreAllMocks());
@@ -86,9 +90,11 @@ describe("Home", () => {
         ]}
       >
         <Home />
+        <LocationState />
       </MemoryRouter>,
     );
 
     expect(scrollIntoView).toHaveBeenCalledWith({ block: "start" });
+    expect(screen.getByText("null", { selector: "output" })).toBeInTheDocument();
   });
 });

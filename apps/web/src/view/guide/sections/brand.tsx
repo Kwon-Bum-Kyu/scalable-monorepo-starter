@@ -1,5 +1,6 @@
 import { Badge, Card, cn, SystemIcon } from "@repo/ui";
 
+import DataTable from "@/components/DataTable";
 import InlineCode from "@/components/InlineCode";
 import {
   BRAND_FILES,
@@ -12,7 +13,7 @@ import {
   SYSTEM_ICON_NAMES,
   SYSTEM_ICON_SAMPLES,
 } from "@/view/guide/brandData";
-import { GuideSection, GuideTable, TD } from "@/view/guide/primitives";
+import { GuideSection, TD } from "@/view/guide/primitives";
 
 const TILE = "grid min-h-36 place-items-center rounded-lg border p-4";
 const TRACK_ROW = "grid gap-4 desktop:flex desktop:items-start";
@@ -24,7 +25,7 @@ export const ConceptSection = () => (
         <img src={BRAND_SYMBOL_SRC} alt="scalable-monorepo-starter 심볼" width={160} height={128} />
       </div>
       <div className="min-w-0 flex-1">
-        <GuideTable head={["요소", "의미"]}>
+        <DataTable head={["요소", "의미"]}>
           {CONCEPT_ROWS.map((row) => (
             <tr key={row.term} className="group">
               <td className={`${TD} whitespace-nowrap`}>{row.term}</td>
@@ -33,7 +34,7 @@ export const ConceptSection = () => (
               </td>
             </tr>
           ))}
-        </GuideTable>
+        </DataTable>
       </div>
     </div>
   </GuideSection>
@@ -73,14 +74,14 @@ export const ClearSpaceSection = () => (
         </p>
       </Card>
       <div className="min-w-0 flex-1">
-        <GuideTable head={["구성", "최소 크기"]}>
+        <DataTable head={["구성", "최소 크기"]}>
           {MIN_SIZES.map((row) => (
             <tr key={row.part} className="group">
               <td className={TD}>{row.part}</td>
               <td className={`${TD} whitespace-nowrap`}>{row.size}</td>
             </tr>
           ))}
-        </GuideTable>
+        </DataTable>
       </div>
     </div>
   </GuideSection>
@@ -149,7 +150,7 @@ export const IconsSection = () => (
 
 export const FilesSection = () => (
   <GuideSection id="files" eyebrow="브랜드" title="파일 목록">
-    <GuideTable head={["파일", "용도"]} className="min-w-150">
+    <DataTable head={["파일", "용도"]} className="min-w-150">
       {BRAND_FILES.map((row) => (
         <tr key={row.file} className="group">
           <td className={TD}>
@@ -158,6 +159,6 @@ export const FilesSection = () => (
           <td className={TD}>{row.usage}</td>
         </tr>
       ))}
-    </GuideTable>
+    </DataTable>
   </GuideSection>
 );

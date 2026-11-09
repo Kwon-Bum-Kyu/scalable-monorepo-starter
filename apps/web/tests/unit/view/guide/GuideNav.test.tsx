@@ -2,8 +2,9 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
+import DataTable from "@/components/DataTable";
 import { GuideSectionSelect, GuideSidebar } from "@/view/guide/GuideNav";
-import { GuideSection, GuideTable } from "@/view/guide/primitives";
+import { GuideSection } from "@/view/guide/primitives";
 
 describe("GuideSidebar", () => {
   it("4그룹 12항목을 가이드 섹션 내비로 렌더한다", () => {
@@ -60,12 +61,12 @@ describe("GuideSectionSelect", () => {
   });
 });
 
-describe("GuideTable", () => {
+describe("DataTable", () => {
   it("className을 줄 때 표 요소에 적용하고 표 영역은 가로로 스크롤한다", () => {
     const { container } = render(
-      <GuideTable head={["a"]} className="min-w-150">
+      <DataTable head={["a"]} className="min-w-150">
         <tr><td>1</td></tr>
-      </GuideTable>,
+      </DataTable>,
     );
     expect(screen.getByRole("table")).toHaveClass("w-full", "min-w-150");
     expect(container.firstElementChild).toHaveClass("overflow-x-auto");
@@ -82,6 +83,8 @@ describe("GuideSection", () => {
     const section = screen.getByRole("region", { name: "컬러" });
     expect(section).toHaveAttribute("id", "color");
     expect(screen.getByRole("heading", { level: 2, name: "컬러" })).toHaveAttribute("id", "color-title");
+    expect(screen.getByRole("heading", { level: 2, name: "컬러" })).toHaveAttribute("tabindex", "-1");
+    expect(screen.getByRole("heading", { level: 2, name: "컬러" })).toHaveClass("focus:outline-none");
     expect(screen.getByText("토큰")).toBeInTheDocument();
   });
 });

@@ -30,6 +30,8 @@ export default function DeleteExampleDialog({
   returnFocusRef,
 }: DeleteExampleDialogProps): React.JSX.Element {
   const cancelRef = useRef<HTMLButtonElement | null>(null);
+  const lastTargetRef = useRef(target);
+  if (target !== null) lastTargetRef.current = target;
 
   return (
     <Dialog
@@ -54,7 +56,9 @@ export default function DeleteExampleDialog({
         <DialogHeader className="pr-12">
           <DialogTitle>예제를 삭제합니다.</DialogTitle>
           <DialogDescription>
-            {target ? `'${target.title}'를 삭제하면 되돌릴 수 없습니다.` : null}
+            {lastTargetRef.current
+              ? `'${lastTargetRef.current.title}'를 삭제하면 되돌릴 수 없습니다.`
+              : null}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -62,6 +66,7 @@ export default function DeleteExampleDialog({
             ref={cancelRef}
             type="button"
             variant="outline"
+            size="lg"
             className={PAGE_ACTION_CLASS}
             onClick={onCancel}
           >
@@ -70,6 +75,7 @@ export default function DeleteExampleDialog({
           <Button
             type="button"
             variant="destructive"
+            size="lg"
             className={PAGE_ACTION_CLASS}
             onClick={() => target && onConfirm(target.id)}
           >

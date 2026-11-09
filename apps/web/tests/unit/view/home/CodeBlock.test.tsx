@@ -88,6 +88,16 @@ describe("CodeBlock", () => {
     expect(screen.getByText("bash")).toBeInTheDocument();
   });
 
+  it("[넘치는 코드 블록]이 키보드 포커스를 받을 때 어두운 장면 포커스 링을 표시한다", () => {
+    const { container } = render(<CodeBlock segments={segments} />);
+    expect(container.querySelector("pre")).toHaveClass(
+      "focus-visible:ring-2",
+      "focus-visible:ring-system-white",
+      "focus-visible:ring-offset-2",
+      "focus-visible:ring-offset-gray-900",
+    );
+  });
+
   it("복사됨 상태에서 unmount될 때 대기 중인 타이머를 정리한다", async () => {
     const { unmount } = render(<CodeBlock segments={segments} />);
     await click();

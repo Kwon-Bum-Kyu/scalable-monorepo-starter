@@ -57,21 +57,23 @@ const targets = {
   ],
   schemaFile: "apps/api/prisma/schema.prisma",
   routerIndexFile: "apps/api/src/routes/v1/index.ts",
-  // web·desktop 양쪽에서 같은 상대 경로로 마커 블록을 지운다.
   markerFiles: [
-    "src/routes/paths.ts",
-    "src/routes/index.tsx",
-    "src/components/layouts/MainNav.tsx",
-    "tests/unit/routes/routes.test.tsx",
-    "tests/unit/components/layouts/MainNav.test.tsx",
+    "apps/web/src/routes/paths.ts",
+    "apps/desktop/src/renderer/src/routes/paths.ts",
+    "apps/web/src/routes/index.tsx",
+    "apps/desktop/src/renderer/src/routes/index.tsx",
+    "apps/web/src/components/layouts/MainNav.tsx",
+    "apps/desktop/src/renderer/src/components/layouts/MainNav.tsx",
+    "apps/web/tests/unit/routes/routes.test.tsx",
+    "apps/desktop/tests/unit/routes/routes.test.tsx",
+    "apps/web/tests/unit/components/layouts/MainNav.test.tsx",
+    "apps/desktop/tests/unit/components/layouts/MainNav.test.tsx",
+    "apps/web/tests/e2e/visual-regression.spec.ts",
   ],
-  markerRoots: ["apps/web", "apps/desktop/src/renderer"],
-  desktopTestRoot: "apps/desktop",
-  webOnlyMarkerFiles: ["apps/web/tests/e2e/visual-regression.spec.ts"],
 };
 
 const EXAMPLES_BLOCK_REGEX =
-  /^[ \t]*\/\/ >>> EXAMPLES_START\n[\s\S]*?^[ \t]*\/\/ <<< EXAMPLES_END\n/gm;
+  /^[ \t]*\/\/ >>> EXAMPLES_START\r?\n[\s\S]*?^[ \t]*\/\/ <<< EXAMPLES_END\r?\n/gm;
 
 const SCHEMA_BLOCK_REGEX = /\n?\/\/\s*>>> EXAMPLES_START[\s\S]*?\/\/\s*<<< EXAMPLES_END\n?/m;
 
@@ -154,24 +156,13 @@ function stripExamplesBlocks(rel) {
   return { rel, action: "stripped-examples" };
 }
 
-function markerFilePaths() {
-  const [web, desktopRenderer] = targets.markerRoots;
-  const desktopTests = targets.desktopTestRoot;
-  const pairs = targets.markerFiles.flatMap((file) =>
-    file.startsWith("tests/")
-      ? [`${web}/${file}`, `${desktopTests}/${file}`]
-      : [`${web}/${file}`, `${desktopRenderer}/${file}`],
-  );
-  return [...pairs, ...targets.webOnlyMarkerFiles];
-}
-
 const results = [];
 for (const rel of targets.paths) {
   results.push(removePath(rel));
 }
 results.push(stripSchemaBlock());
 results.push(stripApiRouterMount());
-for (const rel of markerFilePaths()) {
+for (const rel of targets.markerFiles) {
   results.push(stripExamplesBlocks(rel));
 }
 

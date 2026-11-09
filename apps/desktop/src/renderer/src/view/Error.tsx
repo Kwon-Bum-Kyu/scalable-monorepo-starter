@@ -11,7 +11,6 @@ export type ErrorPageVariant = "not-found" | "route-error";
 
 export interface ErrorPageProps {
   variant?: ErrorPageVariant;
-  className?: string;
 }
 
 const CONTENT = {
@@ -29,10 +28,7 @@ const CONTENT = {
   },
 } as const;
 
-export default function ErrorPage({
-  variant,
-  className,
-}: ErrorPageProps): React.JSX.Element {
+export default function ErrorPage({ variant }: ErrorPageProps): React.JSX.Element {
   const error = useRouteError();
   const resolved =
     variant ??
@@ -46,10 +42,7 @@ export default function ErrorPage({
       <div
         id="error-page"
         role={resolved === "route-error" ? "alert" : undefined}
-        className={cn(
-          "mx-auto grid max-w-error-text justify-items-center gap-4 py-20 text-center tablet:py-32",
-          className,
-        )}
+        className="mx-auto grid max-w-error-text justify-items-center gap-4 py-20 text-center tablet:py-32"
       >
         <p
           className={cn(
