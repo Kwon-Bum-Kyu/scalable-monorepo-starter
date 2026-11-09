@@ -13,10 +13,10 @@
  *   - apps/api/test 의 examples 관련 unit/integration 파일
  *   - apps/api/prisma/schema.prisma 의 EXAMPLES_START/END 블록
  *   - apps/api/src/routes/v1/index.ts 의 examples 마운트 코드
- *   - apps/web/src/services/examples.ts
- *   - apps/web/src/view/examples
- *   - apps/web/tests/unit 의 examples services/view 테스트
- *   - apps/web/src/routes/index.tsx 의 /examples 라우트
+ *   - apps/web 의 examples services/hooks/view, 단위 테스트, e2e spec
+ *   - apps/desktop renderer 사본의 같은 파일과 단위 테스트
+ *   - web·desktop 의 EXAMPLES_START/END 마커 블록
+ *     (routes/paths.ts, routes/index.tsx, MainNav.tsx, 관련 테스트, VR spec)
  */
 
 import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -42,15 +42,36 @@ const targets = {
     "apps/api/test/unit/config/examples-feature.test.ts",
     "apps/api/test/integration/examples.test.ts",
     "apps/web/src/services/examples.ts",
+    "apps/web/src/hooks/useExamples.ts",
     "apps/web/src/view/examples",
     "apps/web/tests/unit/services/examples.test.ts",
     "apps/web/tests/unit/services/examplesHooks.test.tsx",
     "apps/web/tests/unit/view/examples",
+    "apps/web/tests/e2e/examples.spec.ts",
+    "apps/desktop/src/renderer/src/services/examples.ts",
+    "apps/desktop/src/renderer/src/hooks/useExamples.ts",
+    "apps/desktop/src/renderer/src/view/examples",
+    "apps/desktop/tests/unit/services/examples.test.ts",
+    "apps/desktop/tests/unit/services/examplesHooks.test.tsx",
+    "apps/desktop/tests/unit/view/examples",
   ],
   schemaFile: "apps/api/prisma/schema.prisma",
   routerIndexFile: "apps/api/src/routes/v1/index.ts",
-  webRouterFile: "apps/web/src/routes/index.tsx",
+  // web·desktop 양쪽에서 같은 상대 경로로 마커 블록을 지운다.
+  markerFiles: [
+    "src/routes/paths.ts",
+    "src/routes/index.tsx",
+    "src/components/layouts/MainNav.tsx",
+    "tests/unit/routes/routes.test.tsx",
+    "tests/unit/components/layouts/MainNav.test.tsx",
+  ],
+  markerRoots: ["apps/web", "apps/desktop/src/renderer"],
+  desktopTestRoot: "apps/desktop",
+  webOnlyMarkerFiles: ["apps/web/tests/e2e/visual-regression.spec.ts"],
 };
+
+const EXAMPLES_BLOCK_REGEX =
+  /^[ \t]*\/\/ >>> EXAMPLES_START\n[\s\S]*?^[ \t]*\/\/ <<< EXAMPLES_END\n/gm;
 
 const SCHEMA_BLOCK_REGEX = /\n?\/\/\s*>>> EXAMPLES_START[\s\S]*?\/\/\s*<<< EXAMPLES_END\n?/m;
 
@@ -116,23 +137,32 @@ function stripApiRouterMount() {
   return { rel: targets.routerIndexFile, action: "edited" };
 }
 
-function stripWebRoute() {
-  const abs = path.join(repoRoot, targets.webRouterFile);
+function stripExamplesBlocks(rel) {
+  const abs = path.join(repoRoot, rel);
   if (!existsSync(abs)) {
-    return { rel: targets.webRouterFile, action: "skip", reason: "missing" };
+    return { rel, action: "skip", reason: "missing" };
   }
   const original = readFileSync(abs, "utf8");
-  const next = original
-    .replace(/^.*ExamplesPage.*\n/gm, "")
-    .replace(/^.*\/examples.*\n/gm, "");
+  const next = original.replace(EXAMPLES_BLOCK_REGEX, "");
   if (next === original) {
-    return { rel: targets.webRouterFile, action: "skip", reason: "no-change" };
+    return { rel, action: "skip", reason: "no-block" };
   }
   if (dryRun) {
-    return { rel: targets.webRouterFile, action: "would-edit-web-route" };
+    return { rel, action: "would-strip-examples" };
   }
   writeFileSync(abs, next);
-  return { rel: targets.webRouterFile, action: "edited" };
+  return { rel, action: "stripped-examples" };
+}
+
+function markerFilePaths() {
+  const [web, desktopRenderer] = targets.markerRoots;
+  const desktopTests = targets.desktopTestRoot;
+  const pairs = targets.markerFiles.flatMap((file) =>
+    file.startsWith("tests/")
+      ? [`${web}/${file}`, `${desktopTests}/${file}`]
+      : [`${web}/${file}`, `${desktopRenderer}/${file}`],
+  );
+  return [...pairs, ...targets.webOnlyMarkerFiles];
 }
 
 const results = [];
@@ -141,7 +171,9 @@ for (const rel of targets.paths) {
 }
 results.push(stripSchemaBlock());
 results.push(stripApiRouterMount());
-results.push(stripWebRoute());
+for (const rel of markerFilePaths()) {
+  results.push(stripExamplesBlocks(rel));
+}
 
 const summary = results.reduce(
   (acc, r) => {
@@ -162,6 +194,6 @@ for (const r of results) {
 
 if (!dryRun) {
   process.stdout.write(
-    "\n다음 단계: prisma migrate (drop_examples_table) 생성 후 npm run typecheck/test 실행을 권장합니다.\n",
+    "\n다음 단계: prisma migrate (drop_examples_table) 생성 후 npm run check:parity, npm run typecheck, npm run test 실행을 권장합니다.\n",
   );
 }

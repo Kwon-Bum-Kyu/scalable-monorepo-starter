@@ -5,8 +5,7 @@ import { expect, test } from "@playwright/test";
  *
  * - viewport 4종: mobile-640 / tablet-768 / desktop-1280 / wide-1920
  *   (`playwright.config.ts`의 vr-* projects로 매핑)
- * - 라우트 2종: `/` (Guide), `/examples` (ExamplesPage)
- *   `/error` 는 라우터 정의는 있으나 시각 검증 가치가 낮아 제외
+ * - 라우트 5종: `/` (홈), `/guide`, `/examples` (ExamplesPage), `/error`, `/nope` (404)
  * 선택 항목: 기준 스냅샷(*-darwin.png)은 macOS 전용이고 CI에서는 실행하지 않는다. 갱신은 아래 실행 명령에 --update-snapshots=all을 붙인다.
  *
  * 실행:
@@ -18,7 +17,12 @@ import { expect, test } from "@playwright/test";
 
 const ROUTES: ReadonlyArray<{ name: string; path: string }> = [
   { name: "root", path: "/" },
+  { name: "guide", path: "/guide" },
+  // >>> EXAMPLES_START
   { name: "examples", path: "/examples" },
+  // <<< EXAMPLES_END
+  { name: "error", path: "/error" },
+  { name: "not-found", path: "/nope" },
 ];
 
 for (const route of ROUTES) {

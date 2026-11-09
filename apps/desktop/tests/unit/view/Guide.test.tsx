@@ -1,313 +1,118 @@
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import App from "@/App";
 import Guide from "@/view/Guide";
+import { GUIDE_NAV_GROUPS, GUIDE_SECTION_IDS } from "@/view/guide/navData";
 
-const renderGuide = () =>
-  render(
-    <MemoryRouter>
-      <Guide />
-    </MemoryRouter>,
+type Callback = (entries: Array<Partial<IntersectionObserverEntry>>) => void;
+let observerCallback: Callback | undefined;
+
+beforeEach(() => {
+  observerCallback = undefined;
+  vi.stubGlobal(
+    "IntersectionObserver",
+    class {
+      constructor(cb: Callback) {
+        observerCallback = cb;
+      }
+      observe() {}
+      disconnect() {}
+    },
   );
+});
 
-describe("Guide 페이지 — 디자인 시스템 가이드", () => {
-  describe("페이지 헤더", () => {
-    it("페이지 타이틀이 노출된다", () => {
-      renderGuide();
-      expect(
-        screen.getByRole("heading", {
-          name: "디자인 시스템 한눈에 보기",
-          level: 1,
-        }),
-      ).toBeInTheDocument();
-    });
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
+
+const SECTION_TITLES: ReadonlyArray<readonly [string, string]> = [
+  ["principles", "원칙"],
+  ["color", "컬러"],
+  ["type", "타이포그래피"],
+  ["space", "스페이싱 · 라운딩 · 그림자"],
+  ["bp", "브레이크포인트"],
+  ["components", "기본 컴포넌트"],
+  ["concept", "공유 루트"],
+  ["logos", "로고 조합 4종"],
+  ["clear", "클리어 스페이스와 최소 크기"],
+  ["misuse", "잘못된 사용 예"],
+  ["icons", "시스템 아이콘"],
+  ["files", "파일 목록"],
+];
+
+describe("Guide 페이지 - 디자인 시스템 가이드", () => {
+  it("페이지 제목이 h1로 노출된다", () => {
+    render(<Guide />);
+    expect(screen.getByRole("heading", { level: 1, name: "디자인 시스템 가이드" })).toBeInTheDocument();
   });
 
-  describe("사이드바 navigation", () => {
-    it("Design System Guide aria-label로 네비게이션이 노출된다", () => {
-      renderGuide();
-      expect(
-        screen.getByRole("navigation", { name: "Design System Guide" }),
-      ).toBeInTheDocument();
-    });
-
-    it("9개 섹션 anchor 링크가 모두 노출된다", () => {
-      renderGuide();
-      const nav = screen.getByRole("navigation", {
-        name: "Design System Guide",
-      });
-      const expected = [
-        "개요",
-        "원칙",
-        "컬러",
-        "타이포그래피",
-        "스페이싱 · 라운딩 · 그림자",
-        "브레이크포인트",
-        "기본 컴포넌트",
-        "로고 · 아이콘",
-      ];
-      for (const label of expected) {
-        expect(within(nav).getByRole("link", { name: label })).toHaveAttribute(
-          "href",
-          expect.stringMatching(/^#/),
-        );
-      }
-    });
-
-    it("'참고' 그룹에 README와 monorepo starter 외부 링크가 노출된다", () => {
-      renderGuide();
-      const nav = screen.getByRole("navigation", {
-        name: "Design System Guide",
-      });
-      expect(within(nav).getByRole("link", { name: /README/i })).toBeInTheDocument();
-      const repoLink = within(nav).getByRole("link", {
-        name: /monorepo starter/i,
-      });
-      expect(repoLink).toHaveAttribute(
-        "href",
-        "https://github.com/Kwon-Bum-Kyu/scalable-monorepo-starter",
-      );
-      expect(repoLink).toHaveAttribute("target", "_blank");
-      expect(repoLink.getAttribute("rel") ?? "").toMatch(/noopener/);
-    });
+  it("사이드바가 4그룹 12항목을 노출한다", () => {
+    render(<Guide />);
+    const nav = screen.getByRole("navigation", { name: "가이드 섹션" });
+    expect(within(nav).getAllByRole("button")).toHaveLength(12);
+    expect(GUIDE_NAV_GROUPS).toHaveLength(4);
   });
 
-  describe("8개 섹션 헤딩", () => {
-    it.each([
-      ["디자인 시스템 한눈에 보기", 1],
-      ["5가지 원칙", 2],
-      ["컬러", 2],
-      ["타이포그래피", 2],
-      ["스페이싱 · 라운딩 · 그림자", 2],
-      ["브레이크포인트", 2],
-      ["기본 컴포넌트", 2],
-      ["로고 · 아이콘", 2],
-    ] as const)("'%s' 헤딩이 level %i로 렌더링된다", (name, level) => {
-      renderGuide();
-      expect(screen.getByRole("heading", { name, level })).toBeInTheDocument();
-    });
+  it("처음에는 첫 항목이 현재 항목으로 굵게 표시된다", () => {
+    render(<Guide />);
+    const current = screen.getByRole("button", { name: "원칙" });
+    expect(current).toHaveAttribute("aria-current", "true");
+    expect(current).toHaveClass("font-semibold");
   });
 
-  describe("Principles 섹션", () => {
-    it("6개 원칙 카드가 모두 노출된다", () => {
-      renderGuide();
-      const expected = [
-        "Tokens first",
-        "shadcn 호환",
-        "Mobile-first",
-        "Type-safe",
-        "Accessibility",
-        "적게, 명확하게",
-      ];
-      for (const text of expected) {
-        expect(screen.getByText(text)).toBeInTheDocument();
-      }
-    });
+  it("사이드바 항목을 클릭할 때 현재 항목이 바뀌고 해당 섹션으로 스크롤한다", async () => {
+    const scroll = vi.spyOn(Element.prototype, "scrollIntoView");
+    render(<Guide />);
+    await userEvent.click(screen.getByRole("button", { name: "컬러" }));
+    expect(screen.getByRole("button", { name: "컬러" })).toHaveAttribute("aria-current", "true");
+    expect(screen.getByRole("button", { name: "원칙" })).not.toHaveAttribute("aria-current");
+    expect(scroll).toHaveBeenCalledTimes(1);
+    expect(scroll.mock.contexts[0]).toBe(document.getElementById("color"));
   });
 
-  describe("Colors 섹션", () => {
-    it("blue palette 10단계 토큰 swatch가 모두 노출된다", () => {
-      renderGuide();
-      for (const scale of [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]) {
-        expect(screen.getByText(`--color-blue-${scale}`)).toBeInTheDocument();
-      }
-    });
-
-    it("system color 5종이 노출된다", () => {
-      renderGuide();
-      expect(screen.getByText("--color-system-red")).toBeInTheDocument();
-      expect(screen.getByText("--color-system-green")).toBeInTheDocument();
-      expect(screen.getByText("--color-system-warning")).toBeInTheDocument();
-      expect(screen.getByText("--color-system-info")).toBeInTheDocument();
-      expect(screen.getByText("--color-system-white")).toBeInTheDocument();
-    });
+  it("모바일 선택 메뉴가 그룹 4개를 보여 주고 값을 바꿀 때 스크롤한다", async () => {
+    const scroll = vi.spyOn(Element.prototype, "scrollIntoView");
+    render(<Guide />);
+    await userEvent.click(screen.getByRole("combobox", { name: "가이드 섹션" }));
+    expect(screen.getAllByRole("group")).toHaveLength(4);
+    await userEvent.click(screen.getByRole("option", { name: "파일 목록" }));
+    expect(scroll.mock.contexts[scroll.mock.contexts.length - 1]).toBe(document.getElementById("files"));
+    expect(screen.getByRole("button", { name: "파일 목록" })).toHaveAttribute("aria-current", "true");
   });
 
-  describe("Typography 섹션", () => {
-    it("font-family 토큰 2종이 노출된다", () => {
-      renderGuide();
-      expect(screen.getByText("--font-sans")).toBeInTheDocument();
-      expect(screen.getByText("--font-mono")).toBeInTheDocument();
-    });
-
-    it("type scale 10단계가 --text-<k> 토큰 이름과 크기로 노출된다", () => {
-      renderGuide();
-      for (const [token, size] of [
-        ["--text-6xl", "56px"],
-        ["--text-5xl", "48px"],
-        ["--text-4xl", "40px"],
-        ["--text-3xl", "32px"],
-        ["--text-2xl", "24px"],
-        ["--text-xl", "20px"],
-        ["--text-lg", "18px"],
-        ["--text-base", "16px"],
-        ["--text-sm", "14px"],
-        ["--text-xs", "12px"],
-      ] as const) {
-        expect(screen.getByText(`${token} · ${size}`)).toBeInTheDocument();
-      }
-    });
-
-    it("display·body-alt 샘플이 인라인 스타일 없이 font-display·font-body-alt 클래스로 렌더링된다", () => {
-      renderGuide();
-      const display = screen.getByText("Display · KBK Monorepo Design");
-      const bodyAlt = screen.getByText(
-        "본문 보조 패밀리. 긴 본문이나 기사 톤 콘텐츠에 사용한다.",
-      );
-      expect(display).toHaveClass("font-display");
-      expect(bodyAlt).toHaveClass("font-body-alt");
-      expect(display.style.fontFamily).toBe("");
-      expect(bodyAlt.style.fontFamily).toBe("");
-    });
-
-    it("Weights 카드에 400·500·600·700 네 단계가 노출된다", () => {
-      renderGuide();
-      for (const value of ["400", "500", "600", "700"]) {
-        expect(screen.getByText(`Weight ${value}`)).toBeInTheDocument();
-      }
-    });
+  it.each(SECTION_TITLES)("섹션 %s가 제목 %s와 함께 렌더된다", (id, title) => {
+    render(<Guide />);
+    const section = document.getElementById(id);
+    expect(section).not.toBeNull();
+    expect(within(section!).getByRole("heading", { level: 2, name: title })).toBeInTheDocument();
   });
 
-  describe("Spacing · Radius · Elevation 섹션", () => {
-    it("radius 토큰 5종이 노출된다", () => {
-      renderGuide();
-      for (const name of [
-        "--radius-none",
-        "--radius-sm",
-        "--radius-md",
-        "--radius-lg",
-        "--radius-xl",
-        "--radius-2xl",
-      ]) {
-        expect(screen.getByText(name)).toBeInTheDocument();
-      }
-    });
-
-    it("elevation 4단계 shadow 토큰이 노출된다", () => {
-      renderGuide();
-      expect(screen.getByText("--shadow-1-subtle")).toBeInTheDocument();
-      expect(screen.getByText("--shadow-2-default")).toBeInTheDocument();
-      expect(screen.getByText("--shadow-3-raised")).toBeInTheDocument();
-      expect(screen.getByText("--shadow-4-overlay")).toBeInTheDocument();
-    });
+  it("섹션 id 12개가 내비 데이터와 같은 순서로 문서에 있다", () => {
+    const { container } = render(<Guide />);
+    const ids = Array.from(container.querySelectorAll("section[id]")).map((el) => el.id);
+    expect(ids).toEqual([...GUIDE_SECTION_IDS]);
   });
 
-  describe("Breakpoints 섹션", () => {
-    it("Mobile / Tablet / Desktop 3단계 행이 노출된다", () => {
-      renderGuide();
-      const table = screen.getByRole("table", { name: /breakpoint/i });
-      expect(within(table).getByText("Mobile")).toBeInTheDocument();
-      expect(within(table).getByText("Tablet")).toBeInTheDocument();
-      expect(within(table).getByText("Desktop")).toBeInTheDocument();
+  it("스크롤로 섹션이 교차할 때 현재 항목이 갱신된다", () => {
+    render(<Guide />);
+    const line = window.innerHeight * 0.3;
+    GUIDE_SECTION_IDS.forEach((id, index) => {
+      const top = id === "type" || index < GUIDE_SECTION_IDS.indexOf("type") ? line - 100 : line + 500;
+      document.getElementById(id)!.getBoundingClientRect = () => ({ top }) as DOMRect;
     });
+    act(() => observerCallback?.([{ target: document.getElementById("type")!, isIntersecting: true }]));
+    expect(screen.getByRole("button", { name: "타이포그래피" })).toHaveAttribute("aria-current", "true");
   });
 
-  describe("Components 섹션", () => {
-    it("정본 10개 카드 제목이 모두 노출된다", () => {
-      renderGuide();
-      const components = document.getElementById("components");
-      expect(components).not.toBeNull();
-      const expected = [
-        "Button · variants",
-        "Button · sizes",
-        "Input · field",
-        "Selection",
-        "Slider",
-        "Badge",
-        "Card",
-        "Toast",
-        "Modal",
-        "Tabs · nav",
-      ];
-      for (const title of expected) {
-        expect(within(components!).getByText(title)).toBeInTheDocument();
-      }
-    });
-
-    it.each([
-      "ButtonGroup",
-      "FormSelect",
-      "DatePicker",
-      "Breadcrumb",
-      "Pagination",
-      "Empty state",
-    ])("'%s' 카드는 더 이상 노출되지 않는다", (name) => {
-      renderGuide();
-      const components = document.getElementById("components");
-      expect(components).not.toBeNull();
-      expect(within(components!).queryByText(name)).toBeNull();
-    });
-
-    it("Selection 카드 안에 checkbox · radio · switch가 함께 노출된다", () => {
-      renderGuide();
-      const components = document.getElementById("components");
-      expect(components).not.toBeNull();
-      expect(
-        within(components!).getByRole("checkbox", { name: /checkbox/i }),
-      ).toBeInTheDocument();
-      expect(
-        within(components!).getByRole("radio", { name: /radio/i }),
-      ).toBeInTheDocument();
-      expect(
-        within(components!).getByRole("switch", { name: /switch/i }),
-      ).toBeInTheDocument();
-    });
-
-    it("Toast 카드의 Info 버튼을 클릭하면 토스트가 노출된다", async () => {
-      const user = userEvent.setup();
-      render(
-        <MemoryRouter>
-          <App />
-          <Guide />
-        </MemoryRouter>,
-      );
-      const components = document.getElementById("components");
-      expect(components).not.toBeNull();
-      const infoBtn = within(components!).getByRole("button", { name: "Info" });
-      await user.click(infoBtn);
-      expect(await screen.findByText(/info 토스트/i)).toBeInTheDocument();
-    });
-
-    it("Modal 카드 안에 Dialog와 Drawer 트리거가 함께 노출된다", () => {
-      renderGuide();
-      const components = document.getElementById("components");
-      expect(components).not.toBeNull();
-      expect(
-        within(components!).getByRole("button", { name: /dialog 열기/i }),
-      ).toBeInTheDocument();
-      expect(
-        within(components!).getByRole("button", { name: /drawer 열기/i }),
-      ).toBeInTheDocument();
-    });
-
-    it("Badge 카드에 5개 variants 라벨이 노출된다", () => {
-      renderGuide();
-      const badgeTitles = screen.getAllByText("Badge");
-      expect(badgeTitles.length).toBeGreaterThan(0);
-      const badgeCard = badgeTitles[0]?.closest(
-        "[data-slot='card'], .rounded-xl, .rounded-lg",
-      ) as HTMLElement | null;
-      expect(badgeCard).not.toBeNull();
-      const labels = ["Default", "Secondary", "Outline", "Destructive", "Success"];
-      for (const text of labels) {
-        expect(within(badgeCard!).getByText(text)).toBeInTheDocument();
-      }
-    });
+  it("견본 자리 문구와 색·글꼴 인라인 style이 없다", () => {
+    const { container } = render(<Guide />);
+    expect(container).not.toHaveTextContent("견본 자리");
+    // Radix가 위치 계산용으로 쓰는 style은 허용하고, 색·배경·글꼴 style만 막는다
+    const painted = Array.from(container.querySelectorAll("[style]")).filter((el) =>
+      /color|background|font/.test(el.getAttribute("style") ?? ""),
+    );
+    expect(painted).toHaveLength(0);
   });
-
-  describe("Brand 섹션", () => {
-    it("System icons 카드 타이틀과 hint(`--system-icon` 토큰)가 노출된다", () => {
-      renderGuide();
-      const brandSection = document.getElementById("brand");
-      expect(brandSection).not.toBeNull();
-      expect(within(brandSection!).getByText("System icons")).toBeInTheDocument();
-      expect(
-        within(brandSection!).getByText(/--system-icon/),
-      ).toBeInTheDocument();
-    });
-  });
-
 });

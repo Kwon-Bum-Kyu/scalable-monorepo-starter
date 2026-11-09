@@ -38,14 +38,15 @@ Turborepo 기반의 풀스택 모노레포 스타터 템플릿이다. React 19 +
 
 ## Brand Commitments
 
-- 이름: scalable-monorepo-starter. 로고는 `apps/web/public/logo.png`.
+- 이름: scalable-monorepo-starter. 로고는 BI v1.0 "공유 루트" SVG 8종이며 `packages/ui/src/assets/brand/logo/`에 한 벌만 둔다(기본은 `lockup-horizontal.svg`).
+- 파생 자산: 파비콘(`apps/web/public/`·`apps/desktop/src/renderer/public/`), 앱 아이콘(`apps/desktop/assets/icon.png`, Absolute Ink 판), README 헤더·소셜 미리보기(`docs/assets/`).
 - 목소리: 한국어, 평서문, 이모지 없음. 기술 용어는 원어를 유지한다.
 - 구속력 있는 시각 제약: 색상·간격·폰트는 `@theme` 토큰만 사용하고 임의값(`bg-[#hex]`, `text-[14px]`)을 쓰지 않는다. shadcn/ui 생성 파일은 CLI 출력 그대로 유지한다. 리네임 금지는 파일명 규칙이며 파일 내용(코드)은 프로젝트 규칙(토큰 사용, deprecated 타입 치환 등)에 맞춰 수정할 수 있다.
 - 서체: Open Sans 12종을 `apps/web/public/fonts/`에 동봉한다.
 
 ## Evidence on Hand
 
-- 실제 구현: `apps/web/src/view/Guide.tsx`와 `apps/web/src/view/guide/sections/`(브랜드·토큰·컴포넌트 안내 페이지), `apps/web/src/view/examples/`(CRUD 예제), `packages/ui/src/components/ui/`(shadcn 기반 컴포넌트 약 40종), Storybook.
+- 실제 구현: `apps/web/src/view/Home.tsx`(홈), `apps/web/src/view/Guide.tsx`와 `apps/web/src/view/guide/sections/`(브랜드·토큰·컴포넌트 안내 페이지), `apps/web/src/view/examples/`(CRUD 예제), `packages/ui/src/components/ui/`(shadcn 기반 컴포넌트 약 40종), Storybook.
 - 문서: README.md, CLAUDE.md, `.claude/rules/*.md`, CONTRIBUTING.md.
 - 없는 것: 고객 사례, 추천사, 벤치마크, 가격 정보. 이후 작업에서 만들어 내지 않는다.
 

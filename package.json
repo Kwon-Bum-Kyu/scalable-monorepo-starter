@@ -24,7 +24,8 @@
     "test:api": "turbo run test --filter=api",
     "storybook": "turbo run dev --filter=storybook",
     "build-storybook": "turbo run build --filter=storybook",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check:parity": "node scripts/check-renderer-parity.mjs"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "4.1.4",

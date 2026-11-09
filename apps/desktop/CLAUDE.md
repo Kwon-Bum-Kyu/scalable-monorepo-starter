@@ -11,7 +11,7 @@ src/
 ├── preload/index.ts     # 프리로드 (contextBridge로 window.desktop 노출)
 └── renderer/
     ├── index.html       # renderer 진입 HTML
-    ├── public/          # 정적 자산 (fonts·logo)
+    ├── public/          # 정적 자산 (fonts·favicon)
     └── src/             # apps/web과 동일한 React 앱
         ├── components/  # 앱 전용 컴포넌트 (재사용 가능하면 @repo/ui로 승격)
         ├── config/      # api.ts (API_CONFIG · API_ENDPOINTS)
@@ -43,6 +43,7 @@ electron.vite.config.ts  # main/preload/renderer 3영역 빌드 설정
 - **envelope 언래핑**: `ApiClient` 에서 단 한 번만 수행. 이후 계층(services·hooks·view)은 envelope을 직접 다루지 않는다.
 - **Tailwind**: `@repo/ui/globals.css` 의 `@theme` 토큰만 사용. 임의 값(`bg-[#...]`) 금지.
 - **신규 도메인 추가**: services → hooks → view 순서, [apps/web/CLAUDE.md](../web/CLAUDE.md)의 services 패턴을 그대로 따른다.
+- **web 사본 동기화**: renderer `src`와 `tests/unit`은 apps/web의 사본이다. web을 고친 뒤 같은 변경을 복사하고 루트에서 `npm run check:parity`로 차이가 없는지 확인한다. 의도된 차이(`routes/router.ts` 등)는 `scripts/check-renderer-parity.mjs`의 예외 목록에 있다.
 
 ## 명령어
 

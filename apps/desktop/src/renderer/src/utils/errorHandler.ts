@@ -1,14 +1,6 @@
 import { ApiError } from "@/types/api";
 
-const REQUEST_ID_FALLBACK = "-";
 const REQUEST_ID_PREFIX_LENGTH = 8;
-
-const buildRequestIdSuffix = (requestId?: string): string => {
-  const prefix = requestId
-    ? requestId.slice(0, REQUEST_ID_PREFIX_LENGTH)
-    : REQUEST_ID_FALLBACK;
-  return `(req: ${prefix})`;
-};
 
 export class ErrorHandler {
   static getErrorMessage(error: ApiError | Error): string {
@@ -91,8 +83,10 @@ export class ErrorHandler {
   static formatToastMessage(error: ApiError | Error): string {
     const baseMessage = this.formatErrorForUser(error);
     const requestId = "requestId" in error ? error.requestId : undefined;
-    const suffix = buildRequestIdSuffix(requestId);
-    return `${baseMessage} ${suffix}`;
+    if (!requestId) {
+      return baseMessage;
+    }
+    return `${baseMessage} (req: ${requestId.slice(0, REQUEST_ID_PREFIX_LENGTH)})`;
   }
 
   static logError(error: ApiError | Error, context?: string): void {

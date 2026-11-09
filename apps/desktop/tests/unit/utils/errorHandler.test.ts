@@ -180,17 +180,17 @@ describe("ErrorHandler", () => {
       );
     });
 
-    it("requestId가 없으면 (req: -) 로 표시한다", () => {
+    it("요청 ID가 없으면 괄호가 없다", () => {
       const error = makeApiError({ code: "500" });
       expect(ErrorHandler.formatToastMessage(error)).toBe(
-        "서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요. (req: -)",
+        "서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.",
       );
     });
 
-    it("일반 Error에서도 (req: -) 가 붙는다", () => {
+    it("일반 Error에서는 요청 ID 없이 메시지만 반환한다", () => {
       const error = new TypeError("Failed to fetch");
       expect(ErrorHandler.formatToastMessage(error)).toBe(
-        "네트워크 연결을 확인해주세요. (req: -)",
+        "네트워크 연결을 확인해주세요.",
       );
     });
   });

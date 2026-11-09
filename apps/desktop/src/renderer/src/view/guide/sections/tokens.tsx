@@ -1,274 +1,163 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@repo/ui";
+import { Card } from "@repo/ui";
+import type React from "react";
 
+import { BLUE_PALETTE, GRAY_PALETTE, SEMANTIC_ALIASES } from "@/view/guide/colorData";
+import { GuideSection, GuideTable, TD } from "@/view/guide/primitives";
 import {
-  BLUE_PALETTE,
-  GRAY_PALETTE,
-  SYSTEM_COLORS,
-} from "@/view/guide/colorData";
-import { BREAKPOINTS } from "@/view/guide/navData";
-import { Section, SwatchRow, TokenCard } from "@/view/guide/primitives";
-import {
+  BREAKPOINT_BARS,
   FONT_FAMILIES,
   FONT_WEIGHTS,
   RADIUS_SCALE,
   SHADOW_SCALE,
-  SPACING_SCALE,
+  SPACING_TOKENS,
   TYPE_SCALE,
 } from "@/view/guide/scaleData";
 
-export const ColorsSection = () => (
-  <Section
-    id="colors"
-    eyebrow="Tokens · Colors"
-    title="컬러"
-    description="Brand Blue (50–900), Neutral Gray (50–900), System 5종."
-  >
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      <TokenCard title="Brand · Blue" hint="--color-blue-*">
-        <div>
-          {BLUE_PALETTE.map((row) => (
-            <SwatchRow key={row.name} row={row} />
-          ))}
-        </div>
-      </TokenCard>
-      <TokenCard title="Neutral · Gray" hint="--color-gray-*">
-        <div>
-          {GRAY_PALETTE.map((row) => (
-            <SwatchRow key={row.name} row={row} />
-          ))}
-        </div>
-      </TokenCard>
-      <TokenCard title="System" hint="red · green · warning · info · white">
-        <div>
-          {SYSTEM_COLORS.map((row) => (
-            <SwatchRow key={row.name} row={row} />
-          ))}
-        </div>
-      </TokenCard>
-      <TokenCard
-        title="Semantic alias"
-        hint="focus-ring · text-inverse · bg-accent"
-      >
-        <ul className="space-y-2 font-mono text-xs text-gray-700">
-          <li>--color-text-primary → gray-900</li>
-          <li>--color-text-secondary → gray-400</li>
-          <li>--color-focus-ring → blue-500 (AAA on white)</li>
-          <li>--color-bg-accent → blue-50</li>
-          <li>--color-border-strong → gray-300</li>
-        </ul>
-      </TokenCard>
+const SubTitle = ({ children }: { children: React.ReactNode }) => (
+  <p className="-mb-3 text-base font-semibold">{children}</p>
+);
+
+const Swatch = ({ name, note, className }: { name: string; note: string; className: string }) => (
+  <div className="overflow-hidden rounded-lg border border-border bg-card">
+    <div data-swatch-chip className={`h-16 border-b border-border ${className}`} />
+    <div className="grid px-3 py-2 font-mono text-xs">
+      <span className="font-semibold">{name}</span>
+      <span className="text-muted-foreground">{note}</span>
     </div>
-  </Section>
+  </div>
+);
+
+const SpecCard = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <Card variant="flat" className="grid content-start gap-4 p-5">
+    <h3 className="text-base font-semibold">{title}</h3>
+    {children}
+  </Card>
+);
+
+const TIGHT_PALETTE_GRID = "grid grid-cols-2 gap-2 tablet:grid-cols-3 desktop:grid-cols-5";
+
+export const ColorSection = () => (
+  <GuideSection id="color" eyebrow="토큰" title="컬러">
+    <SubTitle>Blue</SubTitle>
+    <div className={TIGHT_PALETTE_GRID}>
+      {BLUE_PALETTE.map((s) => (
+        <Swatch key={s.name} name={s.name} note={s.value} className={s.className} />
+      ))}
+    </div>
+    <SubTitle>Gray</SubTitle>
+    <div className={TIGHT_PALETTE_GRID}>
+      {GRAY_PALETTE.map((s) => (
+        <Swatch key={s.name} name={s.name} note={s.value} className={s.className} />
+      ))}
+    </div>
+    <SubTitle>의미 별칭</SubTitle>
+    <div className="grid grid-cols-2 gap-4 tablet:grid-cols-3 desktop:grid-cols-4">
+      {SEMANTIC_ALIASES.map((a) => (
+        <Swatch key={a.name} name={a.name} note={`→ ${a.target}`} className={a.className} />
+      ))}
+    </div>
+  </GuideSection>
+);
+
+const NameValueRow = ({ children, value, valueClassName }: { children: React.ReactNode; value: string; valueClassName?: string }) => (
+  <tr className="group">
+    <td className={TD}>{children}</td>
+    <td className={`${TD} ${valueClassName ?? ""}`}>{value}</td>
+  </tr>
 );
 
 export const TypographySection = () => (
-  <Section
-    id="type"
-    eyebrow="Tokens · Typography"
-    title="타이포그래피"
-    description="Open Sans (sans, 로컬 .ttf 12 face) · Roboto Mono (mono · display, CDN) · PT Sans (body-alt, CDN)."
-  >
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      <TokenCard title="Families" hint="--font-*">
-        <ul className="space-y-4">
-          {FONT_FAMILIES.map((f) => (
-            <li key={f.token}>
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="font-mono text-xs text-gray-700">
-                  {f.token}
-                </span>
-                <span className="font-mono text-xs text-gray-400">
-                  {f.family}
-                </span>
-              </div>
-              <p className={`${f.className} mt-2 text-base text-gray-900`}>
-                {f.sample}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </TokenCard>
-
-      <TokenCard title="Weights" hint="--font-weight-*">
-        <ul className="space-y-3">
-          {FONT_WEIGHTS.map((w) => (
-            <li
-              key={w.token}
-              className="flex items-baseline justify-between gap-3"
-            >
-              <span className={`${w.className} text-lg text-gray-900`}>
-                Weight {w.value}
-              </span>
-              <span className="font-mono text-xs text-gray-400">{w.token}</span>
-            </li>
-          ))}
-        </ul>
-      </TokenCard>
-
-      <Card className="shadow-2-default lg:col-span-2">
-        <CardHeader>
-          <CardTitle className="text-base font-semibold">
-            Type scale (10 단계)
-          </CardTitle>
-          <CardDescription className="font-mono text-xs text-gray-400">
-            --text-xs → --text-6xl
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-3">
-            {TYPE_SCALE.map((t) => (
-              <li
-                key={t.token}
-                className="flex items-baseline justify-between gap-4 border-b border-gray-50 pb-2 last:border-b-0"
-              >
-                <span className={`${t.className} text-gray-900`}>
-                  {t.utility}
-                </span>
-                <span className="font-mono text-xs text-gray-400">
-                  {t.token} · {t.size}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
+  <GuideSection id="type" eyebrow="토큰" title="타이포그래피">
+    <div className="grid grid-cols-1 gap-4 tablet:grid-cols-2">
+      <GuideTable head={["서체 토큰", "값"]}>
+        {FONT_FAMILIES.map((f) => (
+          <NameValueRow key={f.token} value={f.family} valueClassName={f.className}>
+            <code>{f.token}</code>
+          </NameValueRow>
+        ))}
+      </GuideTable>
+      <GuideTable head={["굵기 토큰", "값"]}>
+        {FONT_WEIGHTS.map((w) => (
+          <NameValueRow key={w.token} value={w.value} valueClassName={w.className}>
+            <code>{w.token}</code>
+          </NameValueRow>
+        ))}
+      </GuideTable>
     </div>
-  </Section>
+    <GuideTable head={["크기 토큰", "크기 / 행간", "견본"]} className="min-w-150">
+      {TYPE_SCALE.map((t) => (
+        <tr key={t.token} className="group">
+          <td className={TD}>
+            <code>{t.token}</code>
+          </td>
+          <td className={`${TD} whitespace-nowrap font-mono`}>{`${t.size} / ${t.lineHeight}`}</td>
+          <td className={`${TD} whitespace-nowrap ${t.className}`}>Aa 공유 루트</td>
+        </tr>
+      ))}
+    </GuideTable>
+  </GuideSection>
 );
+
+const BAR = "h-2 max-w-full rounded-sm bg-foreground";
 
 export const SpacingSection = () => (
-  <Section
-    id="spacing"
-    eyebrow="Tokens · Spacing"
-    title="스페이싱 · 라운딩 · 그림자"
-    description="4px 베이스 스케일. Radius와 Elevation은 globals.css의 4단계 토큰을 사용합니다."
-  >
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-      <TokenCard title="Spacing scale" hint="4 → 80 px">
-        <ul className="space-y-2">
-          {SPACING_SCALE.map((s) => (
-            <li
-              key={s.token}
-              className="flex items-center gap-3 border-b border-gray-50 pb-2 last:border-b-0"
-            >
-              <span
-                aria-hidden
-                className={`inline-block h-3 ${s.widthClassName} bg-blue-500`}
-              />
-              <span className="font-mono text-xs text-gray-700">
-                {s.utility}
+  <GuideSection id="space" eyebrow="토큰" title="스페이싱 · 라운딩 · 그림자">
+    <div className="grid grid-cols-1 gap-4 tablet:grid-cols-3">
+      <SpecCard title="스페이싱">
+        <ul className="grid gap-3">
+          <li className="grid gap-1.5">
+            <span className="text-sm">
+              <code>4px</code> 원자 단위 · Tailwind <code>p-1</code>
+            </span>
+            <span className={`${BAR} w-1`} />
+          </li>
+          {SPACING_TOKENS.map((s) => (
+            <li key={s.token} className="grid gap-1.5">
+              <span className="text-sm">
+                <code>{s.token}</code> {s.value}
               </span>
-              <span className="ml-auto font-mono text-xs text-gray-400">
-                {s.size}
-              </span>
+              <span className={`${BAR} ${s.barClassName}`} />
             </li>
           ))}
         </ul>
-      </TokenCard>
-
-      <TokenCard title="Border radius" hint="--radius-*">
-        <ul className="space-y-3">
+      </SpecCard>
+      <SpecCard title="라운딩">
+        <ul className="flex flex-wrap gap-3">
           {RADIUS_SCALE.map((r) => (
-            <li
-              key={r.token}
-              className="flex items-center gap-3 border-b border-gray-50 pb-3 last:border-b-0"
-            >
-              <span
-                aria-hidden
-                className={`inline-block h-10 w-10 border border-blue-200 bg-blue-50 ${r.className}`}
-              />
-              <span className="font-mono text-xs text-gray-700">{r.token}</span>
-              <span className="ml-auto font-mono text-xs text-gray-400">
-                {r.size}
-              </span>
+            <li key={r.token} className="grid justify-items-center gap-1.5">
+              <span className={`h-12 w-12 border-2 border-foreground bg-secondary ${r.className}`} />
+              <code className="text-xs">{r.token}</code>
+              <span className="text-xs text-muted-foreground">{r.value}</span>
             </li>
           ))}
         </ul>
-      </TokenCard>
-
-      <TokenCard title="Elevation" hint="--shadow-1 → --shadow-4">
-        <ul className="space-y-4">
+      </SpecCard>
+      <SpecCard title="그림자">
+        <ul className="grid gap-4 rounded-md bg-secondary p-4">
           {SHADOW_SCALE.map((s) => (
-            <li key={s.token}>
-              <div
-                aria-hidden
-                className={`mb-2 flex h-12 items-center justify-center rounded-md bg-white text-xs font-semibold text-gray-700 ${s.className}`}
-              >
-                Level {s.level}
-              </div>
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="font-mono text-xs text-gray-700">
-                  {s.token}
-                </span>
-                <span className="text-xs text-gray-400">{s.description}</span>
-              </div>
+            <li key={s.token} className={`grid rounded-md bg-card px-4 py-3 ${s.className}`}>
+              <code className="text-xs">{s.token}</code>
+              {s.note ? <span className="text-xs text-muted-foreground">{s.note}</span> : null}
             </li>
           ))}
         </ul>
-      </TokenCard>
+      </SpecCard>
     </div>
-  </Section>
+  </GuideSection>
 );
 
-export const BreakpointsSection = () => (
-  <Section
-    id="breakpoints"
-    eyebrow="Tokens · Layout"
-    title="브레이크포인트"
-    description="Mobile 4col / Tablet 8col / Desktop 12col. 디자인 토큰: --breakpoint-mobile · --breakpoint-tablet · --breakpoint-desktop."
-  >
-    <Card className="overflow-hidden shadow-2-default">
-      <table aria-label="Breakpoints" className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-gray-50 bg-gray-50/40 text-left">
-            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-label text-gray-400">
-              이름
-            </th>
-            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-label text-gray-400">
-              너비
-            </th>
-            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-label text-gray-400">
-              컬럼
-            </th>
-            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-label text-gray-400">
-              마진
-            </th>
-            <th className="px-3 py-2 font-mono text-xs font-bold uppercase tracking-label text-gray-400">
-              거터
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {BREAKPOINTS.map((bp) => (
-            <tr
-              key={bp.name}
-              className="border-b border-gray-50 last:border-b-0"
-            >
-              <td className="px-3 py-2.5 font-semibold text-gray-900">
-                {bp.name}
-              </td>
-              <td className="px-3 py-2.5 font-mono text-xs text-gray-700">
-                {bp.width}
-              </td>
-              <td className="px-3 py-2.5 font-mono text-xs text-gray-700">
-                {bp.columns}
-              </td>
-              <td className="px-3 py-2.5 font-mono text-xs text-gray-700">
-                {bp.margin}
-              </td>
-              <td className="px-3 py-2.5 font-mono text-xs text-gray-700">
-                {bp.gutter}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </Card>
-  </Section>
+export const BreakpointSection = () => (
+  <GuideSection id="bp" eyebrow="토큰" title="브레이크포인트">
+    <div className="grid gap-2">
+      {BREAKPOINT_BARS.map((bp) => (
+        <div
+          key={bp.name}
+          className={`flex min-h-11 min-w-fit items-center gap-3 rounded-md border border-border bg-secondary px-4 ${bp.barClassName}`}
+        >
+          <span className="text-sm font-semibold">{bp.name}</span>
+          <span className="whitespace-nowrap font-mono text-xs text-muted-foreground">{`≥ ${bp.value}`}</span>
+        </div>
+      ))}
+    </div>
+  </GuideSection>
 );

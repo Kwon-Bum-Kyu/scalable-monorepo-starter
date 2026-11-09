@@ -1,172 +1,182 @@
-import { Button, Input, Label } from "@repo/ui";
-import { useEffect, useRef } from "react";
-
+import type { ExampleStatus } from "@repo/shared-types";
 import {
-  type ExampleFormState,
-  STATUS_OPTIONS,
-} from "./exampleFormState";
+  Button,
+  cn,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  Input,
+  Label,
+  RadioGroup,
+  RadioGroupItem,
+} from "@repo/ui";
+import { type RefObject, useState } from "react";
+
+import { type ExampleFormState, STATUS_OPTIONS } from "./exampleFormState";
+import { PAGE_ACTION_CLASS } from "./examplesView";
+
+type Mode = "create" | "edit";
 
 interface ExampleFormDialogProps {
   open: boolean;
-  mode: "create" | "edit";
+  mode: Mode;
   value: ExampleFormState;
   onChange: (next: ExampleFormState) => void;
   onSubmit: () => void;
   onClose: () => void;
+  returnFocusRef: RefObject<HTMLElement | null>;
 }
 
-const TITLE_BY_MODE: Record<ExampleFormDialogProps["mode"], string> = {
+const TITLE_BY_MODE: Record<Mode, string> = {
   create: "New Example",
   edit: "Edit Example",
 };
 
-const SUBMIT_LABEL_BY_MODE: Record<ExampleFormDialogProps["mode"], string> = {
+const SUBMIT_LABEL_BY_MODE: Record<Mode, string> = {
   create: "Create",
   edit: "Save",
 };
 
-const FOCUSABLE_SELECTOR =
-  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+type FormBodyProps = Pick<
+  ExampleFormDialogProps,
+  "mode" | "value" | "onChange" | "onSubmit" | "onClose"
+>;
 
-const ExampleFormDialog = ({
-  open,
+// DialogContent가 닫히면 언마운트되므로 titleTouched는 열릴 때마다 false로 시작한다.
+const ExampleFormBody = ({
   mode,
   value,
   onChange,
   onSubmit,
   onClose,
-}: ExampleFormDialogProps) => {
-  const dialogRef = useRef<HTMLDivElement | null>(null);
-  const titleInputRef = useRef<HTMLInputElement | null>(null);
-  const triggerRef = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    triggerRef.current = document.activeElement as HTMLElement | null;
-    titleInputRef.current?.focus();
-    return () => {
-      triggerRef.current?.focus?.();
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    const handler = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        onClose();
-        return;
-      }
-      if (event.key !== "Tab" || !dialogRef.current) {
-        return;
-      }
-      const focusables = Array.from(
-        dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
-      ).filter((el) => !el.hasAttribute("disabled"));
-      if (focusables.length === 0) {
-        return;
-      }
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      const active = document.activeElement as HTMLElement | null;
-      if (event.shiftKey && active === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && active === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
-  }, [open, onClose]);
-
-  if (!open) {
-    return null;
-  }
-
-  const isSubmitDisabled = value.title.trim().length === 0;
+}: FormBodyProps) => {
+  const [titleTouched, setTitleTouched] = useState(false);
+  const isTitleEmpty = value.title.trim().length === 0;
+  const titleInvalid = titleTouched && isTitleEmpty;
 
   return (
-    <div className="bg-foreground/50 fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="example-dialog-title"
-        className="bg-background text-foreground w-full max-w-md rounded-md p-6 shadow-md"
+    <>
+      <DialogHeader className="pr-12">
+        <DialogTitle>{TITLE_BY_MODE[mode]}</DialogTitle>
+      </DialogHeader>
+      <form
+        id="example-form"
+        noValidate
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (!isTitleEmpty) {
+            onSubmit();
+          }
+        }}
+        className="grid gap-4"
       >
-        <h2
-          id="example-dialog-title"
-          className="text-foreground mb-4 text-lg font-semibold"
-        >
-          {TITLE_BY_MODE[mode]}
-        </h2>
-        <div className="flex flex-col gap-3">
-          <div>
-            <Label htmlFor="example-title">
-              Title <span aria-hidden="true">*</span>
-            </Label>
-            <Input
-              ref={titleInputRef}
-              id="example-title"
-              required
-              aria-required="true"
-              value={value.title}
-              onChange={(event) =>
-                onChange({ ...value, title: event.target.value })
-              }
-            />
-          </div>
-          <div>
-            <Label htmlFor="example-description">Description</Label>
-            <textarea
-              id="example-description"
-              value={value.description}
-              onChange={(event) =>
-                onChange({ ...value, description: event.target.value })
-              }
-              className="border-input bg-background text-foreground focus-visible:ring-ring min-h-20 w-full rounded-md border p-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
-            />
-          </div>
-          <fieldset className="flex flex-col gap-2">
-            <legend className="text-muted-foreground text-sm">Status</legend>
+        <div className="grid gap-2">
+          <Label htmlFor="example-title">
+            Title <span aria-hidden="true">*</span>
+          </Label>
+          <Input
+            id="example-title"
+            className="tablet:h-10 h-11"
+            placeholder="예제 제목"
+            aria-required="true"
+            aria-invalid={titleInvalid}
+            aria-describedby="example-title-help"
+            value={value.title}
+            onChange={(event) =>
+              onChange({ ...value, title: event.target.value })
+            }
+            onBlur={() => setTitleTouched(true)}
+          />
+          <p
+            id="example-title-help"
+            className={cn(
+              "text-sm",
+              titleInvalid ? "text-destructive" : "text-muted-foreground",
+            )}
+          >
+            Title을 입력해야 저장할 수 있습니다.
+          </p>
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="example-description">Description</Label>
+          <textarea
+            id="example-description"
+            rows={3}
+            value={value.description}
+            onChange={(event) =>
+              onChange({ ...value, description: event.target.value })
+            }
+            className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring tablet:text-sm flex min-h-20 w-full rounded-lg border px-3 py-2 text-base focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          />
+        </div>
+        <fieldset className="grid gap-2">
+          <legend className="text-sm font-semibold">Status</legend>
+          <RadioGroup
+            value={value.status}
+            onValueChange={(status) =>
+              onChange({ ...value, status: status as ExampleStatus })
+            }
+          >
             {STATUS_OPTIONS.map((status) => (
               <label
                 key={status}
-                className="text-foreground flex items-center gap-2 text-sm"
+                className="flex min-h-11 items-center gap-2 text-sm"
               >
-                <input
-                  type="radio"
-                  name="example-status"
-                  value={status}
-                  checked={value.status === status}
-                  onChange={() => onChange({ ...value, status })}
-                />
+                <RadioGroupItem value={status} />
                 {status}
               </label>
             ))}
-          </fieldset>
-          <div className="mt-4 flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button
-              type="button"
-              onClick={onSubmit}
-              disabled={isSubmitDisabled}
-            >
-              {SUBMIT_LABEL_BY_MODE[mode]}
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
+          </RadioGroup>
+        </fieldset>
+      </form>
+      <DialogFooter>
+        <Button
+          type="button"
+          variant="outline"
+          className={PAGE_ACTION_CLASS}
+          onClick={onClose}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          form="example-form"
+          className={PAGE_ACTION_CLASS}
+          disabled={isTitleEmpty}
+        >
+          {SUBMIT_LABEL_BY_MODE[mode]}
+        </Button>
+      </DialogFooter>
+    </>
   );
 };
+
+const ExampleFormDialog = ({
+  open,
+  returnFocusRef,
+  onClose,
+  ...body
+}: ExampleFormDialogProps) => (
+  <Dialog
+    open={open}
+    onOpenChange={(next) => {
+      if (!next) {
+        onClose();
+      }
+    }}
+  >
+    <DialogContent
+      aria-describedby={undefined}
+      onCloseAutoFocus={(event) => {
+        event.preventDefault();
+        returnFocusRef.current?.focus();
+      }}
+    >
+      <ExampleFormBody {...body} onClose={onClose} />
+    </DialogContent>
+  </Dialog>
+);
 
 export default ExampleFormDialog;

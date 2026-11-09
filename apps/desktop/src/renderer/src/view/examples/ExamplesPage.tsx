@@ -2,9 +2,10 @@ import type {
   CreateExampleInput,
   UpdateExampleInput,
 } from "@repo/shared-types";
-import { Button } from "@repo/ui";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Badge, Button, Card, Empty, SystemIcon, toast } from "@repo/ui";
+import { useCallback, useMemo, useRef, useState } from "react";
 
+import PageContainer from "@/components/layouts/PageContainer";
 import {
   useCreateExample,
   useDeleteExample,
@@ -14,9 +15,13 @@ import {
 import type { ApiError } from "@/types/api";
 import { ErrorHandler } from "@/utils/errorHandler";
 
+import DeleteExampleDialog, {
+  type DeleteExampleTarget,
+} from "./DeleteExampleDialog";
 import ExampleFormDialog from "./ExampleFormDialog";
 import { EMPTY_EXAMPLE_FORM, type ExampleFormState } from "./exampleFormState";
-import ExampleListItem from "./ExampleListItem";
+import ExamplesTable from "./ExamplesTable";
+import { PAGE_ACTION_CLASS, resolveListView } from "./examplesView";
 
 type DialogMode = "create" | "edit";
 
@@ -30,7 +35,7 @@ const formatToast = (error: unknown): string => {
   if (isApiError(error) || error instanceof Error) {
     return ErrorHandler.formatToastMessage(error);
   }
-  return "알 수 없는 오류 (req: -)";
+  return "알 수 없는 오류";
 };
 
 const ExamplesPage = () => {
@@ -39,38 +44,34 @@ const ExamplesPage = () => {
   const updateMutation = useUpdateExample();
   const deleteMutation = useDeleteExample();
 
-  const [toast, setToast] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<DialogMode>("create");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<ExampleFormState>(EMPTY_EXAMPLE_FORM);
+  const [deleteTarget, setDeleteTarget] = useState<DeleteExampleTarget | null>(
+    null,
+  );
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+  const headingRef = useRef<HTMLHeadingElement | null>(null);
 
   const items = useMemo(() => list.data?.items ?? [], [list.data]);
   const submitting = createMutation.isLoading || updateMutation.isLoading;
 
-  useEffect(() => {
-    const error =
-      list.error ??
-      createMutation.error ??
-      updateMutation.error ??
-      deleteMutation.error;
-    if (!error) {
-      return;
-    }
-    setToast(formatToast(error));
-  }, [
-    list.error,
-    createMutation.error,
-    updateMutation.error,
-    deleteMutation.error,
-  ]);
+  // Radix Dialog는 DialogTrigger 없이 열면 포커스를 되돌리지 않아 직접 저장한다.
+  const rememberFocus = useCallback(() => {
+    returnFocusRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+  }, []);
 
   const openCreateDialog = useCallback(() => {
+    rememberFocus();
     setDialogMode("create");
     setEditingId(null);
     setForm(EMPTY_EXAMPLE_FORM);
     setDialogOpen(true);
-  }, []);
+  }, [rememberFocus]);
 
   const closeDialog = useCallback(() => {
     setDialogOpen(false);
@@ -101,8 +102,8 @@ const ExamplesPage = () => {
       }
       closeDialog();
       await list.refetch();
-    } catch {
-      // toast useEffect가 mutation.error를 watching해 표시한다.
+    } catch (error) {
+      toast.error(formatToast(error));
     }
   }, [
     submitting,
@@ -115,13 +116,29 @@ const ExamplesPage = () => {
     list,
   ]);
 
+  const requestDelete = useCallback(
+    (id: string) => {
+      const target = items.find((item) => item.id === id);
+      if (!target) {
+        return;
+      }
+      rememberFocus();
+      setDeleteTarget({ id, title: target.title });
+    },
+    [items, rememberFocus],
+  );
+
   const handleDelete = useCallback(
     async (id: string) => {
+      setDeleteTarget(null);
       try {
         await deleteMutation.mutate(id);
+        // 삭제된 행 버튼은 사라지므로 다이얼로그 닫힘 포커스 복귀 대상을 h1로 바꾼다.
+        returnFocusRef.current = headingRef.current;
+        headingRef.current?.focus();
         await list.refetch();
-      } catch {
-        // toast useEffect가 deleteMutation.error를 watching해 표시한다.
+      } catch (error) {
+        toast.error(formatToast(error));
       }
     },
     [deleteMutation, list],
@@ -133,6 +150,7 @@ const ExamplesPage = () => {
       if (!target) {
         return;
       }
+      rememberFocus();
       setDialogMode("edit");
       setEditingId(id);
       setForm({
@@ -142,53 +160,75 @@ const ExamplesPage = () => {
       });
       setDialogOpen(true);
     },
-    [items],
+    [items, rememberFocus],
   );
 
+  const view = resolveListView(list);
+  const retry = () => {
+    void list.refetch().catch(() => {
+      /* useApi가 error 상태로 노출한다 */
+    });
+  };
+
   return (
-    <div className="container mx-auto p-6">
-      <header className="mb-4 flex items-center justify-between">
-        <h1 className="text-foreground text-2xl font-bold">Examples</h1>
-        <Button type="button" onClick={openCreateDialog}>
-          + New Example
-        </Button>
+    <PageContainer className="tablet:pt-12 tablet:pb-16 pt-8 pb-12">
+      <header className="tablet:flex-row tablet:items-end tablet:justify-between tablet:gap-6 mb-6 flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-wrap items-center gap-3">
+            <h1
+              ref={headingRef}
+              tabIndex={-1}
+              className="tablet:text-3xl text-2xl font-bold focus:outline-none"
+            >
+              Examples
+            </h1>
+            <Badge variant="warn">개발 모드 전용</Badge>
+          </div>
+          <p className="text-muted-foreground text-base">
+            {view === "loading"
+              ? "예제 목록을 불러오는 중입니다."
+              : "개발 환경에서만 열리는 CRUD 예제입니다. 배포 환경(production, staging)에서는 API가 이 기능을 마운트하지 않습니다."}
+          </p>
+        </div>
+        {view === "empty" ? null : (
+          <Button
+            type="button"
+            className={PAGE_ACTION_CLASS}
+            onClick={openCreateDialog}
+          >
+            + New Example
+          </Button>
+        )}
       </header>
 
-      {toast ? (
-        <div
-          role="status"
-          aria-live="polite"
-          className="bg-destructive text-destructive-foreground mb-4 rounded-md p-3"
-        >
-          {toast}
-        </div>
-      ) : null}
-
-      <section
-        aria-busy={list.loading}
-        className="bg-card text-card-foreground rounded-md border"
-      >
-        <table className="w-full text-left">
-          <thead>
-            <tr className="border-b">
-              <th className="text-muted-foreground p-3">Title</th>
-              <th className="text-muted-foreground p-3">Status</th>
-              <th className="text-muted-foreground p-3">Created</th>
-              <th className="text-muted-foreground p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <ExampleListItem
-                key={item.id}
-                item={item}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-            ))}
-          </tbody>
-        </table>
-      </section>
+      {view === "empty" ? (
+        <Card variant="flat">
+          <Empty
+            className="tablet:items-center items-stretch px-6"
+            icon={<SystemIcon name="info" size={24} aria-hidden />}
+            title="아직 예제가 없습니다."
+            description="첫 예제를 만들면 이 목록에 표시됩니다."
+            action={
+              <Button
+                type="button"
+                className={PAGE_ACTION_CLASS}
+                onClick={openCreateDialog}
+              >
+                첫 예제 만들기
+              </Button>
+            }
+          />
+        </Card>
+      ) : (
+        <ExamplesTable
+          view={view}
+          items={items}
+          busy={list.loading}
+          onEdit={handleEdit}
+          onDelete={requestDelete}
+          onRetry={retry}
+        />
+      )}
 
       <ExampleFormDialog
         open={dialogOpen}
@@ -197,8 +237,15 @@ const ExamplesPage = () => {
         onChange={setForm}
         onSubmit={handleSubmit}
         onClose={closeDialog}
+        returnFocusRef={returnFocusRef}
       />
-    </div>
+      <DeleteExampleDialog
+        target={deleteTarget}
+        onConfirm={(id) => void handleDelete(id)}
+        onCancel={() => setDeleteTarget(null)}
+        returnFocusRef={returnFocusRef}
+      />
+    </PageContainer>
   );
 };
 

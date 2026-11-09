@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 
 import { BLUE_PALETTE, GRAY_PALETTE, SEMANTIC_ALIASES } from "@/view/guide/colorData";
 import { BREAKPOINT_BARS, FONT_FAMILIES, FONT_WEIGHTS, RADIUS_SCALE, SHADOW_SCALE, SPACING_TOKENS, TYPE_SCALE } from "@/view/guide/scaleData";
+import scaleDataSource from "@/view/guide/scaleData.ts?raw";
 
 const css = readFileSync(resolve(__dirname, "../../../../../../packages/ui/src/styles/globals.css"), "utf8");
 const cssValue = (token: string) => css.match(new RegExp(`--${token}:\\s*([^;]+);`))?.[1]?.trim();
@@ -38,7 +39,7 @@ describe("가이드 토큰 데이터", () => {
   });
 
   it("scaleData 소스가 클래스를 템플릿으로 조립하지 않을 때 Tailwind가 모든 견본 클래스를 생성한다", () => {
-    const source = readFileSync(resolve(__dirname, "../../../../src/view/guide/scaleData.ts"), "utf8");
+    const source = scaleDataSource;
     expect(source).not.toMatch(/\$\{/);
     expect(source).toContain('className: "text-5xl"');
     expect(source).toContain('className: "text-6xl"');

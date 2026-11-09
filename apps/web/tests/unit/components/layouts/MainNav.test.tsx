@@ -1,6 +1,3 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useEffect } from "react";
@@ -13,6 +10,7 @@ import {
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import MainNav, { GitHubLink } from "@/components/layouts/MainNav";
+import mainNavSource from "@/components/layouts/MainNav.tsx?raw";
 import {
   type HomeScrollState,
   scrollToSection,
@@ -57,12 +55,7 @@ describe("MainNav", () => {
   // <<< EXAMPLES_END
 
   it("[Examples 마커]가 MainNav에 있을 때 JSX 주석을 사용할 수 없다", () => {
-    const source = readFileSync(
-      resolve(process.cwd(), "src/components/layouts/MainNav.tsx"),
-      "utf-8",
-    );
-
-    expect(source).not.toMatch(/\{\/\*\s*(?:>>>|<<<) EXAMPLES_(?:START|END)\s*\*\/\}/);
+    expect(mainNavSource).not.toMatch(/\{\/\*\s*(?:>>>|<<<) EXAMPLES_(?:START|END)\s*\*\/\}/);
   });
 
   it("[주 메뉴]가 프로덕션 환경에서 렌더될 때 개발 항목을 표시할 수 없다", () => {

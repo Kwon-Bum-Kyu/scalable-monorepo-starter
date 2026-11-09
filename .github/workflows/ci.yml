@@ -67,6 +67,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Renderer parity
+        run: npm run check:parity
+
       - name: Test
         run: npm run test:coverage
 

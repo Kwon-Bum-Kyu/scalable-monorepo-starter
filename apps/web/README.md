@@ -44,7 +44,7 @@ apps/web/
 │   ├── services/     # 도메인별 API 함수
 │   ├── types/        # 앱 로컬 타입
 │   ├── utils/        # ApiClient 싱글턴, errorHandler
-│   ├── view/         # 라우터에 마운트되는 페이지 (Guide, examples, Error)
+│   ├── view/         # 라우터에 마운트되는 페이지 (Home, Guide, examples, Error)
 │   ├── index.css     # @repo/ui/globals.css import
 │   └── main.tsx      # 진입점
 ├── public/           # 정적 에셋 (fonts 포함)
