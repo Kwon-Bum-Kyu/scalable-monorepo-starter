@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-labelledby="title">
+  <title id="title">scalable-monorepo-starter 파비콘</title>
+  <rect width="32" height="32" rx="6" fill="#000000"/>
+  <path fill="#ffffff" d="M6 24V10a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2h-8v12h-4V12h-4v12z"/>
+  <path fill="#0071e3" d="M22 14h4v10h-4z"/>
+</svg>
