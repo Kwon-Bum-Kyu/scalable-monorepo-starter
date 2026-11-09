@@ -21,10 +21,10 @@ type Story = StoryObj<typeof Footer>;
 
 const columns = [
   {
-    title: "Product",
+    title: "Workspace",
     links: [
-      { label: "Overview", href: "/product" },
-      { label: "Pricing", href: "/pricing" },
+      { label: "apps/web", href: "/apps/web", className: "font-mono" },
+      { label: "apps/api", href: "/apps/api", className: "font-mono" },
     ],
   },
   {

@@ -9,6 +9,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./globals.css": "./src/styles/globals.css",
+    "./assets/*": "./src/assets/*",
     "./lib/*": "./src/lib/*.ts",
     "./hooks/*": "./src/hooks/*.ts",
     "./components/badge-variants": "./src/components/ui/badge-variants.ts",

@@ -29,7 +29,7 @@ describe("RootLayout", () => {
     renderWithRouter(<div data-testid="outlet">Outlet</div>);
 
     expect(
-      screen.getByRole("navigation", { name: "Primary" }),
+      screen.getByRole("navigation", { name: "주 메뉴" }),
     ).toBeInTheDocument();
   });
 

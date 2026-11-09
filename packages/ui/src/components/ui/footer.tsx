@@ -6,6 +6,7 @@ export interface FooterLink {
   label: string;
   href: string;
   external?: boolean;
+  className?: string;
 }
 
 export interface FooterColumn {
@@ -32,9 +33,9 @@ function Footer({
       )}
       {...props}
     >
-      <div className="mx-auto flex w-full max-w-app flex-col gap-8 px-6 py-10">
+      <div className="mx-auto flex w-full max-w-app flex-col gap-8 px-4 py-10 tablet:px-8 desktop:px-page-x">
         {columns.length > 0 && (
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 tablet:grid-cols-2 tablet:gap-8 desktop:grid-cols-4">
             {columns.map((col) => (
               <div key={col.title} className="flex flex-col gap-3">
                 <h3 className="text-sm font-semibold">{col.title}</h3>
@@ -46,14 +47,20 @@ function Footer({
                           href={link.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-muted-foreground hover:text-foreground"
+                          className={cn(
+                            "rounded-sm text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                            link.className,
+                          )}
                         >
                           {link.label}
                         </a>
                       ) : (
                         <RouterLink
                           to={link.href}
-                          className="text-sm text-muted-foreground hover:text-foreground"
+                          className={cn(
+                            "rounded-sm text-sm text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                            link.className,
+                          )}
                         >
                           {link.label}
                         </RouterLink>

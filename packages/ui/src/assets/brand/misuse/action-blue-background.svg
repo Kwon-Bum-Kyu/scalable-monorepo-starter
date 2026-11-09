@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 112" width="300" height="112" preserveAspectRatio="xMidYMid slice" role="img" aria-labelledby="title">
+  <title id="title">금지 견본: Action Blue 배경 위에 놓인 다크 버전 심볼</title>
+  <rect width="300" height="112" fill="#0071e3"/>
+  <g transform="translate(100 16)">
+    <path fill="#ffffff" d="M0 80V8a8 8 0 0 1 8-8h84a8 8 0 0 1 8 8v12H60v60H40V20H20v60z"/>
+    <path fill="#0071e3" d="M80 24h20v56H80z"/>
+  </g>
+</svg>

@@ -9,7 +9,7 @@ function renderWithRouter(ui: React.ReactElement) {
 }
 
 describe("Footer", () => {
-  it("columns 배열에 따라 섹션 title과 링크가 렌더된다", () => {
+  it("Footer가 columns를 받을 때 섹션 제목과 링크를 렌더한다", () => {
     renderWithRouter(
       <Footer
         columns={[
@@ -35,7 +35,7 @@ describe("Footer", () => {
     );
   });
 
-  it("external=true 링크는 anchor 태그로 렌더되고 target이 _blank이다", () => {
+  it("Footer가 external 링크를 받을 때 새 탭 anchor로 렌더한다", () => {
     renderWithRouter(
       <Footer
         columns={[
@@ -53,7 +53,7 @@ describe("Footer", () => {
     expect(link).toHaveAttribute("target", "_blank");
   });
 
-  it("bottom 슬롯이 렌더된다", () => {
+  it("Footer가 bottom 슬롯을 받을 때 하단 내용을 렌더한다", () => {
     renderWithRouter(
       <Footer
         columns={[]}
@@ -63,12 +63,12 @@ describe("Footer", () => {
     expect(screen.getByTestId("copyright")).toBeInTheDocument();
   });
 
-  it("footer 랜드마크가 표시된다", () => {
+  it("Footer가 기본 렌더될 때 contentinfo 랜드마크를 표시한다", () => {
     renderWithRouter(<Footer columns={[]} />);
     expect(screen.getByRole("contentinfo")).toBeInTheDocument();
   });
 
-  it("contentinfo 안에서 columns가 렌더된다", () => {
+  it("Footer가 columns를 렌더할 때 contentinfo 안에 표시한다", () => {
     renderWithRouter(
       <Footer
         columns={[{ title: "링크", links: [{ label: "홈", href: "/" }] }]}
@@ -76,5 +76,43 @@ describe("Footer", () => {
     );
     const footer = screen.getByRole("contentinfo");
     expect(within(footer).getByText("링크")).toBeInTheDocument();
+  });
+
+  it("Footer가 반응형 레이아웃을 렌더할 때 여백과 열 수를 적용한다", () => {
+    renderWithRouter(
+      <Footer
+        columns={[{ title: "링크", links: [{ label: "홈", href: "/" }] }]}
+      />,
+    );
+
+    const container = screen.getByRole("contentinfo").firstElementChild;
+    const columns = screen.getByText("링크").parentElement?.parentElement;
+    expect(container?.className).toContain("px-4");
+    expect(container?.className).toContain("tablet:px-8");
+    expect(container?.className).toContain("desktop:px-page-x");
+    expect(container?.className).toContain("py-10");
+    expect(columns?.className).toContain("grid-cols-1");
+    expect(columns?.className).toContain("tablet:grid-cols-2");
+    expect(columns?.className).toContain("desktop:grid-cols-4");
+    expect(columns?.className).not.toContain("md:");
+  });
+
+  it("Footer가 링크별 className을 받을 때 기본 링크 클래스 뒤에 합성한다", () => {
+    renderWithRouter(
+      <Footer
+        columns={[
+          {
+            title: "링크",
+            links: [{ label: "워크스페이스", href: "/apps", className: "font-mono" }],
+          },
+        ]}
+      />,
+    );
+
+    const link = screen.getByRole("link", { name: "워크스페이스" });
+    expect(link.className).toContain("rounded-sm");
+    expect(link.className).toContain("transition-colors");
+    expect(link.className).toContain("focus-visible:ring-2");
+    expect(link.className).toMatch(/focus-visible:ring-offset-2.*font-mono$/);
   });
 });

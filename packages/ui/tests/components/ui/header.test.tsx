@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 
 describe("Header", () => {
-  it("logo·nav·actions 슬롯이 각각 렌더된다", () => {
+  it("Header가 슬롯을 받을 때 logo·nav·actions를 렌더한다", () => {
     render(
       <Header
         logo={<span data-testid="logo">L</span>}
@@ -17,26 +17,33 @@ describe("Header", () => {
     expect(screen.getByTestId("actions")).toBeInTheDocument();
   });
 
-  it("기본 렌더 시 header 랜드마크가 표시된다", () => {
+  it("Header가 기본 렌더될 때 banner 랜드마크를 표시한다", () => {
     render(<Header logo={<span>L</span>} />);
     expect(screen.getByRole("banner")).toBeInTheDocument();
   });
 
-  it("inner container에 헤더 높이·페이지 좌우 패딩·앱 컨테이너 토큰이 적용된다", () => {
+  it("Header가 반응형 컨테이너를 렌더할 때 모바일·태블릿·데스크톱 여백을 적용한다", () => {
     render(<Header logo={<span>L</span>} />);
     const banner = screen.getByRole("banner");
     const inner = banner.firstElementChild as HTMLElement;
-    // 의미적 토큰만 사용해야 함 (min-h-header / px-page-x / max-w-app).
-    // h-16 / px-6 같은 4px-base 자동 utility는 우연히 동일 px가 나올 수 있어도
-    // "의미"를 표현하지 못하므로 금지.
     expect(inner.className).toContain("min-h-header");
-    expect(inner.className).toContain("px-page-x");
+    expect(inner.className).toContain("px-4");
+    expect(inner.className).toContain("tablet:px-8");
+    expect(inner.className).toContain("desktop:px-page-x");
     expect(inner.className).toContain("max-w-app");
-    expect(inner.className).not.toContain("h-16");
-    expect(inner.className).not.toContain("px-6");
+    expect(inner.className).toContain("gap-6");
   });
 
-  it("mobileMenu 슬롯이 주어지면 햄버거 토글 버튼이 표시된다", async () => {
+  it("Header가 nav를 받을 때 주 메뉴 이름과 tablet 배치를 적용한다", () => {
+    render(<Header nav={<span>내비게이션</span>} />);
+
+    const nav = screen.getByRole("navigation", { name: "주 메뉴" });
+    expect(nav.className).toContain("self-stretch");
+    expect(nav.className).toContain("tablet:flex");
+    expect(nav.className).not.toContain("md:");
+  });
+
+  it("Header가 mobileMenu를 받을 때 44px 메뉴 버튼으로 펼친 메뉴를 표시한다", async () => {
     const user = userEvent.setup();
     render(
       <Header
@@ -45,7 +52,14 @@ describe("Header", () => {
       />,
     );
     const toggle = screen.getByRole("button", { name: /메뉴 열기/ });
+    expect(toggle.className).toContain("h-11");
+    expect(toggle.className).toContain("w-11");
+    expect(toggle.className).toContain("tablet:hidden");
+    expect(toggle.className).not.toContain("md:");
     await user.click(toggle);
-    expect(screen.getByTestId("mobile-menu")).toBeInTheDocument();
+    const menu = screen.getByTestId("mobile-menu");
+    expect(menu.parentElement?.className).toContain("border-t");
+    expect(menu.parentElement?.className).toContain("tablet:hidden");
+    expect(menu.parentElement?.className).not.toContain("md:");
   });
 });

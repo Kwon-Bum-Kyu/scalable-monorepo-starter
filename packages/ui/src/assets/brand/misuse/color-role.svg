@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 80" width="100" height="80" role="img" aria-labelledby="title">
+  <title id="title">금지 견본: 색 역할을 바꾼 심볼</title>
+  <g>
+    <path fill="#0071e3" d="M0 80V8a8 8 0 0 1 8-8h84a8 8 0 0 1 8 8v12H60v60H40V20H20v60z"/>
+    <path fill="#000000" d="M80 24h20v56H80z"/>
+  </g>
+</svg>
