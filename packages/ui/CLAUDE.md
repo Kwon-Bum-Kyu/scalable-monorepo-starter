@@ -83,8 +83,8 @@ shadow 토큰은 0~4 5단계 위계로 정의된다(`globals.css` `@theme`). 각
 | `--shadow-0-subtle` | `shadow-0-subtle` | 0 (subtle outline) | 테두리와 함께 쓰는 최소 그림자 — `card`(subtle variant) |
 | `--shadow-1-subtle` | `shadow-1-subtle` | 1 (subtle) | 같은 평면 내 미세 강조 — `tabs trigger active`(default variant), `calendar dropdown_root`, `switch` thumb |
 | `--shadow-2-default` | `shadow-2-default` | 2 (default) | 컨텐츠 그룹화 default surface — `card`(elev variant) |
-| `--shadow-3-raised` | `shadow-3-raised` | 3 (raised) | 사용자 트리거로 띄워지는 raised surface — `popover content`, `select content`, `tooltip content` |
-| `--shadow-4-overlay` | `shadow-4-overlay` | 4 (overlay) | 최상위 overlay — `dialog content`, `sheet content`, `sonner toast` |
+| `--shadow-3-raised` | `shadow-3-raised` | 3 (raised) | 사용자 트리거로 띄워지는 raised surface — `popover content`, `select content`, `tooltip content`, `sonner toast` |
+| `--shadow-4-overlay` | `shadow-4-overlay` | 4 (overlay) | 최상위 overlay — `dialog content`, `sheet content` |
 
 **원칙:**
 - **자식 위계 ≤ 부모 위계** — popover 안에 떠 있는 select은 부모(popover)와 같은 raised 또는 더 약한 위계만 허용.

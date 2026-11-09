@@ -77,7 +77,7 @@ export async function createUser(input: CreateUserInput): Promise<User> {
 
 ### ExamplesPage 패턴 요약
 
-`src/view/examples/ExamplesPage.tsx`는 `useExamplesList`·`useCreateExample`·`useUpdateExample`·`useDeleteExample`만 사용하며, 토스트는 각 훅의 `error` 필드를 `useEffect`로 watching해 `ErrorHandler.formatToastMessage(error)`로 포맷한다. `fetch`·`useState<Example[]>`로 데이터를 직접 보관하지 않는다.
+`src/view/examples/ExamplesPage.tsx`는 `useExamplesList`·`useCreateExample`·`useUpdateExample`·`useDeleteExample`만 사용한다. 목록 조회 실패(`useExamplesList().error`)는 토스트 없이 표 자리 안내(`role="alert"` + "다시 시도")로 알리고, 토스트는 생성·수정·삭제 핸들러의 실패 분기에서 그 요청의 오류로 한 번만 `toast.error`를 호출하고, 문구는 `ErrorHandler.formatToastMessage(error)`로 포맷한다(요청 ID가 없으면 괄호를 붙이지 않는다). 훅의 `error` 필드를 `useEffect`로 함께 관찰하면 이전 요청의 오류가 다시 뜨므로 쓰지 않는다. `fetch`·`useState<Example[]>`로 데이터를 직접 보관하지 않는다.
 
 ## 테스트 경로
 

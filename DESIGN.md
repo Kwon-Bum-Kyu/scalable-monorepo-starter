@@ -317,7 +317,7 @@ components:
 
 ## Layout
 
-그리드는 Mobile 4열 / Tablet 8열 / Desktop 12열이며 각 구간의 마진·거터가 `apps/web/src/view/guide/navData.ts`의 `BREAKPOINTS`에 명시되어 있다.
+그리드는 Mobile 4열 / Tablet 8열 / Desktop 12열이며 각 구간의 마진·거터는 아래 표와 같다.
 
 | 구간 | 너비 | 컬럼 | 마진 | 거터 |
 | ---- | ---- | ---- | ---- | ---- |
@@ -325,7 +325,7 @@ components:
 | Tablet | 768–1279px | 8 | 32px | 16px |
 | Desktop | ≥ 1280px | 12 | 72px | 16px |
 
-페이지 컨테이너는 `max-w-app`(`--container-app: 1280px`)을 공통 폭으로 쓰고 좌우 여백은 `px-page-x`(`--spacing-page-x: 72px`)로 고정한다(`RootLayout.tsx`: `mx-auto w-full max-w-app px-page-x`). 헤더 높이는 `min-h-header`(`--spacing-header: 64px`). 4px 베이스의 전체 스페이싱 스케일(`p-1=4px` … `p-20=80px`)은 Tailwind v4 표준 자동 유틸리티에 의존한다. 이 값들을 위한 별도 토큰은 추가하지 않는다(FR-10, `packages/ui/CLAUDE.md`).
+페이지 컨테이너는 `max-w-app`(`--container-app: 1280px`)을 공통 폭으로 쓰고 좌우 여백은 위 표의 마진을 따른다: Mobile `px-4`, Tablet `tablet:px-8`, Desktop `desktop:px-page-x`(`--spacing-page-x: 72px`). 각 화면이 `PageContainer`(`mx-auto w-full max-w-app px-4 tablet:px-8 desktop:px-page-x`)로 내용 폭을 잡고, `RootLayout.tsx`의 `<main>`은 구역 바탕이 화면 끝까지 닿도록 폭을 제한하지 않는다. Header·Footer 안쪽 컨테이너도 같은 여백을 쓴다. 헤더 높이는 `min-h-header`(`--spacing-header: 64px`). 4px 베이스의 전체 스페이싱 스케일(`p-1=4px` … `p-20=80px`)은 Tailwind v4 표준 자동 유틸리티에 의존한다. 이 값들을 위한 별도 토큰은 추가하지 않는다(FR-10, `packages/ui/CLAUDE.md`).
 
 ### Breakpoint Tokens
 | 토큰 | 값 | 용도 |

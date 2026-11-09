@@ -2,266 +2,223 @@ import {
   Badge,
   Button,
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
   Checkbox,
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
   Input,
   Label,
   RadioGroup,
   RadioGroupItem,
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SimpleTabs,
   Slider,
   Switch,
+  SystemIcon,
   Tabs,
-  TabsContent,
   TabsList,
   TabsTrigger,
-  toast,
 } from "@repo/ui";
+import type React from "react";
 
-import { Section, TokenCard } from "@/view/guide/primitives";
+import { GuideSection } from "@/view/guide/primitives";
 
-export type ComponentsSectionProps = {
-  sliderValue: number[];
-  onSliderChange: (value: number[]) => void;
-  rangeValue: number[];
-  onRangeChange: (value: number[]) => void;
-  activeTab: string;
-  onActiveTabChange: (value: string) => void;
-};
+const CAPTION = "font-mono text-xs text-muted-foreground";
+const ROW = "flex flex-wrap items-center gap-2";
+const MODAL_CAPTION = "DialogContent · 최대 폭 512px · shadow-4-overlay · 오버레이 gray-900 50%";
 
-export const ComponentsSection = ({
-  sliderValue,
-  onSliderChange,
-  rangeValue,
-  onRangeChange,
-  activeTab,
-  onActiveTabChange,
-}: ComponentsSectionProps) => (
-  <Section
-    id="components"
-    eyebrow="Components"
-    title="기본 컴포넌트"
-    description="shadcn/ui 베이스 위에 KBK 브랜드 색을 입힌 핵심 컴포넌트."
-  >
-    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      <TokenCard title="Button · variants" hint="6 variants">
-        <div className="flex flex-wrap gap-2">
-          <Button variant="default">Primary</Button>
-          <Button variant="secondary">Secondary</Button>
-          <Button variant="outline">Outline</Button>
-          <Button variant="ghost">Ghost</Button>
-          <Button variant="link">Link</Button>
-          <Button variant="destructive">Destructive</Button>
-        </div>
-      </TokenCard>
+const CompCard = ({ name, children }: { name: string; children: React.ReactNode }) => (
+  <Card variant="flat" className="grid content-start gap-4 p-5">
+    <h3 className="font-mono text-base font-semibold">{name}</h3>
+    <div className="grid gap-3">{children}</div>
+  </Card>
+);
 
-      <TokenCard title="Button · sizes" hint="sm · md · lg · icon">
-        <div className="flex flex-wrap items-center gap-2">
-          <Button size="sm">Small</Button>
-          <Button size="default">Medium</Button>
-          <Button size="lg">Large</Button>
-          <Button size="icon" aria-label="아이콘 버튼">
-            <span aria-hidden>★</span>
-          </Button>
-        </div>
-      </TokenCard>
+const Caption = ({ children }: { children: React.ReactNode }) => <p className={CAPTION}>{children}</p>;
 
-      <TokenCard title="Input · field" hint="label · hint · error">
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="guide-input-default">Label</Label>
-            <Input id="guide-input-default" placeholder="Text input" />
-            <p className="text-xs text-gray-400">Assistive text</p>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="guide-input-error">Label</Label>
-            <Input
-              id="guide-input-error"
-              placeholder="Text input"
-              aria-invalid
-            />
-            <p className="text-xs text-system-red">Error message</p>
-          </div>
-          <Input placeholder="Text input" disabled />
-        </div>
-      </TokenCard>
-
-      <TokenCard title="Selection" hint="checkbox · radio · switch">
-        <div className="flex flex-wrap items-center gap-6">
-          <label className="flex items-center gap-2 text-sm">
-            <Checkbox aria-label="checkbox" />
-            Checkbox
-          </label>
-          <RadioGroup defaultValue="a" className="flex gap-3">
-            <label className="flex items-center gap-2 text-sm">
-              <RadioGroupItem value="a" aria-label="radio" />
-              Radio
-            </label>
-          </RadioGroup>
-          <label className="flex items-center gap-2 text-sm">
-            <Switch aria-label="switch" />
-            Switch
-          </label>
-        </div>
-      </TokenCard>
-
-      <TokenCard title="Slider" hint="single · range">
-        <div className="flex flex-col gap-4">
-          <Slider value={sliderValue} onValueChange={onSliderChange} />
-          <Slider value={rangeValue} onValueChange={onRangeChange} />
-        </div>
-      </TokenCard>
-
-      <TokenCard title="Badge" hint="5 variants">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="default">Default</Badge>
-          <Badge variant="secondary">Secondary</Badge>
-          <Badge variant="outline">Outline</Badge>
-          <Badge variant="destructive">Destructive</Badge>
-          <Badge variant="success">Success</Badge>
-        </div>
-      </TokenCard>
-
-      <TokenCard title="Card" hint="header · body · footer">
-        <Card className="shadow-2-default">
-          <CardHeader>
-            <CardTitle>Card 제목</CardTitle>
-            <CardDescription>header · body · footer 컴포지션</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm leading-6 text-gray-700">
-              본문 영역. 길이가 길어지면 자동으로 줄바꿈됩니다.
-            </p>
-          </CardContent>
-          <CardFooter>
-            <Button size="sm" variant="outline">
-              Footer 액션
-            </Button>
-          </CardFooter>
-        </Card>
-      </TokenCard>
-
-      <TokenCard title="Toast" hint="info · success · warn · error">
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => toast.info("Info 토스트")}
-          >
-            Info
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => toast.success("Success 토스트")}
-          >
-            Success
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => toast.warning("Warning 토스트")}
-          >
-            Warning
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => toast.error("Error 토스트")}
-          >
-            Error
-          </Button>
-        </div>
-      </TokenCard>
-
-      <TokenCard title="Modal" hint="dialog · drawer">
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-wrap gap-2">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="default" size="sm">
-                  Dialog 열기
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Dialog 제목</DialogTitle>
-                  <DialogDescription>
-                    중앙 정렬 modal — focus trap · ESC 닫기 지원.
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <Button variant="outline" size="sm">
-                    닫기
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" size="sm">
-                  Drawer 열기
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right">
-                <SheetHeader>
-                  <SheetTitle>Drawer 제목</SheetTitle>
-                  <SheetDescription>
-                    측면에서 슬라이드되는 modal — 동일 Radix primitive 컴포지션.
-                  </SheetDescription>
-                </SheetHeader>
-              </SheetContent>
-            </Sheet>
-          </div>
-          <p className="font-mono text-xs text-gray-400">
-            dialog · drawer 는 동일 Radix primitive 위 컴포지션 패턴
-          </p>
-        </div>
-      </TokenCard>
-
-      <TokenCard title="Tabs · nav" hint="underline · pill">
-        <div className="flex flex-col gap-4">
-          <Tabs defaultValue="a">
-            <TabsList variant="underline">
-              <TabsTrigger value="a">Underline A</TabsTrigger>
-              <TabsTrigger value="b">Underline B</TabsTrigger>
-            </TabsList>
-            <TabsContent value="a">
-              <p className="mt-3 text-sm text-gray-700">Underline 콘텐츠 A</p>
-            </TabsContent>
-            <TabsContent value="b">
-              <p className="mt-3 text-sm text-gray-700">Underline 콘텐츠 B</p>
-            </TabsContent>
-          </Tabs>
-          <SimpleTabs
-            variant="pill"
-            items={[
-              { value: "Tab 1", label: "Pill 1", content: "Pill 콘텐츠 1" },
-              { value: "Tab 2", label: "Pill 2", content: "Pill 콘텐츠 2" },
-            ]}
-            value={activeTab}
-            onValueChange={onActiveTabChange}
-          />
-        </div>
-      </TokenCard>
+const ButtonCard = () => (
+  <CompCard name="Button">
+    <Caption>variant</Caption>
+    <div className={ROW}>
+      <Button>default</Button>
+      <Button variant="secondary">secondary</Button>
+      <Button variant="outline">outline</Button>
+      <Button variant="ghost">ghost</Button>
+      <Button variant="destructive">destructive</Button>
+      <Button variant="link">link</Button>
     </div>
-  </Section>
+    <Caption>size · sm 32 · default 40 · lg 44</Caption>
+    <div className={ROW}>
+      <Button variant="outline" size="sm">sm</Button>
+      <Button variant="outline">default</Button>
+      <Button variant="outline" size="lg">lg</Button>
+    </div>
+    <Caption>state · hover 90% · focus · disabled 50%</Caption>
+    <div className={ROW}>
+      <Button className="bg-primary/90">hover</Button>
+      <Button className="ring-2 ring-ring ring-offset-2">focus</Button>
+      <Button disabled>disabled</Button>
+    </div>
+  </CompCard>
+);
+
+const InputCard = () => (
+  <CompCard name="Input">
+    <div className="grid gap-1.5">
+      <Label htmlFor="guide-in-default" className="font-mono text-xs font-normal text-muted-foreground">default</Label>
+      <Input id="guide-in-default" placeholder="예제 제목" />
+    </div>
+    <div className="grid gap-1.5">
+      <Label htmlFor="guide-in-invalid" className="font-mono text-xs font-normal text-muted-foreground">aria-invalid</Label>
+      <Input id="guide-in-invalid" aria-invalid="true" aria-describedby="guide-in-invalid-err" />
+      <p id="guide-in-invalid-err" className="text-sm text-destructive">Title을 입력해야 저장할 수 있습니다.</p>
+    </div>
+    <div className="grid gap-1.5">
+      <Label htmlFor="guide-in-disabled" className="font-mono text-xs font-normal text-muted-foreground">disabled</Label>
+      <Input id="guide-in-disabled" defaultValue="네 번째 예제" disabled />
+    </div>
+  </CompCard>
+);
+
+const SelectionCard = () => (
+  <CompCard name="Selection">
+    <div className="flex items-center gap-2">
+      <Checkbox id="guide-checkbox" />
+      <Label htmlFor="guide-checkbox">Checkbox</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <RadioGroup defaultValue="a" className="flex gap-2" aria-labelledby="guide-radio-label">
+        <RadioGroupItem id="guide-radio-a" value="a" aria-label="Radio 1" />
+        <RadioGroupItem value="b" aria-label="Radio 2" />
+      </RadioGroup>
+      <Label id="guide-radio-label" htmlFor="guide-radio-a">Radio</Label>
+    </div>
+    <div className="flex items-center gap-2">
+      <Switch id="guide-switch" />
+      <Label htmlFor="guide-switch">Switch</Label>
+    </div>
+  </CompCard>
+);
+
+const SliderCard = () => (
+  <CompCard name="Slider">
+    <Slider defaultValue={[50]} aria-label="값" />
+    <Caption>값</Caption>
+    <Slider defaultValue={[20, 80]} aria-label="범위" />
+    <Caption>범위</Caption>
+  </CompCard>
+);
+
+const BadgeCard = () => (
+  <CompCard name="Badge">
+    <div className={ROW}>
+      <Badge>default</Badge>
+      <Badge variant="primary">primary</Badge>
+      <Badge variant="secondary">secondary</Badge>
+      <Badge variant="success">success</Badge>
+      <Badge variant="warn">warn</Badge>
+      <Badge variant="destructive">destructive</Badge>
+      <Badge variant="outline">outline</Badge>
+    </div>
+    <Caption>shape · pill · sq · dot</Caption>
+    <div className={ROW}>
+      <Badge>pill</Badge>
+      <Badge shape="sq">sq</Badge>
+      <Badge variant="primary" dot>dot</Badge>
+    </div>
+  </CompCard>
+);
+
+const CardCard = () => (
+  <CompCard name="Card">
+    <Card variant="elev" className="grid gap-1 p-3">
+      <p className="text-sm font-semibold">elev</p>
+      <Caption>shadow-2-default</Caption>
+    </Card>
+    <Card variant="flat" className="grid gap-1 p-3">
+      <p className="text-sm font-semibold">flat</p>
+      <Caption>테두리 · 그림자 없음</Caption>
+    </Card>
+    <Card variant="subtle" className="grid gap-1 p-3">
+      <p className="text-sm font-semibold">subtle</p>
+      <Caption>테두리 · shadow-0-subtle</Caption>
+    </Card>
+    <Caption>CardHeader · CardContent · CardFooter 안쪽 24px</Caption>
+  </CompCard>
+);
+
+const ToastCard = () => (
+  <CompCard name="Toast">
+    <div
+      role="status"
+      className="flex items-center gap-2 rounded-lg border border-gray-100 bg-background p-4 text-sm font-medium shadow-3-raised"
+    >
+      <SystemIcon name="octagon-x" aria-hidden />
+      <span className="flex-1">알 수 없는 오류</span>
+      <SystemIcon name="close" aria-hidden />
+    </div>
+    <Caption>Toaster · shadow-3-raised · 최대 폭 356px</Caption>
+  </CompCard>
+);
+
+const ModalCard = () => (
+  <CompCard name="Modal">
+    <Dialog>
+      <div>
+        <DialogTrigger asChild>
+          <Button variant="outline">Dialog</Button>
+        </DialogTrigger>
+      </div>
+      <DialogContent>
+        <DialogTitle>Dialog</DialogTitle>
+        <DialogDescription>{MODAL_CAPTION}</DialogDescription>
+      </DialogContent>
+    </Dialog>
+    <Caption>{MODAL_CAPTION}</Caption>
+  </CompCard>
+);
+
+const TabsCard = () => (
+  <CompCard name="Tabs">
+    <Caption>underline</Caption>
+    <Tabs defaultValue="start">
+      <TabsList variant="underline" className="w-full" aria-label="Tabs underline 견본">
+        <TabsTrigger value="start">시작</TabsTrigger>
+        <TabsTrigger value="token">토큰</TabsTrigger>
+        <TabsTrigger value="component">컴포넌트</TabsTrigger>
+      </TabsList>
+    </Tabs>
+    <Caption>pill</Caption>
+    <Tabs defaultValue="start">
+      <TabsList variant="pill" aria-label="Tabs pill 견본">
+        <TabsTrigger value="start">시작</TabsTrigger>
+        <TabsTrigger value="token">토큰</TabsTrigger>
+        <TabsTrigger value="component">컴포넌트</TabsTrigger>
+      </TabsList>
+    </Tabs>
+    <Caption>boxed</Caption>
+    <Tabs defaultValue="start">
+      <TabsList variant="boxed" className="w-full" aria-label="Tabs boxed 견본">
+        <TabsTrigger value="start">시작</TabsTrigger>
+        <TabsTrigger value="token">토큰</TabsTrigger>
+        <TabsTrigger value="component">컴포넌트</TabsTrigger>
+      </TabsList>
+    </Tabs>
+  </CompCard>
+);
+
+export const ComponentsSection = () => (
+  <GuideSection id="components" eyebrow="컴포넌트" title="기본 컴포넌트">
+    <div className="grid grid-cols-1 gap-4 tablet:grid-cols-2 desktop:grid-cols-3">
+      <ButtonCard />
+      <InputCard />
+      <SelectionCard />
+      <SliderCard />
+      <BadgeCard />
+      <CardCard />
+      <ToastCard />
+      <ModalCard />
+      <TabsCard />
+    </div>
+  </GuideSection>
 );

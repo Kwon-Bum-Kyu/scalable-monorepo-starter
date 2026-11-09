@@ -1,3 +1,5 @@
+<img src="docs/assets/readme-header.svg" alt="scalable-monorepo-starter: 2시간 안에 셋업하고 1주 안에 배포하는 풀스택 모노레포 스타터" width="100%">
+
 # scalable-monorepo-starter
 
 > 2시간 안에 셋업하고 1주 안에 배포하는 풀스택 모노레포 스타터.
@@ -98,6 +100,7 @@ scalable-monorepo-starter/
 │   ├── eslint-config/          # 공유 ESLint 설정
 │   ├── typescript-config/      # 공유 tsconfig
 │   └── vitest-config/          # 공유 Vitest 설정
+├── docs/assets/                # README 헤더·소셜 미리보기 이미지
 ├── scripts/                    # 개발 부트스트랩 스크립트
 └── turbo.json                  # Turborepo 파이프라인
 ```
@@ -112,6 +115,7 @@ scalable-monorepo-starter/
 | `npm run lint` | 전체 ESLint (워크스페이스별) |
 | `npm run test` | 전체 단위/통합 테스트 |
 | `npm run test:coverage` | 전체 단위/통합 테스트 + 커버리지 80% 임계 검사 (CI와 같은 명령) |
+| `npm run check:parity` | web 화면 코드와 desktop renderer 사본이 같은지 검사 (CI와 같은 명령) |
 | `npm run test:web` | `apps/web` 만 테스트 |
 | `npm run test:api` | `apps/api` 만 테스트 |
 | `npm run storybook` | Storybook 단독 구동 |
@@ -172,7 +176,7 @@ npx impeccable install --global --no-hooks
 | `LOG_LEVEL` | dev: debug / prod: info | |
 | `CORS_ALLOWED_ORIGINS` | http://localhost:3000 | 콤마 구분 다중 허용 |
 | `RATE_LIMIT_WINDOW_MS` / `RATE_LIMIT_MAX` | 60000 / 100 | API rate-limit |
-| `ENABLE_EXAMPLES` | dev: true / prod: false | 레퍼런스 CRUD 활성화 |
+| `ENABLE_EXAMPLES` | dev: true / prod: false | 레퍼런스 CRUD 활성화. 개발 중에 끄면 web의 Examples 화면은 그대로 열리고 목록 조회만 실패한다(목록 자리에 오류 안내 표시) |
 | `VITE_API_BASE_URL` | http://localhost:4000 | FE → API |
 
 > 배포 환경(Vercel 등)에서는 `.env` 파일을 사용하지 않는다. 플랫폼의 Environment Variables UI에서 직접 설정한다.
