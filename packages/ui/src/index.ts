@@ -135,7 +135,10 @@ export type {
   SystemIconName,
   SystemIconProps,
 } from "./components/ui/system-icon";
-export { SystemIcon } from "./components/ui/system-icon";
+export {
+  SYSTEM_ICON_NAMES,
+  SystemIcon,
+} from "./components/ui/system-icon";
 export type { TypographyProps } from "./components/ui/typography";
 export { Typography, typographyVariants } from "./components/ui/typography";
 

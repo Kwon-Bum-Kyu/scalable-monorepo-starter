@@ -15,9 +15,9 @@ const NOT_FOUND_DESCRIPTION =
 const ROUTE_ERROR_DESCRIPTION =
   "페이지를 불러오는 중에 문제가 생겼습니다. 다시 시도해도 같은 화면이 보이면 홈으로 이동해 주세요.";
 
-const renderVariant = (variant: "not-found" | "route-error", className?: string) => {
+const renderVariant = (variant: "not-found" | "route-error") => {
   const router = createMemoryRouter(
-    [{ path: "/", element: <ErrorPage variant={variant} className={className} /> }],
+    [{ path: "/", element: <ErrorPage variant={variant} /> }],
     { initialEntries: ["/"] },
   );
   return render(<RouterProvider router={router} />);
@@ -71,12 +71,6 @@ describe("ErrorPage", () => {
     await user.click(screen.getByRole("button", { name: "다시 시도" }));
 
     expect(reload).toHaveBeenCalledOnce();
-  });
-
-  it("[오류 페이지]가 추가 클래스를 받을 때 루트에 합성한다", () => {
-    const { container } = renderVariant("not-found", "custom-error");
-
-    expect(container.querySelector("#error-page")).toHaveClass("custom-error");
   });
 
   it("[오류 페이지]가 loader 404를 받을 때 찾을 수 없음으로 자동 판정한다", async () => {

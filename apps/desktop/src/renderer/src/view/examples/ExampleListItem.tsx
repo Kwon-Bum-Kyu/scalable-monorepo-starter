@@ -24,7 +24,7 @@ const ExampleListItem = ({ item, onEdit, onDelete }: ExampleListItemProps) => {
           <Button
             type="button"
             variant="outline"
-            size="sm"
+            size="lg"
             className={ROW_ACTION_CLASS}
             onClick={() => onEdit(item.id)}
             aria-label={`Edit ${item.title}`}
@@ -34,7 +34,7 @@ const ExampleListItem = ({ item, onEdit, onDelete }: ExampleListItemProps) => {
           <Button
             type="button"
             variant="outline"
-            size="sm"
+            size="lg"
             className={ROW_ACTION_CLASS}
             onClick={() => onDelete(item.id)}
             aria-label={`Delete ${item.title}`}

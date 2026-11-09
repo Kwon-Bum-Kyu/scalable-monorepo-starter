@@ -196,6 +196,26 @@ describe("ExamplesPage", () => {
     expect(await screen.findByText("새 항목")).toBeInTheDocument();
   });
 
+  it("[예제 생성]이 성공한 뒤 목록 재조회에 실패할 때 생성 실패 토스트를 표시할 수 없다", async () => {
+    const user = userEvent.setup();
+    (fetchExamplesList as ReturnType<typeof vi.fn>)
+      .mockResolvedValueOnce({ items: sampleItems(2) })
+      .mockRejectedValueOnce(new Error("refetch failed"));
+
+    renderPage();
+    await screen.findByText("Example 1");
+    await user.click(screen.getByRole("button", { name: /new example/i }));
+    const dialog = await screen.findByRole("dialog");
+    await user.type(within(dialog).getByLabelText(/Title/), "새 항목");
+    await user.click(within(dialog).getByRole("button", { name: /^create$/i }));
+
+    await waitFor(() => expect(fetchExamplesList).toHaveBeenCalledTimes(2));
+    expect(screen.queryByText("refetch failed")).not.toBeInTheDocument();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "예제 목록을 불러오지 못했습니다.",
+    );
+  });
+
   it("BE가 실패 응답을 반환할 때 toast가 표시된다", async () => {
     const user = userEvent.setup();
     (createExample as ReturnType<typeof vi.fn>).mockRejectedValueOnce({
@@ -241,6 +261,19 @@ describe("ExamplesPage", () => {
     expect(
       within(dialog).getByRole("radio", { name: /published/i }),
     ).toHaveAttribute("aria-checked", "true");
+  });
+
+  it("[수정 다이얼로그]가 닫히는 동안 기존 제목과 입력값을 빈 생성 폼으로 바꿀 수 없다", async () => {
+    const user = userEvent.setup();
+    renderPage();
+    await screen.findByText("Example 2");
+    await user.click(screen.getByRole("button", { name: "Edit Example 2" }));
+
+    const dialog = await screen.findByRole("dialog");
+    await user.click(within(dialog).getByRole("button", { name: "Cancel" }));
+
+    expect(dialog).toHaveTextContent("Edit Example");
+    expect(within(dialog).getByLabelText(/Title/)).toHaveValue("Example 2");
   });
 
   it("Delete 성공 시 목록이 refetch되어 항목이 제거된다", async () => {

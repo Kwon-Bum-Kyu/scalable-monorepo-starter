@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import {
   type HomeScrollState,
@@ -12,12 +12,15 @@ import { RulesSection } from "@/view/home/sections/rules";
 import { StructureSection } from "@/view/home/sections/structure";
 
 export default function Home(): React.JSX.Element {
-  const { state } = useLocation();
+  const { pathname, state } = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const scrollState = state as HomeScrollState | null;
-    if (scrollState?.scrollTo) scrollToSection(scrollState.scrollTo);
-  }, [state]);
+    if (!scrollState?.scrollTo) return;
+    scrollToSection(scrollState.scrollTo);
+    void navigate(pathname, { replace: true, state: null });
+  }, [navigate, pathname, state]);
 
   return (
     <>

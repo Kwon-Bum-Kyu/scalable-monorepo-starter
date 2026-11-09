@@ -1,4 +1,4 @@
-import type { SystemIconName } from "@repo/ui";
+import { SYSTEM_ICON_NAMES as ALL_SYSTEM_ICON_NAMES } from "@repo/ui";
 import { describe, expect, it } from "vitest";
 
 import { BRAND_FILES, LOGO_VARIANTS, MISUSE_EXAMPLES, SYSTEM_ICON_NAMES, SYSTEM_ICON_SAMPLES } from "@/view/guide/brandData";
@@ -22,15 +22,25 @@ describe("브랜드 데이터", () => {
   });
 
   it("아이콘 데이터가 SystemIconName 전체를 중복 없이 나눈다", () => {
-    const all: ReadonlyArray<SystemIconName> = [...SYSTEM_ICON_SAMPLES, ...SYSTEM_ICON_NAMES];
     expect(SYSTEM_ICON_SAMPLES).toHaveLength(3);
-    expect(SYSTEM_ICON_NAMES).toHaveLength(33);
-    expect(new Set(SYSTEM_ICON_NAMES).size).toBe(33);
+    expect(new Set(SYSTEM_ICON_NAMES).size).toBe(SYSTEM_ICON_NAMES.length);
     expect(SYSTEM_ICON_NAMES.filter((name) => SYSTEM_ICON_SAMPLES.includes(name))).toHaveLength(0);
-    expect(new Set(all).size).toBe(36);
+    expect(new Set([...SYSTEM_ICON_SAMPLES, ...SYSTEM_ICON_NAMES])).toEqual(
+      new Set(ALL_SYSTEM_ICON_NAMES),
+    );
   });
 
-  it("브랜드 파일 데이터가 아홉 행을 제공한다", () => {
-    expect(BRAND_FILES).toHaveLength(9);
+  it("브랜드 파일 데이터가 레포의 실제 경로만 제공한다", () => {
+    expect(BRAND_FILES.map(({ file }) => file)).toEqual([
+      "packages/ui/src/assets/brand/logo/symbol.svg · symbol-dark.svg",
+      "packages/ui/src/assets/brand/logo/wordmark.svg · wordmark-dark.svg",
+      "packages/ui/src/assets/brand/logo/lockup-horizontal.svg · lockup-horizontal-dark.svg",
+      "packages/ui/src/assets/brand/logo/lockup-stacked.svg · lockup-stacked-dark.svg",
+      "apps/web/public/favicon.svg",
+      "apps/desktop/assets/app-icon-ink.svg",
+      "docs/assets/readme-header.svg",
+      "docs/assets/og-image.svg",
+      "apps/web/public/fonts/",
+    ]);
   });
 });

@@ -1,4 +1,7 @@
-import { SystemIcon } from "@repo/ui/components/system-icon";
+import {
+  SYSTEM_ICON_NAMES,
+  SystemIcon,
+} from "@repo/ui/components/system-icon";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
@@ -28,6 +31,12 @@ describe("SystemIcon", () => {
 
     rerender(<SystemIcon name="octagon-x" data-testid="icon" />);
     expect(screen.getByTestId("icon").tagName.toLowerCase()).toBe("svg");
+  });
+
+  it("SystemIcon이 지원하는 이름을 런타임 목록으로 공개한다", () => {
+    expect(SYSTEM_ICON_NAMES).toContain("copy");
+    expect(SYSTEM_ICON_NAMES).toContain("octagon-x");
+    expect(new Set(SYSTEM_ICON_NAMES).size).toBe(SYSTEM_ICON_NAMES.length);
   });
 
   it("알 수 없는 name이면 null을 반환한다", () => {

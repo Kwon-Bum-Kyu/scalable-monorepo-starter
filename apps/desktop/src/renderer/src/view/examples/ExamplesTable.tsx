@@ -96,6 +96,7 @@ const ExamplesTable = ({
         action={
           <Button
             type="button"
+            size="lg"
             variant="outline"
             className={PAGE_ACTION_CLASS}
             onClick={onRetry}

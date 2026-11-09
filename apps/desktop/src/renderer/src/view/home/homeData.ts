@@ -3,17 +3,15 @@ export interface CodeSegment {
   isVariable?: boolean;
 }
 
-export interface QuickstartBlock {
-  subtitle?: string;
-  code: ReadonlyArray<CodeSegment>;
-  help: string;
-}
-
 export type QuickstartStep =
   | {
       number: "01" | "02" | "03";
       title: string;
-      blocks: ReadonlyArray<QuickstartBlock>;
+      blocks: ReadonlyArray<{
+        subtitle?: string;
+        code: ReadonlyArray<CodeSegment>;
+        help: string;
+      }>;
     }
   | {
       number: "04";
@@ -22,12 +20,7 @@ export type QuickstartStep =
       help: string;
     };
 
-export const HERO: {
-  title: string;
-  lead: string;
-  goals: ReadonlyArray<{ value: string; caption: string }>;
-  stack: ReadonlyArray<string>;
-} = {
+export const HERO = {
   title: "2시간 안에 셋업하고 1주 안에 배포하는 풀스택 모노레포 스타터.",
   lead: "주니어도 시니어도 똑같이 빠르게 손에 익도록 만든 Turborepo 템플릿.",
   goals: [
@@ -44,13 +37,9 @@ export const HERO: {
     "Turborepo 2.9",
     "TypeScript 6",
   ],
-};
+} as const;
 
-export const ROOT_BEAM: {
-  name: string;
-  description: string;
-  packages: ReadonlyArray<string>;
-} = {
+export const ROOT_BEAM = {
   name: "packages/*",
   description: "보 · 단일 출처 공유 패키지",
   packages: [
@@ -60,26 +49,22 @@ export const ROOT_BEAM: {
     "typescript-config",
     "vitest-config",
   ],
-};
+} as const;
 
-export const ROOT_PILLARS: ReadonlyArray<{
-  name: string;
-  port: string;
-  description: string;
-}> = [
+export const ROOT_PILLARS = [
   { name: "apps/web", port: ":3000", description: "React · Vite 웹 앱" },
   { name: "apps/api", port: ":4000", description: "Express · Prisma API" },
   { name: "apps/storybook", port: ":6006", description: "컴포넌트 카탈로그" },
   { name: "apps/desktop", port: ":3100", description: "Electron 데스크톱 앱" },
-];
+] as const;
 
-export const NEXT_PILLAR: { name: string; description: string; badge: string } = {
+export const NEXT_PILLAR = {
   name: "다음 앱",
   description: "사용자가 추가하는 워크스페이스",
   badge: "apps/*",
-};
+} as const;
 
-export const ROOT_KEYS: ReadonlyArray<{ term: string; description: string }> = [
+export const ROOT_KEYS = [
   {
     term: "보",
     description: "저장소 루트 하나와 공유 패키지입니다. 값과 규칙의 단일 출처입니다.",
@@ -93,7 +78,7 @@ export const ROOT_KEYS: ReadonlyArray<{ term: string; description: string }> = [
     description:
       "다음 앱은 보에서 떨어져 있습니다. 그 틈이 곧 명시적으로 선언한 워크스페이스 경계입니다.",
   },
-];
+] as const;
 
 export const QUICKSTART_STEPS: ReadonlyArray<QuickstartStep> = [
   {
@@ -150,13 +135,9 @@ export const QUICKSTART_STEPS: ReadonlyArray<QuickstartStep> = [
     ],
     help: "desktop은 브라우저 주소가 아니라 Electron 창으로 열립니다.",
   },
-];
+] as const satisfies ReadonlyArray<QuickstartStep>;
 
-export const RULES: ReadonlyArray<{
-  number: string;
-  title: string;
-  description: string;
-}> = [
+export const RULES = [
   {
     number: "01",
     title: "앱 간 직접 import 금지",
@@ -199,9 +180,9 @@ export const RULES: ReadonlyArray<{
     description:
       "React 컴포넌트 PascalCase, 훅·유틸 camelCase, API 레이어·shadcn 생성물 kebab-case",
   },
-];
+] as const;
 
-export const GUARDS: ReadonlyArray<{ name: string; description: string }> = [
+export const GUARDS = [
   {
     name: "architecture-guard",
     description: "9가지 아키텍처 불변 규칙을 코드에서 정적으로 스캔·검증하는 가드.",
@@ -215,12 +196,12 @@ export const GUARDS: ReadonlyArray<{ name: string; description: string }> = [
     name: "tdd-guide",
     description: "Red-Green-Refactor 사이클을 강제하는 TDD 코치.",
   },
-];
+] as const;
 
-export const DS_ENTRY_TAGS: ReadonlyArray<string> = [
+export const DS_ENTRY_TAGS = [
   "원칙",
   "컬러",
   "타이포그래피",
   "기본 컴포넌트",
   "브랜드",
-];
+] as const;

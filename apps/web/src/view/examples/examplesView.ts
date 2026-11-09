@@ -17,6 +17,6 @@ export function resolveListView(list: {
 }
 
 export const PAGE_ACTION_CLASS =
-  "h-11 w-full px-8 text-base tablet:h-10 tablet:w-auto tablet:px-4 tablet:text-sm";
+  "w-full tablet:h-10 tablet:w-auto tablet:px-4 tablet:text-sm";
 export const ROW_ACTION_CLASS =
-  "h-11 px-8 text-base tablet:h-8 tablet:px-3 tablet:text-sm";
+  "tablet:h-8 tablet:px-3 tablet:text-sm";

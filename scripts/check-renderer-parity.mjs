@@ -24,14 +24,12 @@ const PAIRS = [
       "index.css", // @source 상대 경로 깊이가 다르다
     ],
     desktopOnly: ["types/desktop.d.ts"], // preload가 노출하는 window.desktop 타입
-    webOnly: [],
   },
   {
     web: "apps/web/tests/unit",
     desktop: "apps/desktop/tests/unit",
     differs: [],
     desktopOnly: ["main/", "preload/", "shared/"], // Electron main/preload/IPC 전용 테스트
-    webOnly: [],
   },
 ];
 const IGNORED_FILE_NAMES = [".DS_Store"];
@@ -77,7 +75,7 @@ for (const pair of PAIRS) {
         readFileSync(path.join(desktopDir, rel)),
       );
       if (!same) violations.push(`  - 내용 다름: ${label(rel)}`);
-    } else if (inWeb && !matches(pair.webOnly, rel)) {
+    } else if (inWeb) {
       violations.push(`  - web에만 있음: ${label(rel)}`);
     } else if (inDesktop && !matches(pair.desktopOnly, rel)) {
       violations.push(`  - desktop에만 있음: ${label(rel)}`);

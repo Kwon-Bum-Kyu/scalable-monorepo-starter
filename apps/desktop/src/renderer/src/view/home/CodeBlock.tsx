@@ -6,13 +6,9 @@ import type { CodeSegment } from "@/view/home/homeData";
 
 export interface CodeBlockProps {
   segments: ReadonlyArray<CodeSegment>;
-  language?: string;
 }
 
-export default function CodeBlock({
-  segments,
-  language = "bash",
-}: CodeBlockProps): React.JSX.Element {
+export default function CodeBlock({ segments }: CodeBlockProps): React.JSX.Element {
   const [copied, setCopied] = useState(false);
   const codeId = useId();
 
@@ -35,7 +31,7 @@ export default function CodeBlock({
     <div className="overflow-hidden rounded-md bg-gray-900 text-gray-50">
       <div className="flex items-center justify-between gap-2 border-b border-gray-700 py-1 pl-4 pr-1">
         <span className="font-mono text-xs tracking-label text-gray-200">
-          {language}
+          bash
         </span>
         <Button
           type="button"
@@ -49,7 +45,10 @@ export default function CodeBlock({
           <span aria-live="polite">{copied ? "복사됨" : "복사"}</span>
         </Button>
       </div>
-      <pre id={codeId} className="overflow-x-auto p-4 text-sm">
+      <pre
+        id={codeId}
+        className="overflow-x-auto p-4 text-sm focus-visible:ring-2 focus-visible:ring-system-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900"
+      >
         <code className="font-mono">
           {segments.map((segment, index) => (
             <span

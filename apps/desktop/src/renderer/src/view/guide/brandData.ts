@@ -1,4 +1,7 @@
-import type { SystemIconName } from "@repo/ui";
+import {
+  SYSTEM_ICON_NAMES as ALL_SYSTEM_ICON_NAMES,
+  type SystemIconName,
+} from "@repo/ui";
 import horizontal from "@repo/ui/assets/brand/logo/lockup-horizontal.svg";
 import horizontalDark from "@repo/ui/assets/brand/logo/lockup-horizontal-dark.svg";
 import stacked from "@repo/ui/assets/brand/logo/lockup-stacked.svg";
@@ -54,24 +57,20 @@ export const MISUSE_EXAMPLES: ReadonlyArray<MisuseExample> = [
 ];
 
 export const SYSTEM_ICON_SAMPLES: ReadonlyArray<SystemIconName> = ["github", "linkedin", "envelope-outline"];
-export const SYSTEM_ICON_NAMES: ReadonlyArray<SystemIconName> = [
-  "bars", "search", "info", "close", "circle", "circle-filled", "eye", "eye-slash",
-  "chevron-right", "chevron-left", "chevron-up", "chevron-down", "toggle-on", "toggle-off",
-  "user", "user-circle", "user-outline", "envelope", "caret-up", "caret-down", "arrow-up",
-  "arrow-down", "arrow-left", "arrow-right", "check-square", "check-square-outline",
-  "check-circle", "check-circle-outline", "square", "square-outline", "globe", "copy", "octagon-x",
-];
+export const SYSTEM_ICON_NAMES = ALL_SYSTEM_ICON_NAMES.filter(
+  (name) => !SYSTEM_ICON_SAMPLES.includes(name),
+);
 
 export const BRAND_FILES = [
-  { file: "logo/symbol.svg · symbol-dark.svg", usage: "심볼 단독(100 × 80)" },
-  { file: "logo/wordmark.svg · wordmark-dark.svg", usage: "워드마크 단독, 글자 윤곽 path" },
-  { file: "logo/lockup-horizontal.svg · lockup-horizontal-dark.svg", usage: "가로 조합, 기본 버전" },
-  { file: "logo/lockup-stacked.svg · lockup-stacked-dark.svg", usage: "세로 조합" },
-  { file: "applications/favicon.svg", usage: "브라우저 탭 아이콘(16 · 32px 보정)" },
-  { file: "applications/app-icon.svg", usage: "Electron 데스크톱 앱 아이콘 원본(1024 × 1024)" },
-  { file: "applications/readme-header.svg", usage: "GitHub README 상단 헤더(1280 × 320)" },
-  { file: "applications/og-image.svg", usage: "GitHub 소셜 미리보기 원본(1280 × 640)" },
-  { file: "fonts/", usage: "Open Sans, Roboto Mono 웹폰트와 라이선스" },
+  { file: "packages/ui/src/assets/brand/logo/symbol.svg · symbol-dark.svg", usage: "심볼 단독(100 × 80)" },
+  { file: "packages/ui/src/assets/brand/logo/wordmark.svg · wordmark-dark.svg", usage: "워드마크 단독, 글자 윤곽 path" },
+  { file: "packages/ui/src/assets/brand/logo/lockup-horizontal.svg · lockup-horizontal-dark.svg", usage: "가로 조합, 기본 버전" },
+  { file: "packages/ui/src/assets/brand/logo/lockup-stacked.svg · lockup-stacked-dark.svg", usage: "세로 조합" },
+  { file: "apps/web/public/favicon.svg", usage: "브라우저 탭 아이콘(16 · 32px 보정)" },
+  { file: "apps/desktop/assets/app-icon-ink.svg", usage: "Electron 데스크톱 앱 아이콘 원본(1024 × 1024)" },
+  { file: "docs/assets/readme-header.svg", usage: "GitHub README 상단 헤더(1280 × 320)" },
+  { file: "docs/assets/og-image.svg", usage: "GitHub 소셜 미리보기 원본(1280 × 640)" },
+  { file: "apps/web/public/fonts/", usage: "Open Sans, Roboto Mono 웹폰트와 라이선스" },
 ] as const;
 
 export { symbol as BRAND_SYMBOL_SRC };

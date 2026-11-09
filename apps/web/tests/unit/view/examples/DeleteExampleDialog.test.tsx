@@ -1,9 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { createRef } from "react";
+import { createRef, useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-import DeleteExampleDialog from "@/view/examples/DeleteExampleDialog";
+import DeleteExampleDialog, {
+  type DeleteExampleTarget,
+} from "@/view/examples/DeleteExampleDialog";
 
 const renderDialog = (
   props: Partial<React.ComponentProps<typeof DeleteExampleDialog>> = {},
@@ -54,6 +56,30 @@ describe("DeleteExampleDialog", () => {
 
     expect(onCancel).toHaveBeenCalledTimes(1);
     expect(onConfirm).not.toHaveBeenCalled();
+  });
+
+  it("[삭제 확인]이 닫히는 동안 삭제 대상 본문을 지울 수 없다", async () => {
+    const user = userEvent.setup();
+    const StatefulDialog = () => {
+      const [target, setTarget] = useState<DeleteExampleTarget | null>({
+        id: "id-1",
+        title: "첫 예제",
+      });
+      return (
+        <DeleteExampleDialog
+          target={target}
+          onConfirm={vi.fn()}
+          onCancel={() => setTarget(null)}
+          returnFocusRef={createRef<HTMLElement>()}
+        />
+      );
+    };
+    render(<StatefulDialog />);
+    const dialog = screen.getByRole("alertdialog");
+
+    await user.click(within(dialog).getByRole("button", { name: "Cancel" }));
+
+    expect(dialog).toHaveTextContent("'첫 예제'를 삭제하면 되돌릴 수 없습니다.");
   });
 
   it("Delete를 클릭하면 대상 id로 onConfirm이 호출된다", async () => {

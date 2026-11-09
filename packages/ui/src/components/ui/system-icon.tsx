@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   ArrowDown,
   ArrowLeft,
@@ -113,6 +114,10 @@ const iconMap: Record<SystemIconName, LucideIcon> = {
   copy: Copy,
   "octagon-x": OctagonX,
 };
+
+export const SYSTEM_ICON_NAMES: ReadonlyArray<SystemIconName> = Object.keys(
+  iconMap,
+) as SystemIconName[];
 
 export interface SystemIconProps extends Omit<LucideProps, "ref"> {
   name: SystemIconName;

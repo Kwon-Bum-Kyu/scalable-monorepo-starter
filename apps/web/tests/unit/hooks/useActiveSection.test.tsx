@@ -82,6 +82,19 @@ describe("useActiveSection", () => {
     expect(result.current.activeId).toBe("c");
   });
 
+  it("[가이드 현재 섹션]이 항목 클릭으로 고정될 때 다음 사용자 스크롤 전에는 관찰 결과로 덮어쓸 수 없다", () => {
+    const { result } = renderHook(() => useActiveSection(IDS));
+    setTops({ a: -500, b: 100, c: 900 });
+
+    act(() => result.current.setActiveId("c"));
+    act(() => callback([{ target: document.getElementById("b")!, isIntersecting: true }]));
+    expect(result.current.activeId).toBe("c");
+
+    act(() => window.dispatchEvent(new WheelEvent("wheel")));
+    act(() => callback([{ target: document.getElementById("b")!, isIntersecting: true }]));
+    expect(result.current.activeId).toBe("b");
+  });
+
   it("unmount될 때 관찰을 해제한다", () => {
     const { unmount } = renderHook(() => useActiveSection(IDS));
     unmount();

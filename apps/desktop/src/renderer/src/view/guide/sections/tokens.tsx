@@ -1,8 +1,9 @@
 import { Card } from "@repo/ui";
 import type React from "react";
 
+import DataTable from "@/components/DataTable";
 import { BLUE_PALETTE, GRAY_PALETTE, SEMANTIC_ALIASES } from "@/view/guide/colorData";
-import { GuideSection, GuideTable, TD } from "@/view/guide/primitives";
+import { GuideSection, TD } from "@/view/guide/primitives";
 import {
   BREAKPOINT_BARS,
   FONT_FAMILIES,
@@ -69,22 +70,22 @@ const NameValueRow = ({ children, value, valueClassName }: { children: React.Rea
 export const TypographySection = () => (
   <GuideSection id="type" eyebrow="토큰" title="타이포그래피">
     <div className="grid grid-cols-1 gap-4 tablet:grid-cols-2">
-      <GuideTable head={["서체 토큰", "값"]}>
+      <DataTable head={["서체 토큰", "값"]}>
         {FONT_FAMILIES.map((f) => (
           <NameValueRow key={f.token} value={f.family} valueClassName={f.className}>
             <code>{f.token}</code>
           </NameValueRow>
         ))}
-      </GuideTable>
-      <GuideTable head={["굵기 토큰", "값"]}>
+      </DataTable>
+      <DataTable head={["굵기 토큰", "값"]}>
         {FONT_WEIGHTS.map((w) => (
           <NameValueRow key={w.token} value={w.value} valueClassName={w.className}>
             <code>{w.token}</code>
           </NameValueRow>
         ))}
-      </GuideTable>
+      </DataTable>
     </div>
-    <GuideTable head={["크기 토큰", "크기 / 행간", "견본"]} className="min-w-150">
+    <DataTable head={["크기 토큰", "크기 / 행간", "견본"]} className="min-w-150">
       {TYPE_SCALE.map((t) => (
         <tr key={t.token} className="group">
           <td className={TD}>
@@ -94,7 +95,7 @@ export const TypographySection = () => (
           <td className={`${TD} whitespace-nowrap ${t.className}`}>Aa 공유 루트</td>
         </tr>
       ))}
-    </GuideTable>
+    </DataTable>
   </GuideSection>
 );
 

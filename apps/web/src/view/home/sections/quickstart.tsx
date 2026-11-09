@@ -1,6 +1,7 @@
 import { Card } from "@repo/ui";
 import type React from "react";
 
+import DataTable from "@/components/DataTable";
 import InlineCode from "@/components/InlineCode";
 import CodeBlock from "@/view/home/CodeBlock";
 import { QUICKSTART_STEPS } from "@/view/home/homeData";
@@ -40,30 +41,16 @@ export function QuickstartSection(): React.JSX.Element {
                 ))
               ) : (
                 <>
-                  <div className="overflow-x-auto rounded-lg border border-border bg-card">
-                    <table className="table w-full text-left text-sm">
-                      <thead>
-                        <tr>
-                          <th scope="col" className="whitespace-nowrap border-b border-border p-3 text-xs font-bold tracking-label text-muted-foreground">
-                            서비스
-                          </th>
-                          <th scope="col" className="whitespace-nowrap border-b border-border p-3 text-xs font-bold tracking-label text-muted-foreground">
-                            주소
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {step.services.map((service) => (
-                          <tr key={service.name} className="border-b border-border last:border-b-0">
-                            <td className="whitespace-nowrap p-3">{service.name}</td>
-                            <td className="p-3">
-                              <code className="font-mono">{service.url}</code>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                  <DataTable head={["서비스", "주소"]}>
+                    {step.services.map((service) => (
+                      <tr key={service.name} className="border-b border-border last:border-b-0">
+                        <td className="whitespace-nowrap p-3">{service.name}</td>
+                        <td className="p-3">
+                          <code className="font-mono">{service.url}</code>
+                        </td>
+                      </tr>
+                    ))}
+                  </DataTable>
                   <p className={HELP}>{step.help}</p>
                 </>
               )}

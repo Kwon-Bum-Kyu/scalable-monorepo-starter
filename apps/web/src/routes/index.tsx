@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import type { RouteObject } from "react-router-dom";
 
 import App from "@/App";
@@ -10,8 +9,6 @@ import ExamplesPage from "@/view/examples/ExamplesPage";
 // <<< EXAMPLES_END
 import Guide from "@/view/Guide";
 import Home from "@/view/Home";
-
-export { ROUTES } from "@/routes/paths";
 
 export const buildRoutes = (): RouteObject[] => {
   const pageRoutes: RouteObject[] = [
