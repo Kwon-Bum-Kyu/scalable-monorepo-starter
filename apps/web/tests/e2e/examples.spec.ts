@@ -29,8 +29,10 @@ test.describe("Examples CRUD 흐름", () => {
       page.getByRole("heading", { name: "Examples", level: 1 }),
     ).toBeVisible();
 
-    // 2) 생성: + New Example 다이얼로그 열기
-    await page.getByRole("button", { name: "+ New Example" }).click();
+    // 2) 생성: 다이얼로그 열기. 목록이 비어 있으면(W2-b) 머리의 "+ New Example" 대신 "첫 예제 만들기"만 보인다
+    await page
+      .getByRole("button", { name: /^(\+ New Example|첫 예제 만들기)$/ })
+      .click();
 
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
