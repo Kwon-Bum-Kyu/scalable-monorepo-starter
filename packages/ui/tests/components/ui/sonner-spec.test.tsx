@@ -27,6 +27,7 @@ describe("Toaster", () => {
     expect(src).toContain("group-[.toaster]:bg-background!");
     expect(src).toContain("group-[.toaster]:text-foreground!");
     expect(src).toContain("group-[.toaster]:text-sm!");
+    expect(src).toContain("group-[.toaster]:font-sans!");
     expect(src).toContain("group-[.toaster]:border-gray-100!");
     expect(src).toContain("group-[.toaster]:rounded-lg!");
   });

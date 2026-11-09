@@ -69,14 +69,14 @@ test.describe("Examples CRUD 흐름", () => {
       page.getByRole("row", { name: new RegExp(escapeRegex(updatedTitle)) }),
     ).toBeVisible();
 
-    // 4) 삭제: Delete 버튼 -> 행이 목록에서 사라짐
-    page.once("dialog", (browserDialog) => {
-      // confirm 등 native dialog가 뜨면 수락 (현재 UI엔 없지만 안전망).
-      void browserDialog.accept();
-    });
+    // 4) 삭제: Delete 버튼 -> 확인 alertdialog의 Delete -> 행이 목록에서 사라짐
     await page
       .getByRole("button", { name: `Delete ${updatedTitle}` })
       .click();
+
+    const deleteDialog = page.getByRole("alertdialog");
+    await expect(deleteDialog).toBeVisible();
+    await deleteDialog.getByRole("button", { name: "Delete" }).click();
 
     await expect(
       page.getByRole("row", { name: new RegExp(escapeRegex(updatedTitle)) }),
