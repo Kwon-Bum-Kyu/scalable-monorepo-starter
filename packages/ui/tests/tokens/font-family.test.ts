@@ -46,6 +46,17 @@ describe("--font-mono 토큰 (FR-FF-1)", () => {
       ).toBe(true);
     }
   });
+
+  it("--font-mono가 한글 대체 서체를 포함할 때 두 서체가 monospace 앞에 놓인다", () => {
+    const value = getCssVar("--font-mono");
+    const appleIndex = value.indexOf("Apple SD Gothic Neo");
+    const malgunIndex = value.indexOf("Malgun Gothic");
+    const monospaceIndex = value.lastIndexOf("monospace");
+
+    expect(appleIndex).toBeGreaterThan(-1);
+    expect(malgunIndex).toBeGreaterThan(appleIndex);
+    expect(monospaceIndex).toBeGreaterThan(malgunIndex);
+  });
 });
 
 // T-FF-G0-2-R: --font-sans 비파괴 (FR-FF-6)

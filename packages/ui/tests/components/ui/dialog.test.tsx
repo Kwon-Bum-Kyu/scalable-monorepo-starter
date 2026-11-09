@@ -53,6 +53,49 @@ describe("Dialog", () => {
     expect(content.className).not.toContain("shadow-lg");
   });
 
+  it("DialogContent가 열릴 때 반응형 가로 여백과 표준 세로 중앙 클래스를 적용한다", async () => {
+    const user = userEvent.setup();
+    render(<TestDialog />);
+    await user.click(screen.getByText("열기"));
+    const classes = (await screen.findByTestId("dialog-content")).className.split(
+      /\s+/,
+    );
+
+    expect(classes).toEqual(
+      expect.arrayContaining([
+        "inset-x-4",
+        "mx-auto",
+        "max-w-lg",
+        "rounded-lg",
+        "p-5",
+        "tablet:p-6",
+        "top-1/2",
+        "-translate-y-1/2",
+      ]),
+    );
+    for (const className of [
+      "w-full",
+      "translate-x-[-50%]",
+      "sm:rounded-lg",
+      "top-[50%]",
+      "left-[50%]",
+      "translate-y-[-50%]",
+    ]) {
+      expect(classes).not.toContain(className);
+    }
+  });
+
+  it("Dialog 닫기 버튼이 모바일과 태블릿에서 요구된 클릭 영역을 제공할 때 한글 이름을 노출한다", async () => {
+    const user = userEvent.setup();
+    render(<TestDialog />);
+    await user.click(screen.getByText("열기"));
+    const closeButton = await screen.findByRole("button", { name: "닫기" });
+
+    expect(closeButton.className.split(/\s+/)).toEqual(
+      expect.arrayContaining(["h-11", "w-11", "tablet:h-8", "tablet:w-8"]),
+    );
+  });
+
   it("ESC 키를 누르면 dialog가 닫힌다", async () => {
     const user = userEvent.setup();
     render(<TestDialog />);

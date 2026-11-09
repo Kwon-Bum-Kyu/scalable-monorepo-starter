@@ -15,4 +15,11 @@ describe("Input", () => {
     const input = screen.getByTestId("in");
     expect(input.className).toContain("border-input");
   });
+
+  it("Input이 aria-invalid 상태일 때 destructive 테두리 variant를 제공한다", () => {
+    render(<Input aria-invalid="true" data-testid="in" />);
+    expect(screen.getByTestId("in").className).toContain(
+      "aria-invalid:border-destructive",
+    );
+  });
 });

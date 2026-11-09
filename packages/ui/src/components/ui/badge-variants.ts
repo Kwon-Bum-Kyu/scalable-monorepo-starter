@@ -12,7 +12,7 @@ export const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         success:
-          "border-transparent bg-system-green text-primary-foreground hover:bg-system-green/90",
+          "border-transparent bg-system-green text-foreground hover:bg-system-green/90",
         outline: "text-foreground",
         primary:
           "border-blue-100 bg-blue-50 text-blue-700 hover:bg-blue-100/80",

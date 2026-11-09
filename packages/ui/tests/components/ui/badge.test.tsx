@@ -22,13 +22,17 @@ describe("Badge", () => {
     expect(screen.getByTestId("badge").className).toContain("bg-destructive");
   });
 
-  it("variant가 success일 때 system-green 배경 클래스가 적용된다", () => {
+  it("Badge가 success variant일 때 system-green 배경과 foreground 텍스트를 적용한다", () => {
     render(
       <Badge variant="success" data-testid="badge">
         Success
       </Badge>,
     );
-    expect(screen.getByTestId("badge").className).toContain("bg-system-green");
+    const badge = screen.getByTestId("badge");
+    expect(badge.className).toContain("bg-system-green");
+    expect(badge.className).toContain("text-foreground");
+    expect(badge.className).not.toContain("text-white");
+    expect(badge.className).not.toContain("text-primary-foreground");
   });
 
   it("5개 variants(default·secondary·outline·destructive·success) 모두 다른 클래스를 갖는다", () => {
