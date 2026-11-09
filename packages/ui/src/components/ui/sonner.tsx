@@ -18,6 +18,7 @@ const Toaster = ({ className, ...props }: ToasterProps) => (
   <Sonner
     className={cn("toaster group", className)}
     position="top-center"
+    containerAriaLabel="알림"
     closeButton
     offset={TOAST_OFFSET}
     mobileOffset={TOAST_OFFSET}
@@ -32,7 +33,7 @@ const Toaster = ({ className, ...props }: ToasterProps) => (
       closeButtonAriaLabel: "토스트 닫기",
       classNames: {
         toast:
-          "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border group-[.toaster]:border-gray-100 group-[.toaster]:rounded-lg group-[.toaster]:shadow-3-raised",
+          "group toast group-[.toaster]:bg-background! group-[.toaster]:text-foreground! group-[.toaster]:text-sm! group-[.toaster]:border group-[.toaster]:border-gray-100! group-[.toaster]:rounded-lg! group-[.toaster]:shadow-3-raised!",
         description: "group-[.toast]:text-muted-foreground",
         actionButton:
           "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground",

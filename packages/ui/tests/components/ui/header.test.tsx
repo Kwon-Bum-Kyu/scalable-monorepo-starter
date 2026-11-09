@@ -54,6 +54,7 @@ describe("Header", () => {
     const toggle = screen.getByRole("button", { name: /메뉴 열기/ });
     expect(toggle.className).toContain("h-11");
     expect(toggle.className).toContain("w-11");
+    expect(toggle.className).toContain("shrink-0");
     expect(toggle.className).toContain("tablet:hidden");
     expect(toggle.className).not.toContain("md:");
     await user.click(toggle);
@@ -61,5 +62,41 @@ describe("Header", () => {
     expect(menu.parentElement?.className).toContain("border-t");
     expect(menu.parentElement?.className).toContain("tablet:hidden");
     expect(menu.parentElement?.className).not.toContain("md:");
+  });
+
+  it("Header가 펼친 메뉴의 링크를 클릭할 때 메뉴를 닫는다", async () => {
+    const user = userEvent.setup();
+    render(<Header mobileMenu={<a href="#guide">가이드</a>} />);
+    const toggle = screen.getByRole("button", { name: "메뉴 열기" });
+
+    await user.click(toggle);
+    await user.click(screen.getByRole("link", { name: "가이드" }));
+
+    expect(screen.queryByRole("link", { name: "가이드" })).not.toBeInTheDocument();
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("Header가 펼친 메뉴의 버튼을 클릭할 때 메뉴를 닫는다", async () => {
+    const user = userEvent.setup();
+    render(<Header mobileMenu={<button type="button">이동</button>} />);
+    const toggle = screen.getByRole("button", { name: "메뉴 열기" });
+
+    await user.click(toggle);
+    await user.click(screen.getByRole("button", { name: "이동" }));
+
+    expect(screen.queryByRole("button", { name: "이동" })).not.toBeInTheDocument();
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("Header가 펼친 메뉴의 일반 텍스트를 클릭할 때 메뉴를 열어 둔다", async () => {
+    const user = userEvent.setup();
+    render(<Header mobileMenu={<span>메뉴 설명</span>} />);
+    const toggle = screen.getByRole("button", { name: "메뉴 열기" });
+
+    await user.click(toggle);
+    await user.click(screen.getByText("메뉴 설명"));
+
+    expect(screen.getByText("메뉴 설명")).toBeInTheDocument();
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
   });
 });
