@@ -49,7 +49,7 @@ function Header({
             aria-expanded={isOpen}
             aria-label={isOpen ? "메뉴 닫기" : "메뉴 열기"}
             onClick={() => setIsOpen((prev) => !prev)}
-            className="-mr-1 inline-flex h-11 w-11 items-center justify-center rounded-md text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 tablet:hidden"
+            className="-mr-1 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 tablet:hidden"
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -59,6 +59,14 @@ function Header({
       {hasMobileMenu && isOpen && (
         <div
           id={menuId}
+          onClick={(event) => {
+            if (
+              event.target instanceof Element &&
+              event.target.closest("a, button")
+            ) {
+              setIsOpen(false);
+            }
+          }}
           className="border-t border-border bg-background tablet:hidden"
         >
           {mobileMenu}

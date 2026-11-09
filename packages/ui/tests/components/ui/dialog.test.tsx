@@ -2,6 +2,8 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@repo/ui/components/dialog";
@@ -94,6 +96,31 @@ describe("Dialog", () => {
     expect(closeButton.className.split(/\s+/)).toEqual(
       expect.arrayContaining(["h-11", "w-11", "tablet:h-8", "tablet:w-8"]),
     );
+  });
+
+  it("DialogFooter가 모바일과 태블릿에서 렌더될 때 간격과 방향 계약을 적용한다", () => {
+    render(<DialogFooter data-testid="dialog-footer" />);
+    const classes = screen.getByTestId("dialog-footer").className.split(/\s+/);
+
+    expect(classes).toEqual(
+      expect.arrayContaining([
+        "flex",
+        "flex-col-reverse",
+        "gap-2",
+        "tablet:flex-row",
+        "tablet:justify-end",
+      ]),
+    );
+    expect(classes).not.toContain("sm:flex-row");
+    expect(classes).not.toContain("sm:space-x-2");
+  });
+
+  it("DialogHeader가 모바일에서 렌더될 때 왼쪽 정렬을 유지한다", () => {
+    render(<DialogHeader data-testid="dialog-header" />);
+    const classes = screen.getByTestId("dialog-header").className.split(/\s+/);
+
+    expect(classes).toContain("text-left");
+    expect(classes).not.toContain("text-center");
   });
 
   it("ESC 키를 누르면 dialog가 닫힌다", async () => {

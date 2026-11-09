@@ -1,5 +1,5 @@
 import { Toaster } from "@repo/ui/components/sonner";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 describe("Toaster", () => {
@@ -14,7 +14,7 @@ describe("Toaster", () => {
       path.resolve(__dirname, "../../../src/components/ui/sonner.tsx"),
       "utf-8",
     );
-    expect(src).toContain("shadow-3-raised");
+    expect(src).toContain("group-[.toaster]:shadow-3-raised!");
     expect(src).not.toContain("shadow-4-overlay");
     expect(src).not.toContain("maxWidth");
     expect(src).toContain('position="top-center"');
@@ -22,8 +22,18 @@ describe("Toaster", () => {
     expect(src).toContain('top: "calc(var(--spacing-header) + 1rem)"');
     expect(src).toContain("offset={TOAST_OFFSET}");
     expect(src).toContain("mobileOffset={TOAST_OFFSET}");
+    expect(src).toContain('containerAriaLabel="알림"');
     expect(src).toContain('closeButtonAriaLabel: "토스트 닫기"');
-    expect(src).toContain("rounded-lg");
-    expect(src).toContain("border-gray-100");
+    expect(src).toContain("group-[.toaster]:bg-background!");
+    expect(src).toContain("group-[.toaster]:text-foreground!");
+    expect(src).toContain("group-[.toaster]:text-sm!");
+    expect(src).toContain("group-[.toaster]:border-gray-100!");
+    expect(src).toContain("group-[.toaster]:rounded-lg!");
+  });
+
+  it("Toaster가 기본 영역을 렌더할 때 알림 이름을 제공한다", () => {
+    render(<Toaster />);
+
+    expect(screen.getByLabelText(/^알림 /)).toBeInTheDocument();
   });
 });
