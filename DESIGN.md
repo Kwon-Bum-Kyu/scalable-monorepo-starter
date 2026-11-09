@@ -69,7 +69,7 @@ colors:
   ring: "#084777"
 typography:
   display:
-    fontFamily: "'Roboto Mono', ui-monospace, monospace"
+    fontFamily: "'Roboto Mono', ui-monospace, 'Apple SD Gothic Neo', 'Malgun Gothic', monospace"
     fontSize: "56px"
     fontWeight: 700
     lineHeight: "72px"
@@ -89,7 +89,7 @@ typography:
     fontWeight: 400
     lineHeight: "20px"
   label:
-    fontFamily: "'Roboto Mono', ui-monospace, SFMono-Regular, monospace"
+    fontFamily: "'Roboto Mono', ui-monospace, SFMono-Regular, 'Apple SD Gothic Neo', 'Malgun Gothic', monospace"
     fontSize: "12px"
     fontWeight: 700
     lineHeight: "16px"
@@ -176,7 +176,7 @@ components:
     padding: "4px 10px"
   badge-success:
     backgroundColor: "{colors.system-green}"
-    textColor: "{colors.primary-foreground}"
+    textColor: "{colors.foreground}"
     rounded: "{rounded.full}"
     padding: "4px 10px"
   badge-destructive:
@@ -250,8 +250,8 @@ components:
 | 토큰 | 값 | 용도 |
 | ---- | -- | ---- |
 | `--font-sans` | `"Open Sans", ui-sans-serif, system-ui, sans-serif` | 본문 |
-| `--font-mono` | `"Roboto Mono", ui-monospace, SFMono-Regular, monospace` | 라벨·코드 |
-| `--font-display` | `"Roboto Mono", ui-monospace, monospace` | 디스플레이 |
+| `--font-mono` | `"Roboto Mono", ui-monospace, SFMono-Regular, "Apple SD Gothic Neo", "Malgun Gothic", monospace` | 라벨·코드 |
+| `--font-display` | `"Roboto Mono", ui-monospace, "Apple SD Gothic Neo", "Malgun Gothic", monospace` | 디스플레이 |
 | `--font-body-alt` | `"PT Sans", "Open Sans", sans-serif` | 보조 본문(기사 톤) |
 
 ### Font Size Tokens
@@ -310,6 +310,8 @@ components:
 ### Named Rules
 
 **The Paired Scale Rule.** 글자 크기 10단계와 행간 10단계는 같은 키로 묶인다. `--text-<k>`의 짝 행간은 하위 키 `--text-<k>--line-height`다(xs↔16, sm↔20, base↔24, lg↔28, xl↔32, 2xl↔40, 3xl↔48, 4xl↔56, 5xl↔64, 6xl↔72). `text-<k>` 클래스 하나가 크기와 행간을 함께 적용한다. 새 텍스트 스타일은 이 짝을 기본값으로 삼으며 `leading-none` 같은 `leading-*` 클래스로 행간을 바꾸면 의도적 예외로 취급한다.
+
+**알려진 예외(자간·행간):** shadcn 기본 클래스인 `tracking-tight`와 `leading-none`은 `DialogTitle`·`CardTitle`(`leading-none tracking-tight`), `Typography` h1~h6(`tracking-tight`)·small(`leading-none`), `Label`(`leading-none`)에 그대로 둔다. 바꾸면 이 컴포넌트를 쓰는 모든 화면의 제목 모양이 바뀌기 때문이다. 그래서 이 제목들은 짝 행간과 기본 자간으로 그린 시안보다 자간과 줄 간격이 조금 좁다.
 
 ## Layout
 
@@ -387,7 +389,7 @@ components:
 
 ### Badges
 - **Style:** 기본 `rounded-full`(pill), `shape="sq"`일 때만 `rounded-sm`(4px). 텍스트는 12px/600(semibold).
-- **Variants:** default(`gray-50` 배경/`gray-700` 텍스트), primary(`blue-50`/`blue-700`), secondary(shadcn `secondary` 별칭), success(`system-green` 배경/흰 텍스트), warn(`system-warning`의 15% 배경/`gray-900` 텍스트), destructive·error(`destructive` 별칭), outline(테두리만).
+- **Variants:** default(`gray-50` 배경/`gray-700` 텍스트), primary(`blue-50`/`blue-700`), secondary(shadcn `secondary` 별칭), success(`system-green` 배경/`gray-900` 텍스트, `text-foreground`), warn(`system-warning`의 15% 배경/`gray-900` 텍스트), destructive·error(`destructive` 별칭), outline(테두리만).
 - **Dot:** 좌측에 `h-1.5 w-1.5 rounded-full bg-current` 점을 옵션으로 붙일 수 있다.
 
 ### Cards
@@ -402,24 +404,25 @@ components:
 - **Focus:** `ring-2 ring-ring`(`#084777`) + `ring-offset-2`, 기본 outline은 제거.
 - **Disabled:** 불투명도 50%, `cursor-not-allowed`.
 - **Placeholder:** `text-muted-foreground`(`#535350`).
+- **Error:** `aria-invalid="true"`이면 테두리가 `border-destructive`(`#c2050b`)로 바뀐다. 오류 문구는 입력란 아래에 소비 화면이 `text-destructive`로 두고 `aria-describedby`로 연결한다.
 
 ### Navigation (Header)
-- **Style:** `border-b border-border`(`#c2c2c1`) + `bg-background`, 내부 컨테이너는 `max-w-app`(1280px) + `px-page-x`(72px), 높이 `min-h-header`(64px).
-- **Link 상태:** 기본 `text-muted-foreground`(`#535350`), hover 시 `text-foreground`(`#161613`)로 전환만 하고 새 색을 더하지 않는다.
-- **Mobile:** `md` 미만에서 nav/actions를 숨기고 40×40px 햄버거 버튼(`rounded-md`)으로 대체한다. 펼치면 `border-t` 구분선을 가진 세로 메뉴가 나타난다.
+- **Style:** 내부 컨테이너 `max-w-app`, 좌우 여백 Mobile 16px(`px-4`)·Tablet 32px(`tablet:px-8`)·Desktop 72px(`desktop:px-page-x`), 높이 `min-h-header`, 주 메뉴 `nav aria-label="주 메뉴"`.
+- **현재 위치:** 굵기 600 + 아래 2px `--foreground` 막대, 액센트 색 없음.
+- **Mobile:** `tablet` 미만에서 nav·actions를 숨기고 44×44px 메뉴 버튼(`h-11 w-11`, `rounded-md`), 펼친 메뉴 항목은 최소 높이 44px·`text-base`.
 
 ### Dialog (Signature Component)
-- **Style:** 화면 중앙 고정(`fixed`, `translate(-50%, -50%)`), `max-w-lg`(512px), `bg-background` + `p-6`(24px), `sm` 이상에서 `rounded-lg`, `shadow-4-overlay`.
+- **Style:** 세로 중앙 고정, 가로는 좌우 16px(`inset-x-4`) 안에서 `max-w-lg`까지 넓어지며 `mx-auto`로 가운데, 안쪽 20px(`p-5`)·Tablet 이상 24px(`tablet:p-6`), 항상 `rounded-lg`, `shadow-4-overlay`.
 - **Overlay:** `bg-gray-900/50`(gray-900의 50% 불투명도)로 전체 화면을 덮는다.
 - **Title/Description:** Title은 18px/`font-semibold`(600)/`leading-none`/`tracking-tight`, Description은 14px/`text-muted-foreground`.
-- **Close 버튼:** 우상단 absolute 배치, 기본 불투명도 70% → hover 100%, focus 시 `ring-2 ring-ring`.
+- **Close 버튼:** 클릭 영역 Mobile 44×44px · Tablet 이상 32×32px, 스크린리더 이름 "닫기".
 
 ## Do's and Don'ts
 
 ### Do:
 - **Do** 모든 색·간격·폰트·라운드·그림자를 `packages/ui/src/styles/globals.css`의 `@theme` 토큰과 `:root`/`.dark` 시맨틱 변수에서만 가져온다. (`.claude/rules/tailwind-v4.md`) 그 값의 원천은 이 문서다.
 - **Do** 새 컴포넌트는 shadcn 시맨틱 레이어(`bg-primary`, `bg-secondary`, `bg-accent`, `text-foreground` 등)를 1순위로 쓴다. 다크 모드 전환(`.dark` 블록)은 이 레이어에 실제로 연결되어 있다.
-- **Do** 그림자는 표면 위계(card=2, popover/select/tooltip=3, dialog/sheet=4)에 맞는 정확한 레벨만 쓴다.
+- **Do** 그림자는 표면 위계(card=2, popover/select/tooltip/toast=3, dialog/sheet=4)에 맞는 정확한 레벨만 쓴다.
 - **Do** 중첩 컴포넌트의 radius는 부모 radius 이하로 한 단계 좁힌다(예: `rounded-md` 팝오버 안의 아이템은 `rounded-sm`).
 - **Do** 강조·라벨·코드성 텍스트에는 Roboto Mono(`--font-mono`/`--font-display`)를, 본문에는 Open Sans를 쓴다.
 

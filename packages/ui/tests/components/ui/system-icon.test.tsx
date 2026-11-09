@@ -20,6 +20,16 @@ describe("SystemIcon", () => {
     expect(screen.getByTestId("icon")).toHaveClass("text-destructive");
   });
 
+  it("SystemIcon이 copy와 octagon-x 이름을 받을 때 각각 svg를 렌더한다", () => {
+    const { rerender } = render(
+      <SystemIcon name="copy" data-testid="icon" />,
+    );
+    expect(screen.getByTestId("icon").tagName.toLowerCase()).toBe("svg");
+
+    rerender(<SystemIcon name="octagon-x" data-testid="icon" />);
+    expect(screen.getByTestId("icon").tagName.toLowerCase()).toBe("svg");
+  });
+
   it("알 수 없는 name이면 null을 반환한다", () => {
     const { container } = render(
       // @ts-expect-error 의도적으로 잘못된 이름 전달

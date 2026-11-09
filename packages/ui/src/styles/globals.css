@@ -7,8 +7,8 @@
 
 @theme {
   --font-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, monospace;
-  --font-display: "Roboto Mono", ui-monospace, monospace;
+  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, "Apple SD Gothic Neo", "Malgun Gothic", monospace;
+  --font-display: "Roboto Mono", ui-monospace, "Apple SD Gothic Neo", "Malgun Gothic", monospace;
   --font-body-alt: "PT Sans", "Open Sans", sans-serif;
 
   /* 글자 크기와 짝 행간 (DESIGN.md Typography, Paired Scale Rule) */

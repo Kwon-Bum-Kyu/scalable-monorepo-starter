@@ -42,6 +42,17 @@ describe("--font-display 토큰 (claude-design-page-alignment Ralph R1)", () => 
       ).toBe(true);
     }
   });
+
+  it("--font-display가 한글 대체 서체를 포함할 때 두 서체가 monospace 앞에 놓인다", () => {
+    const value = getCssVar("--font-display");
+    const appleIndex = value.indexOf("Apple SD Gothic Neo");
+    const malgunIndex = value.indexOf("Malgun Gothic");
+    const monospaceIndex = value.lastIndexOf("monospace");
+
+    expect(appleIndex).toBeGreaterThan(-1);
+    expect(malgunIndex).toBeGreaterThan(appleIndex);
+    expect(monospaceIndex).toBeGreaterThan(malgunIndex);
+  });
 });
 
 describe("--font-body-alt 토큰 (claude-design-page-alignment Ralph R1)", () => {

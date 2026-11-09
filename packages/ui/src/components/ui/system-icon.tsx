@@ -11,6 +11,7 @@ import {
   ChevronRight,
   ChevronUp,
   Circle,
+  Copy,
   Disc,
   Eye,
   EyeOff,
@@ -21,6 +22,7 @@ import {
   Mail,
   MailOpen,
   Menu,
+  OctagonX,
   Search,
   Square,
   SquareCheck,
@@ -69,7 +71,9 @@ export type SystemIconName =
   | "square-outline"
   | "linkedin"
   | "github"
-  | "globe";
+  | "globe"
+  | "copy"
+  | "octagon-x";
 
 const iconMap: Record<SystemIconName, LucideIcon> = {
   bars: Menu,
@@ -106,6 +110,8 @@ const iconMap: Record<SystemIconName, LucideIcon> = {
   linkedin: LinkedinBrandIcon,
   github: GithubBrandIcon,
   globe: Globe,
+  copy: Copy,
+  "octagon-x": OctagonX,
 };
 
 export interface SystemIconProps extends Omit<LucideProps, "ref"> {
