@@ -66,7 +66,7 @@ Classicist — 실제 객체를 최대한 사용. Mock은 외부 경계에만 �
 - TypeScript: `any` 금지(외부 입력은 `unknown`으로 받고 narrowing)
 - 불변성: spread 연산자로 새 객체 생성, in-place 변경 금지
 - 입력 검증: Zod 사용 (단, `packages/shared-types` 에는 금지)
-- 에러 처리: 모든 레이어에서 명시적 처리, 무음 swallow 금지
+- 에러 처리: 모든 레이어에서 명시적 처리, 조용한 swallow 금지
 - 프로덕션 코드에 `console.log` 금지 — pino 등 로거 사용
 - 코드·주석·문서에 이모지 금지
 
@@ -120,7 +120,7 @@ npx playwright test --project=chromium
 
 ### PR 본문
 
-[.github/PULL_REQUEST_TEMPLATE.md](./.github/PULL_REQUEST_TEMPLATE.md) 가 자동으로 채워진다. 다음 항목을 채운다:
+[.github/PULL_REQUEST_TEMPLATE.md](./.github/PULL_REQUEST_TEMPLATE.md) 가 자동으로 들어간다. 다음 항목을 채운다:
 
 1. **변경 요약** — 무엇을 바꿨고 왜 바꿨는가
 2. **관련 이슈** — `Closes #123` 등
@@ -142,4 +142,4 @@ npx playwright test --project=chromium
 
 ## 행동 강령
 
-기여자·메인테이너 모두 상호 존중하며 기술적 토론에 집중한다. 인신공격·차별 발언은 비허용.
+기여자·메인테이너 모두 서로 존중하며 기술적 토론에 집중한다. 인신공격·차별 발언은 금지.

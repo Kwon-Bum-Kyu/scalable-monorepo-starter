@@ -36,7 +36,7 @@ cp ../../.env.example ../../.env
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/myapp
 ```
 
-배포 환경(Vercel·Render 등)에서는 Neon 등의 호스팅 PostgreSQL connection string 을 사용한다.
+배포 환경(Vercel·Render 등)에서는 Neon 같은 호스팅 PostgreSQL의 connection string 을 사용한다.
 
 ### 3. Run Migrations
 

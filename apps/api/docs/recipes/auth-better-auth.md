@@ -5,7 +5,7 @@
 ## 1. 언제 이 옵션을 선택하는가
 
 - 자체 호스팅 인증을 원할 때 (DB는 본 프로젝트의 PostgreSQL 그대로 사용).
-- 이메일/비밀번호 + OAuth 동시 지원이 필요한 경우.
+- 이메일/비밀번호와 OAuth를 동시에 지원해야 하는 경우.
 - Prisma 스키마와 통합되는 라이브러리를 선호할 때.
 
 ## 2. 의존성 설치
@@ -66,5 +66,5 @@ export const requireAuth: RequestHandler = async (request, _response, next) => {
 
 ## 6. 알려진 한계
 
-- better-auth는 자체 마이그레이션을 요구한다. `prisma/schema.prisma`에 `User`/`Session`/`Account`/`Verification` 모델을 추가하고 새 마이그레이션을 생성해야 한다. 기존 마이그레이션 수정 금지.
+- better-auth는 자체 마이그레이션이 필요하다. `prisma/schema.prisma`에 `User`/`Session`/`Account`/`Verification` 모델을 추가하고 새 마이그레이션을 생성해야 한다. 기존 마이그레이션 수정 금지.
 - Edge runtime 미지원. Node 22+ 필수.

@@ -148,7 +148,7 @@ npx impeccable install --global --no-hooks
 # 이후 AI 코딩 도구 안에서 /impeccable audit apps/web/src/view/Guide.tsx 형태로 호출
 ```
 
-제품 맥락과 디자인 토큰은 루트의 [PRODUCT.md](./PRODUCT.md)와 [DESIGN.md](./DESIGN.md)가 설명하며 토큰 사용 규칙은 아래 변경 불가 규칙 8을 따른다.
+제품 맥락과 디자인 토큰은 루트의 [PRODUCT.md](./PRODUCT.md)와 [DESIGN.md](./DESIGN.md)에서 설명하고 토큰 사용 규칙은 아래 변경 불가 규칙 8을 따른다.
 
 ## 변경 불가 규칙 (요약)
 

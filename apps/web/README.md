@@ -6,7 +6,7 @@ Turborepo 모노레포의 프런트엔드 애플리케이션이다. Vite 8, Reac
 
 - React 19 + Vite 8 (`@vitejs/plugin-react`, `@tailwindcss/vite`)
 - 라우팅: `react-router-dom` (`src/routes/`)
-- 스타일: Tailwind CSS v4. `src/index.css`가 `@repo/ui/globals.css`를 import하고, 디자인 토큰 값의 원천은 루트 `DESIGN.md`다
+- 스타일: Tailwind CSS v4. `src/index.css`가 `@repo/ui/globals.css`를 import하고 디자인 토큰 값의 원천은 루트 `DESIGN.md`다
 - 테스트: Vitest + Testing Library(단위), Playwright(E2E)
 
 ## 사전 요구사항
@@ -16,7 +16,7 @@ Turborepo 모노레포의 프런트엔드 애플리케이션이다. Vite 8, Reac
 
 ## 개발 서버
 
-루트에서 실행하면 DB 부트스트랩과 함께 web·api·storybook·desktop이 같이 뜬다.
+루트에서 실행하면 DB 부트스트랩과 함께 web·api·storybook·desktop이 뜬다.
 
 ```bash
 npm run dev
@@ -89,4 +89,4 @@ npm run test                              # Vitest 단위 테스트
 npx playwright test --project=chromium    # E2E (DB 기동 필요, web·api는 webServer가 기동·재사용)
 ```
 
-시각 회귀 테스트(`tests/e2e/visual-regression.spec.ts`)는 선택 항목이다. 기준 스냅샷이 macOS 전용이라 CI에서는 실행하지 않으며, 실행·갱신 명령은 spec 상단 주석에 있다.
+시각 회귀 테스트(`tests/e2e/visual-regression.spec.ts`)는 선택 항목이다. 기준 스냅샷이 macOS 전용이라 CI에서는 실행하지 않는다. 실행·갱신 명령은 spec 상단 주석에 있다.
