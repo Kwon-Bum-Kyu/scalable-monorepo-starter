@@ -32,11 +32,12 @@ npm run dev
 
 - [ ] `npm run typecheck` 통과
 - [ ] `npm run lint` (`--max-warnings=0`) 통과
+- [ ] `npm run check:parity` 통과 (web 화면 코드를 바꿨다면 desktop renderer 사본에도 반영)
 - [ ] `npm run test` 통과
 - [ ] `npm run build` 통과
 - [ ] (해당 시) Playwright E2E 통과
 - [ ] TDD 흐름 준수 (Red → Green → Refactor)
-- [ ] 프로젝트 규칙 준수 (루트 [CLAUDE.md](../CLAUDE.md) 의 변경 불가 규칙)
+- [ ] 프로젝트 규칙 준수 ([.claude/rules/monorepo-invariants.md](../.claude/rules/monorepo-invariants.md) 의 변경 불가 규칙)
 - [ ] 커밋 메시지가 Conventional Commits + 한국어 단문
 
 ## 스크린샷 / GIF (UI 변경 시)
@@ -46,6 +47,7 @@ npm run dev
 ## 영향 범위
 
 - [ ] FE (`apps/web`)
+- [ ] Desktop (`apps/desktop`)
 - [ ] BE (`apps/api`)
 - [ ] 공유 패키지 (`packages/*`)
 - [ ] 인프라·CI

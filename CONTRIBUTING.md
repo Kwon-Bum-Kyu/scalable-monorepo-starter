@@ -106,6 +106,7 @@ PR을 열기 전 다음을 모두 통과시킨다.
 ```bash
 npm run typecheck   # 전체 타입 검사
 npm run lint        # 전체 ESLint (warning 0 강제)
+npm run check:parity  # web 화면 코드와 desktop renderer 사본 일치 검사
 npm run test        # 전체 단위/통합 테스트
 npm run build       # 전체 빌드
 ```

@@ -29,40 +29,27 @@ RATE_LIMIT_PREFIX=rl:
 
 ## 4. config/rate-limit.ts 교체
 
-새 파일 `apps/api/src/config/rate-limit.ts`로 분리하거나 기존 미들웨어 조립부에서 store만 교체.
+기존 `apps/api/src/config/rate-limit.ts`의 `rateLimitOptions`에 `store`만 추가한다.
 
 ```typescript
-import { rateLimit } from "express-rate-limit";
-import RedisStore from "rate-limit-redis";
+import type { Options } from "express-rate-limit";
 import IORedis from "ioredis";
+import { RedisStore, type RedisReply } from "rate-limit-redis";
 import { env } from "./env";
-import { AppError } from "../errors/app-error";
-import { ERROR_CODES } from "../errors/error-codes";
 
 const redis = new IORedis(env.REDIS_URL, { lazyConnect: true });
 
-export const apiRateLimit = rateLimit({
-  windowMs: env.RATE_LIMIT_WINDOW_MS,
-  limit: env.RATE_LIMIT_MAX,
-  standardHeaders: "draft-7",
-  legacyHeaders: false,
+export const rateLimitOptions: Partial<Options> = {
+  // windowMs·max·standardHeaders·legacyHeaders·handler는 기존 값을 그대로 둔다
   store: new RedisStore({
-    sendCommand: (...args: string[]) => redis.call(...args) as Promise<unknown>,
+    sendCommand: (command: string, ...args: string[]) =>
+      redis.call(command, ...args) as Promise<RedisReply>,
     prefix: env.RATE_LIMIT_PREFIX,
   }),
-  handler: (_request, _response, next) => {
-    next(
-      new AppError(
-        "요청 한도를 초과했습니다.",
-        429,
-        ERROR_CODES.RATE_LIMIT_EXCEEDED,
-      ),
-    );
-  },
-});
+};
 ```
 
-`createApp()`에서 `app.use(apiRateLimit)`로 부착.
+`apps/api/src/middlewares/rate-limiter.ts`가 `rateLimitOptions`로 미들웨어를 만들고 `createApp()`이 이미 `app.use(rateLimiter)`로 부착하므로 앱 조립부는 바꾸지 않는다.
 
 ## 5. 테스트 추가 가이드
 
@@ -71,5 +58,5 @@ export const apiRateLimit = rateLimit({
 
 ## 6. 알려진 한계
 
-- Redis 장애 시 무한 허용으로 fail-open 또는 강제 거부로 fail-close 정책을 명시해야 한다 (`rate-limit-redis`는 기본 fail-open).
+- Redis 장애 시 무한 허용으로 fail-open 또는 강제 거부로 fail-close 정책을 명시해야 한다 (`express-rate-limit`은 기본 fail-close이며, `passOnStoreError: true`로 fail-open).
 - 멀티 리전 배포 시 카운터 동기화 지연으로 임시 초과 허용이 발생할 수 있다.

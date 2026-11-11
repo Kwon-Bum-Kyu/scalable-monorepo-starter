@@ -30,15 +30,16 @@ npx turbo run dev --filter=web
 cd apps/web && npm run dev
 ```
 
-서버는 `http://localhost:3000`에서 열린다. API 주소와 엔드포인트는 `src/config/api.ts`에 있다.
+서버는 `http://localhost:3000`에서 열린다. API 주소는 `src/config/api.ts`에, 엔드포인트 경로는 `src/services/`의 도메인별 파일에 있다.
 
 ## 프로젝트 구조
 
 ```
 apps/web/
 ├── src/
-│   ├── components/   # 앱 전용 컴포넌트 (layouts)
-│   ├── config/       # API_CONFIG, API_ENDPOINTS
+│   ├── assets/       # 앱 이미지 (홈 hero 스크린샷)
+│   ├── components/   # 앱 전용 컴포넌트 (layouts, DataTable, InlineCode)
+│   ├── config/       # API_CONFIG, API_ENDPOINTS, 저장소·작성자 링크
 │   ├── hooks/        # useApi, useMutation 등 공통 훅
 │   ├── routes/       # createBrowserRouter 구성, ROUTES 상수
 │   ├── services/     # 도메인별 API 함수
@@ -48,6 +49,7 @@ apps/web/
 │   ├── index.css     # @repo/ui/globals.css import
 │   └── main.tsx      # 진입점
 ├── public/           # 정적 에셋 (fonts 포함)
+├── scripts/          # capture-hero.mjs (홈 hero 스크린샷 생성)
 ├── tests/
 │   ├── unit/         # Vitest 단위 테스트
 │   └── e2e/          # Playwright (examples, visual-regression)
@@ -84,7 +86,7 @@ function MyComponent() {
 
 ```bash
 npm run test                              # Vitest 단위 테스트
-npx playwright test --project=chromium    # E2E (DB·web·api 기동 필요)
+npx playwright test --project=chromium    # E2E (DB 기동 필요, web·api는 webServer가 기동·재사용)
 ```
 
 시각 회귀 테스트(`tests/e2e/visual-regression.spec.ts`)는 선택 항목이다. 기준 스냅샷이 macOS 전용이라 CI에서는 실행하지 않으며, 실행·갱신 명령은 spec 상단 주석에 있다.

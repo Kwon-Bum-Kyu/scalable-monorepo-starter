@@ -71,7 +71,7 @@ npm run dev
 
 루트 `npm run dev`는 다음을 자동 처리한다:
 
-1. `predev` — Docker Postgres 컨테이너 기동 + `pg_isready` 폴링 + Prisma 마이그레이션 적용
+1. `predev` — Docker Postgres 컨테이너 기동 + `pg_isready` 폴링 + Prisma 마이그레이션 적용 + Prisma Client 생성 + `apps/desktop` 빌드
 2. `web`(3000) + `api`(4000) + `storybook`(6006) + `desktop`(3100, Electron 창) + Prisma Studio(5555) 동시 구동
 
 > Docker가 없거나 외부 DB(Neon 등)를 사용하려면 `SKIP_DEV_BOOTSTRAP=1 npm run dev` 로 부트스트랩을 건너뛴다.
@@ -101,7 +101,7 @@ scalable-monorepo-starter/
 │   ├── typescript-config/      # 공유 tsconfig
 │   └── vitest-config/          # 공유 Vitest 설정
 ├── docs/assets/                # README 헤더·소셜 미리보기 이미지
-├── scripts/                    # 개발 부트스트랩 스크립트
+├── scripts/                    # 개발 부트스트랩·renderer 패리티 검사·Examples 제거 스크립트
 └── turbo.json                  # Turborepo 파이프라인
 ```
 
@@ -195,7 +195,7 @@ npx impeccable install --global --no-hooks
 E2E 실행:
 
 ```bash
-# DB·web·api가 기동 중이어야 함 (npm run dev 권장)
+# DB가 기동 중이어야 함 (web·api는 playwright.config.ts의 webServer가 띄우거나 실행 중인 서버를 재사용)
 cd apps/web
 npx playwright test --project=chromium
 ```

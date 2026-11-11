@@ -56,7 +56,7 @@ npm run migrate -- --name <description>
 npm run dev
 ```
 
-기본 포트는 4000. 헬스체크는 `GET /api/health`.
+기본 포트는 4000. Prisma Studio(5555)도 함께 뜬다. 헬스체크는 `GET /health/live`(프로세스 생존), `GET /health/ready`(DB 연결 포함). `GET /health`는 하위 호환용으로 남아 있다.
 
 ## Architecture
 
@@ -75,7 +75,7 @@ Route → (validateRequest) → Controller → Service → Repository → Prisma
 - **Schemas** (`src/schemas`): Zod 입력 검증 스키마
 - **Middlewares** (`src/middlewares`): error-handler·validate-request·rate-limiter 등
 
-상세 규칙은 `src/CLAUDE.md`, `src/services/CLAUDE.md`, `src/repositories/CLAUDE.md` 참조.
+상세 규칙은 `CLAUDE.md`, `src/services/CLAUDE.md`, `src/repositories/CLAUDE.md` 참조.
 
 ## Testing
 
@@ -84,7 +84,7 @@ npm run test
 ```
 
 - 단위 테스트: `test/unit/**/*.test.ts` — Prisma Mock 기반
-- 통합 테스트: `test/integration/**/*.test.ts` — Supertest + 실제 테스트 DB
+- 통합 테스트: `test/integration/**/*.test.ts` — Supertest + Prisma Client·DB ping mock (실제 DB에 접속하지 않음)
 
 루트에서 워크스페이스 단위 실행:
 
