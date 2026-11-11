@@ -8,7 +8,7 @@ Brand 폰트는 로컬 `.ttf` 로 동봉되며 `packages/ui/src/styles/globals.c
 | -------------- | ---------------------------- | ------ | ---------------------------------------- | --------------------------------------- |
 | **Open Sans**  | 300, 400, 500, 600, 700, 800 | 모든 weight 제공 | `--font-sans` (`packages/ui/src/styles/globals.css`) | Primary UI sans. 12 face 모두 로컬 등록. |
 
-Italics 는 모든 weight 에 대해 제공된다.
+Italics 는 모든 weight 에 제공된다.
 
 ## CDN 경유 (Google Fonts)
 
@@ -31,7 +31,7 @@ Italics 는 모든 weight 에 대해 제공된다.
 
 - **본문 텍스트**: `font-sans` (Open Sans). 가독성과 OS 폰트 크기 설정 호환.
 - **코드/숫자/태그/스케줄 라벨**: `font-mono` (Roboto Mono). Hero 기술 스택 줄·코드 inline 등.
-- **dense / condensed 변형**: 도입하지 않음. DESIGN.md가 본문 글꼴을 Open Sans 표준 폭(12 face)으로만 정하고 있고 코드베이스 사용처가 0건이다. 디자인 톤(quiet, technical, engineering-forward)과도 맞는다.
+- **dense / condensed 변형**: 도입하지 않음. DESIGN.md가 본문 글꼴을 Open Sans 표준 폭(12 face)으로만 정하고 코드베이스 사용처가 0건이다. 디자인 톤(quiet, technical, engineering-forward)과도 맞는다.
 
 ## 비고
 

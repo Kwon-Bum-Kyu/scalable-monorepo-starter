@@ -53,10 +53,10 @@ export const rateLimitOptions: Partial<Options> = {
 
 ## 5. 테스트 추가 가이드
 
-- 단위: in-memory store로 동일 함수를 호출하면 충분. Redis 직접 의존 회피를 위해 store만 분리해 inject 하는 구조 권장.
+- 단위: in-memory store로 동일 함수를 호출하면 충분. Redis에 직접 의존하지 않도록 store만 분리해 inject 하는 구조 권장.
 - 통합: testcontainers 또는 docker-compose로 Redis 띄운 뒤 Supertest로 동일 IP에서 한도 + 1회 호출 → 429 + `RATE_LIMIT_EXCEEDED`를 검증.
 
 ## 6. 알려진 한계
 
-- Redis 장애 시 무한 허용으로 fail-open 또는 강제 거부로 fail-close 정책을 명시해야 한다 (`express-rate-limit`은 기본 fail-close이며, `passOnStoreError: true`로 fail-open).
-- 멀티 리전 배포 시 카운터 동기화 지연으로 임시 초과 허용이 발생할 수 있다.
+- Redis 장애 시 요청을 무한 허용하는 fail-open과 강제 거부하는 fail-close 중 어느 정책을 쓸지 명시해야 한다 (`express-rate-limit`은 기본 fail-close이며 `passOnStoreError: true`로 fail-open).
+- 멀티 리전 배포 시 카운터 동기화가 지연되어 한도를 임시로 초과하는 요청이 허용될 수 있다.

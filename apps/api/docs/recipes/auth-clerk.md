@@ -57,7 +57,7 @@ export const requireAuth: RequestHandler = async (request, _response, next) => {
 };
 ```
 
-`createApp()`에서는 `clerkMiddleware()`를 `app.use`로 먼저 부착해야 `getAuth()`가 동작한다. Clerk의 `requireAuth()`는 미인증 요청을 로그인 페이지로 리다이렉트하므로 API 라우트에는 쓰지 않고, 위처럼 `getAuth()`로 확인해 401을 돌려준다.
+`createApp()`에서는 `clerkMiddleware()`를 `app.use`로 먼저 부착해야 `getAuth()`가 동작한다. Clerk의 `requireAuth()`는 미인증 요청을 로그인 페이지로 리다이렉트하므로 API 라우트에는 쓰지 않고 위처럼 `getAuth()`로 확인해 401을 돌려준다.
 
 ## 5. 테스트 추가 가이드
 

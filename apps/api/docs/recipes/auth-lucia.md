@@ -4,7 +4,7 @@
 
 ## 1. 언제 이 옵션을 선택하는가
 
-- 라이브러리가 작고 명시적인 API를 원할 때.
+- 작고 API가 명시적인 라이브러리를 원할 때.
 - 세션 저장소를 직접 통제하고 싶을 때(Prisma adapter 사용 가능).
 - OAuth는 별도 패키지(`arctic`)로 조립하는 방식을 선호할 때.
 
@@ -63,10 +63,10 @@ export const requireAuth: RequestHandler = async (request, _response, next) => {
 
 ## 5. 테스트 추가 가이드
 
-- 단위: `lucia.validateSession`을 mock 처리. mock 최대 2개. (1) 세션 유효 (2) 만료 (3) 쿠키 누락.
+- 단위: `lucia.validateSession`을 mock 처리. mock 최대 2개. 케이스: (1) 세션 유효 (2) 만료 (3) 쿠키 누락.
 - 통합: `Cookie: session=...` 헤더와 함께 Supertest 호출. CSRF 토큰 검증 흐름은 본 미들웨어 외부에서 다룬다.
 
 ## 6. 알려진 한계
 
 - Lucia v3는 OAuth provider helper를 자체 제공하지 않는다 — `arctic` 별도 도입 필요.
-- 세션 갱신(rolling expiry)은 응답 직전 set-cookie 처리가 필요하므로 별도 응답 미들웨어를 추가해야 한다.
+- 세션 갱신(rolling expiry)은 응답 직전에 set-cookie를 내려 줘야 하므로 응답 미들웨어를 따로 추가해야 한다.

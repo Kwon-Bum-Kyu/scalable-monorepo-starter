@@ -8,13 +8,13 @@ web
 
 ## Users
 
-사이드 프로젝트나 소규모 서비스를 새로 시작하는 개발자다. 주니어와 시니어를 가리지 않는다. 상황은 "아이디어는 있는데 프로젝트 구조를 처음부터 다시 정하고 싶지 않다"이고 해내려는 일은 저장소를 clone한 뒤 2시간 안에 개발 서버를 띄우고 1주 안에 첫 배포를 마치는 것이다.
+사이드 프로젝트나 소규모 서비스를 새로 시작하는 개발자다. 주니어와 시니어를 가리지 않는다. "아이디어는 있는데 프로젝트 구조를 처음부터 다시 정하고 싶지 않다"는 상황에서, 저장소를 clone한 뒤 2시간 안에 개발 서버를 띄우고 1주 안에 첫 배포를 마치려 한다.
 
 두 번째 사용자는 AI 코딩 어시스턴트(Claude Code 등)다. CLAUDE.md와 `.claude/rules/`를 읽고 같은 규칙으로 코드를 생성한다.
 
 ## Product Purpose
 
-Turborepo 기반의 풀스택 모노레포 스타터 템플릿이다. React 19 + Vite 프론트엔드, Express + Prisma + PostgreSQL 백엔드, Storybook, 공유 UI 패키지(shadcn/ui)와 공유 타입 패키지를 미리 연결해 두었다. 존재 이유는 "구조 결정에 쓰는 시간을 0에 가깝게" 만드는 것이다. 성공 기준은 셋업 2시간 이내, 첫 배포 1주 이내, 그리고 주니어가 README만 보고 따라할 수 있는가이다.
+Turborepo 기반의 풀스택 모노레포 스타터 템플릿이다. React 19 + Vite 프론트엔드, Express + Prisma + PostgreSQL 백엔드, Storybook, 공유 UI 패키지(shadcn/ui)와 공유 타입 패키지를 미리 연결해 두었다. 이 템플릿은 "구조 결정에 쓰는 시간을 0에 가깝게" 만들려고 존재한다. 성공 기준은 셋업 2시간 이내, 첫 배포 1주 이내, 주니어가 README만 보고 따라할 수 있는지 여부다.
 
 ## Positioning
 
@@ -26,7 +26,7 @@ Turborepo 기반의 풀스택 모노레포 스타터 템플릿이다. React 19 +
 - 배포: Neon PostgreSQL, Vercel 등 플랫폼 환경변수.
 - 문서: README.md(사람 진입점), CLAUDE.md(AI 진입점), `.claude/rules/`(규칙 상세), 워크스페이스별 CLAUDE.md.
 - 검증 의식: TDD Red-Green-Refactor, 커버리지 80%, `npm run lint`(워크스페이스별 `eslint --max-warnings 0`), CI에서 typecheck·lint·renderer 패리티·test(커버리지)·build, 별도 워크플로에서 e2e.
-- 디자인 명세 소스: 루트 `DESIGN.md`. 디자인 토큰의 단일 출처이고 `packages/ui/src/styles/globals.css`의 `@theme` 블록이 그 구현체다. Open Design 같은 디자인 도구는 `packages/ui/src/styles/open-design-contract.css` 브리지로 이 값을 읽어 가는 하위 소비자다.
+- 디자인 명세 소스: 루트 `DESIGN.md`. 디자인 토큰의 단일 출처이고 `packages/ui/src/styles/globals.css`의 `@theme` 블록이 그 구현체다. Open Design 같은 디자인 도구는 하위 소비자로, `packages/ui/src/styles/open-design-contract.css` 브리지를 거쳐 이 값을 읽어 간다.
 
 ## Capabilities and Constraints
 
