@@ -18,22 +18,21 @@ Turborepo 기반의 풀스택 모노레포 스타터 템플릿이다. React 19 +
 
 ## Positioning
 
-명시적 설정을 암묵적 컨벤션보다, 문서화된 규칙을 구두 전수보다 우선한다. 9가지 변경 불가 규칙(앱 간 직접 import 금지, shared-types 런타임 코드 금지, SQL 격리, 파라미터화 쿼리, 마이그레이션 불변, `@/` 별칭, TDD, Tailwind `@theme` 토큰만 사용, 파일명 컨벤션)을 문서와 AI 가드 스킬(`architecture-guard`, `lint-enforcer`, `tdd-guide`)로 함께 강제한다. 한국어 문서와 한국어 BDD 테스트 네이밍을 기본으로 한다.
+명시적 설정을 암묵적 컨벤션보다, 문서화된 규칙을 구두 전수보다 우선한다. 9가지 변경 불가 규칙(앱 간 직접 import 금지, shared-types 런타임 코드 금지, SQL 격리, 파라미터화 쿼리, 마이그레이션 불변, `@/` 별칭, TDD, Tailwind `@theme` 토큰만 사용, 파일명 컨벤션)을 문서와 AI 가드 에이전트(`architecture-guard`, `lint-enforcer`, `tdd-guide`)로 함께 강제한다. 한국어 문서와 한국어 BDD 테스트 네이밍을 기본으로 한다.
 
 ## Operating Context
 
-- 로컬: Docker PostgreSQL, `npm run dev`로 web(3000)·api(4000)·storybook(6006) 동시 구동.
+- 로컬: Docker PostgreSQL, `npm run dev`로 web(3000)·api(4000)·storybook(6006)·desktop(3100, Electron 창) 동시 구동.
 - 배포: Neon PostgreSQL, Vercel 등 플랫폼 환경변수.
 - 문서: README.md(사람 진입점), CLAUDE.md(AI 진입점), `.claude/rules/`(규칙 상세), 워크스페이스별 CLAUDE.md.
-- 검증 의식: TDD Red-Green-Refactor, 커버리지 80%, `turbo run lint --max-warnings=0`, CI에서 typecheck·lint·test·e2e.
+- 검증 의식: TDD Red-Green-Refactor, 커버리지 80%, `npm run lint`(워크스페이스별 `eslint --max-warnings 0`), CI에서 typecheck·lint·renderer 패리티·test(커버리지)·build, 별도 워크플로에서 e2e.
 - 디자인 명세 소스: 루트 `DESIGN.md`. 디자인 토큰의 단일 출처이고 `packages/ui/src/styles/globals.css`의 `@theme` 블록이 그 구현체다. Open Design 같은 디자인 도구는 `packages/ui/src/styles/open-design-contract.css` 브리지로 이 값을 읽어 가는 하위 소비자다.
 
 ## Capabilities and Constraints
 
-- 워크스페이스: `apps/web`, `apps/api`, `apps/storybook`, `packages/ui`, `packages/shared-types`, `packages/eslint-config`, `packages/typescript-config`, `packages/vitest-config`.
+- 워크스페이스: `apps/web`, `apps/api`, `apps/storybook`, `apps/desktop`, `packages/ui`, `packages/shared-types`, `packages/eslint-config`, `packages/typescript-config`, `packages/vitest-config`.
 - 런타임 조건: Node.js 22.13 이상, npm 10 이상.
 - 코드 제약: 이모지 금지, 프로덕션 코드에 `console.log` 금지, 입력 검증은 Zod(`packages/shared-types` 제외).
-- 미결 사실: `apps/desktop` 워크스페이스가 존재하지만 README와 CLAUDE.md의 워크스페이스 표에는 없다. 제품 범위에 포함되는지는 확정되지 않았다.
 - 용어: "워크스페이스"는 npm workspace 단위, "가드"는 규칙을 정적으로 검사하는 AI 스킬을 뜻한다.
 
 ## Brand Commitments
@@ -42,7 +41,7 @@ Turborepo 기반의 풀스택 모노레포 스타터 템플릿이다. React 19 +
 - 파생 자산: 파비콘(`apps/web/public/`·`apps/desktop/src/renderer/public/`), 앱 아이콘(`apps/desktop/assets/icon.png`, Absolute Ink 판), README 헤더·소셜 미리보기(`docs/assets/`).
 - 목소리: 한국어, 평서문, 이모지 없음. 기술 용어는 원어를 유지한다.
 - 구속력 있는 시각 제약: 색상·간격·폰트는 `@theme` 토큰만 사용하고 임의값(`bg-[#hex]`, `text-[14px]`)을 쓰지 않는다. shadcn/ui 생성 파일은 CLI 출력 그대로 유지한다. 리네임 금지는 파일명 규칙이며 파일 내용(코드)은 프로젝트 규칙(토큰 사용, deprecated 타입 치환 등)에 맞춰 수정할 수 있다.
-- 서체: Open Sans 12종을 `apps/web/public/fonts/`에 동봉한다.
+- 서체: Open Sans 12종을 `apps/web/public/fonts/`에 동봉한다(desktop renderer 사본은 `apps/desktop/src/renderer/public/fonts/`).
 
 ## Evidence on Hand
 

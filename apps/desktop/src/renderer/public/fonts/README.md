@@ -13,6 +13,7 @@ Italics 는 모든 weight 에 대해 제공된다.
 ## CDN 경유 (Google Fonts)
 
 - **Roboto Mono** (400 / 500 / 700) — 코드·숫자·디스플레이 강조 라벨에 사용. 매핑 토큰: `--font-mono`. 본 모노레포는 `packages/ui/src/styles/globals.css` 의 `@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap")` 로 로드한다.
+- **PT Sans** (400 / 700) — 보조 본문(기사 톤) 서체. 매핑 토큰: `--font-body-alt`. 같은 `globals.css` 의 `@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap")` 로 로드한다.
 
 향후 로컬화가 필요하면 `.ttf`/`.woff2` 를 본 디렉터리에 추가하고 `globals.css` 의 `@font-face` 를 확장한다.
 
@@ -22,13 +23,14 @@ Italics 는 모든 weight 에 대해 제공된다.
 | --- | --- | --- |
 | **Open Sans** | SIL Open Font License 1.1 (OFL-1.1) | 상업·배포 가능. 본 README 의 라이선스 명시로 OFL §3 동봉 의무 갈음. 원문: https://openfontlicense.org/ |
 | **Roboto Mono** | Apache License 2.0 | Google Fonts 를 통해 자동 라이선싱. 원문: https://www.apache.org/licenses/LICENSE-2.0 |
+| **PT Sans** | SIL Open Font License 1.1 (OFL-1.1) | Google Fonts 를 통해 로드. 원문: https://openfontlicense.org/ |
 
-본 README 는 두 패밀리의 라이선스 단일 출처이며 별도 `OFL.txt`/`LICENSE-Apache-2.0.txt` 동봉 없이 본 명시로 갈음한다 (Q-FF-C 결정).
+본 README 는 세 패밀리의 라이선스 단일 출처이며 별도 `OFL.txt`/`LICENSE-Apache-2.0.txt` 동봉 없이 본 명시로 갈음한다 (Q-FF-C 결정).
 
 ## 사용처 정책
 
 - **본문 텍스트**: `font-sans` (Open Sans). 가독성과 OS 폰트 크기 설정 호환.
-- **코드/숫자/태그/스케줄 라벨**: `font-mono` (Roboto Mono). Hero 카운터·코드 inline 등.
+- **코드/숫자/태그/스케줄 라벨**: `font-mono` (Roboto Mono). Hero 기술 스택 줄·코드 inline 등.
 - **dense / condensed 변형**: 도입하지 않음. DESIGN.md가 본문 글꼴을 Open Sans 표준 폭(12 face)으로만 정하고 있고 코드베이스 사용처가 0건이다. 디자인 톤(quiet, technical, engineering-forward)과도 맞는다.
 
 ## 비고

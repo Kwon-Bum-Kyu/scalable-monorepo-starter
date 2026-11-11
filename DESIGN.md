@@ -242,7 +242,7 @@ components:
 **Display Font:** Roboto Mono (`--font-display`)
 **Body Font:** Open Sans (`--font-sans`, 자체 호스팅 12 face, `apps/web/public/fonts/`)
 **Label/Mono Font:** Roboto Mono (`--font-mono`)
-**보조 본문 Font:** PT Sans (`--font-body-alt`). 보조 패밀리이고 "긴 본문이나 기사 톤 콘텐츠"용으로 문서화되어 있다(Guide 원문 설명 그대로).
+**보조 본문 Font:** PT Sans (`--font-body-alt`). 보조 패밀리이고 긴 본문이나 기사 톤 콘텐츠용이다. 현재 이 토큰은 Guide의 서체 카탈로그에만 표시되고 이를 쓰는 컴포넌트는 없다.
 
 **Character:** 본문은 Open Sans의 인문적인 산세리프로 읽히고 라벨·디스플레이·코드 성격 텍스트는 Roboto Mono로 전환된다. 본문과 표기 텍스트는 서체 자체로 분리된다.
 
@@ -367,7 +367,7 @@ components:
 기준 radius는 `--radius: 0.5rem`(8px)이라 코너가 완만하게 굽는다. 나머지 단계는 여기서 `calc()`로 파생된다: `--radius-sm`(4px) / `--radius-md`(6px) / `--radius-lg`(8px, 기준값) / `--radius-xl`(12px). `--radius-2xl`(24px)과 `--radius-full`(9999px)은 `calc()`가 아닌 고정값이다.
 
 - **컨테이너급** 요소(버튼 전 사이즈, input, select trigger/content, popover content, calendar, tabs 세그먼트 컨테이너)는 `rounded-lg`(8px) 또는 `rounded-md`(6px)를 쓴다.
-- **중첩 요소**(select item, checkbox, tabs underline trigger)는 한 단계 좁은 `rounded-sm`(4px)를 쓴다.
+- **중첩 요소**(select item, checkbox)는 한 단계 좁은 `rounded-sm`(4px)를 쓴다. tabs 세그먼트 컨테이너(`rounded-lg`) 안의 trigger는 한 단계 좁은 `rounded-md`(6px)를 쓰고, tabs underline trigger는 radius가 없다.
 - **pill 형태**(badge 기본, tabs pill trigger)는 `rounded-full`(9999px)을 쓴다.
 
 ### Named Rules

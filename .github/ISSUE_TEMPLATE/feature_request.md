@@ -25,6 +25,7 @@ assignees: ''
 ## 영향 범위
 
 - [ ] FE (`apps/web`)
+- [ ] Desktop (`apps/desktop`)
 - [ ] BE (`apps/api`)
 - [ ] 공유 패키지 (`packages/*`)
 - [ ] 인프라·CI

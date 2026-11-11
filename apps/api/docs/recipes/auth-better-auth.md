@@ -31,13 +31,16 @@ BETTER_AUTH_URL=http://localhost:4000
 
 ```typescript
 import type { RequestHandler } from "express";
+import { fromNodeHeaders } from "better-auth/node";
 import { AppError } from "../errors/app-error";
 import { ERROR_CODES } from "../errors/error-codes";
 import { auth } from "../lib/better-auth"; // 새로 추가하는 better-auth 인스턴스
 
 export const requireAuth: RequestHandler = async (request, _response, next) => {
   try {
-    const session = await auth.api.getSession({ headers: request.headers });
+    const session = await auth.api.getSession({
+      headers: fromNodeHeaders(request.headers),
+    });
     if (!session) {
       throw new AppError("인증이 필요합니다.", 401, ERROR_CODES.UNAUTHORIZED);
     }
@@ -46,7 +49,7 @@ export const requireAuth: RequestHandler = async (request, _response, next) => {
       ...(request.context ?? {}),
       auth: {
         user: { id: session.user.id, email: session.user.email },
-        session: { id: session.session.id, userId: session.user.id, expiresAt: session.session.expiresAt },
+        session: { id: session.session.id, userId: session.user.id, expiresAt: session.session.expiresAt.toISOString() },
       },
     };
     next();
@@ -63,5 +66,5 @@ export const requireAuth: RequestHandler = async (request, _response, next) => {
 
 ## 6. 알려진 한계
 
-- better-auth는 자체 마이그레이션을 요구한다. `prisma/schema.prisma`에 `User`/`Session`/`Account` 모델을 추가하고 새 마이그레이션을 생성해야 한다. 기존 마이그레이션 수정 금지.
+- better-auth는 자체 마이그레이션을 요구한다. `prisma/schema.prisma`에 `User`/`Session`/`Account`/`Verification` 모델을 추가하고 새 마이그레이션을 생성해야 한다. 기존 마이그레이션 수정 금지.
 - Edge runtime 미지원. Node 22+ 필수.

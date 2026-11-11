@@ -31,16 +31,15 @@ CLERK_SECRET_KEY=sk_test_...
 
 ```typescript
 import type { RequestHandler } from "express";
-import { clerkClient, requireAuth as clerkRequireAuth, getAuth } from "@clerk/express";
+import { clerkClient, getAuth } from "@clerk/express";
 import { AppError } from "../errors/app-error";
 import { ERROR_CODES } from "../errors/error-codes";
 
-export const requireAuth: RequestHandler = (request, response, next) => {
-  return clerkRequireAuth()(request, response, async (error) => {
-    if (error) return next(error);
+export const requireAuth: RequestHandler = async (request, _response, next) => {
+  try {
     const { userId, sessionId } = getAuth(request);
     if (!userId || !sessionId) {
-      return next(new AppError("인증이 필요합니다.", 401, ERROR_CODES.UNAUTHORIZED));
+      throw new AppError("인증이 필요합니다.", 401, ERROR_CODES.UNAUTHORIZED);
     }
 
     const user = await clerkClient.users.getUser(userId);
@@ -52,11 +51,13 @@ export const requireAuth: RequestHandler = (request, response, next) => {
       },
     };
     next();
-  });
+  } catch (error) {
+    next(error);
+  }
 };
 ```
 
-`createApp()`에서는 `clerkMiddleware()`를 `app.use`로 먼저 부착해야 `getAuth()`가 동작한다.
+`createApp()`에서는 `clerkMiddleware()`를 `app.use`로 먼저 부착해야 `getAuth()`가 동작한다. Clerk의 `requireAuth()`는 미인증 요청을 로그인 페이지로 리다이렉트하므로 API 라우트에는 쓰지 않고, 위처럼 `getAuth()`로 확인해 401을 돌려준다.
 
 ## 5. 테스트 추가 가이드
 
