@@ -27,7 +27,9 @@ env:
 jobs:
   playwright:
     name: Playwright (chromium)
-    runs-on: ubuntu-latest
+    # Playwright 1.59는 ubuntu-latest가 가리키게 된 26.04에 브라우저를 설치하지 못한다.
+    # Playwright를 26.04 지원 버전으로 올리면 ubuntu-latest로 되돌린다.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     services:
