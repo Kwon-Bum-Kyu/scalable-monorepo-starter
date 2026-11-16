@@ -1,0 +1,211 @@
+name: Template combos
+
+# 앱 조합마다 setup을 실행해 생성물이 설치, 검사, 빌드를 통과하는지 확인한다.
+# CLI가 없는 단계에서는 git archive로 푼 사본에서 run.mjs를 직접 호출한다.
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "packages/create-scalable-monorepo-starter/**"
+      - ".github/workflows/**"
+      - "package.json"
+      - "turbo.json"
+      - ".env.example"
+      - "apps/*/package.json"
+      - "apps/*/turbo.json"
+      - "scripts/**"
+      - ".github/workflows/ci.yml"
+      - ".github/PULL_REQUEST_TEMPLATE.md"
+      - "CLAUDE.md"
+      - "apps/web/playwright.config.ts"
+      - "apps/desktop/CLAUDE.md"
+  workflow_dispatch:
+
+concurrency:
+  group: template-combos-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22.13.0
+  ACTIONLINT_VERSION: 1.7.12
+  SKIP_DEV_BOOTSTRAP: "1"
+
+jobs:
+  combo:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: api, apps: api, remove-examples: "", has-api: "true" }
+          - { name: web, apps: web, remove-examples: "", has-api: "false" }
+          - { name: desktop, apps: desktop, remove-examples: "", has-api: "false" }
+          - { name: api+web, apps: "api,web", remove-examples: "", has-api: "true" }
+          - { name: web+desktop, apps: "web,desktop", remove-examples: "", has-api: "false" }
+          - { name: web+storybook, apps: "web,storybook", remove-examples: "", has-api: "false" }
+          - { name: all-without-examples, apps: "api,web,desktop,storybook", remove-examples: "--remove-examples", has-api: "true" }
+
+    # 조합과 무관하게 모든 job에 둔다. api가 없는 조합에서는 쓰이지 않는다.
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: myapp
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/myapp
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install actionlint
+        run: bash <(curl -fsSL "https://raw.githubusercontent.com/rhysd/actionlint/v${ACTIONLINT_VERSION}/scripts/download-actionlint.bash") "${ACTIONLINT_VERSION}" "${RUNNER_TEMP}/bin"
+
+      - name: Extract tracked files like a release tarball
+        run: |
+          echo "OUT=${RUNNER_TEMP}/smoke-app" >> "$GITHUB_ENV"
+          echo "MANIFEST=${RUNNER_TEMP}/starter.manifest.json" >> "$GITHUB_ENV"
+          OUT="${RUNNER_TEMP}/smoke-app"
+          MANIFEST="${RUNNER_TEMP}/starter.manifest.json"
+          mkdir -p "$OUT"
+          git archive HEAD | tar -x -C "$OUT"
+          cp packages/create-scalable-monorepo-starter/starter.manifest.json "$MANIFEST"
+
+      - name: Run setup
+        working-directory: ${{ env.OUT }}
+        run: node packages/create-scalable-monorepo-starter/src/setup/run.mjs --name smoke-app --apps "${{ matrix.apps }}" ${{ matrix.remove-examples }}
+
+      - name: Check leftover markers and old names
+        working-directory: ${{ env.OUT }}
+        run: |
+          if grep -rIn --exclude-dir=node_modules "APP:" .; then
+            echo "::error::APP marker left in generated project"
+            exit 1
+          fi
+          old_name=$(node -p 'require(process.argv[1]).rename.from' "$MANIFEST")
+          display_name=$(node -p 'require(process.argv[1]).rename.displayFrom' "$MANIFEST")
+          name_roots=$(node -p 'const r = require(process.argv[1]).rename; [...r.npmNameFiles, ...r.replacements.map((item) => item.file)].join(" ")' "$MANIFEST")
+          display_roots=$(node -p 'require(process.argv[1]).rename.displayNameFiles.join(" ")' "$MANIFEST")
+          # shellcheck disable=SC2086
+          if grep -rIlsF "$old_name" $name_roots; then
+            echo "::error::old name left in generated project"
+            exit 1
+          fi
+          # shellcheck disable=SC2086
+          if grep -rIlsF "$display_name" $display_roots; then
+            echo "::error::old display name left in generated project"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        working-directory: ${{ env.OUT }}
+        run: npm install
+
+      - name: Verify lock file with npm ci
+        working-directory: ${{ env.OUT }}
+        run: npm ci
+
+      - name: Check lock cleanup
+        working-directory: ${{ env.OUT }}
+        run: |
+          if grep -q "packages/create-scalable-monorepo-starter" package-lock.json; then
+            echo "::error::CLI package key left in package-lock.json"
+            exit 1
+          fi
+          npm ls --all > npm-ls.log 2>&1 || true
+          if grep -n "extraneous" npm-ls.log; then
+            echo "::error::extraneous packages in npm ls"
+            exit 1
+          fi
+          rm npm-ls.log
+
+      - name: Apply Prisma migrations
+        if: matrix.has-api == 'true'
+        working-directory: ${{ env.OUT }}/apps/api
+        run: npx prisma migrate deploy
+
+      - name: Generate Prisma Client
+        if: matrix.has-api == 'true'
+        working-directory: ${{ env.OUT }}/apps/api
+        run: npx prisma generate
+
+      - name: Typecheck
+        working-directory: ${{ env.OUT }}
+        run: npm run typecheck
+
+      - name: Lint
+        working-directory: ${{ env.OUT }}
+        run: npm run lint
+
+      - name: Renderer parity
+        working-directory: ${{ env.OUT }}
+        run: |
+          if grep -q '"check:parity"' package.json; then
+            npm run check:parity
+          fi
+
+      - name: Test
+        working-directory: ${{ env.OUT }}
+        run: npm run test:coverage
+
+      - name: Build
+        working-directory: ${{ env.OUT }}
+        run: npm run build
+
+      - name: Resolve dev task graph of remaining apps
+        working-directory: ${{ env.OUT }}
+        run: |
+          for app in $(ls apps); do
+            npx turbo run dev --filter="$app" --dry > /dev/null
+            echo "dev graph ok: $app"
+          done
+
+      - name: Start dev:web and wait for port 3000
+        if: matrix.name == 'web'
+        working-directory: ${{ env.OUT }}
+        run: |
+          set -m
+          npm run dev:web > dev-web.log 2>&1 &
+          dev_pid=$!
+          start=$(date +%s)
+          for _ in $(seq 1 60); do
+            if curl -sf -o /dev/null http://localhost:3000; then
+              echo "dev:web responded on port 3000 after $(( $(date +%s) - start ))s"
+              kill -- "-$dev_pid" || true
+              exit 0
+            fi
+            sleep 1
+          done
+          cat dev-web.log
+          kill -- "-$dev_pid" || true
+          echo "::error::dev:web did not respond on port 3000 within 60s"
+          exit 1
+
+      - name: Lint generated workflows
+        working-directory: ${{ env.OUT }}
+        run: |
+          "${RUNNER_TEMP}/bin/actionlint" -color .github/workflows/*.yml
