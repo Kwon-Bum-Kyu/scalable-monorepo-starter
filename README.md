@@ -93,6 +93,36 @@ api를 기동하면 Docker Postgres 컨테이너 기동, `pg_isready` 폴링, Pr
 | Storybook | http://localhost:6006 |
 | Prisma Studio | http://localhost:5555 |
 
+## 필요한 앱만 남기기
+
+clone한 저장소에서 쓸 앱만 남기고 프로젝트 이름을 바꿀 수 있다. 앱 폴더와 그 앱 전용 설정, 스크립트, CI 단계가 함께 정리된다.
+
+```bash
+# 1. 먼저 --dry-run으로 지울 경로와 고칠 파일을 확인한다 (파일은 바뀌지 않는다)
+npm run setup -- --name my-shop --apps web,api --dry-run
+
+# 2. 확인한 대로 실행한다
+npm run setup -- --name my-shop --apps web,api
+
+# 3. 의존성과 lock 파일을 맞춘다
+npm install
+```
+
+| 옵션 | 설명 |
+| ---- | ---- |
+| `--name <이름>` | 새 프로젝트 이름 (필수). `package.json`의 `name` 등에 npm 이름 규칙으로 변환해 쓴다 |
+| `--apps <id,...>` | 남길 앱 id를 콤마로 구분한다 (필수). 고를 수 있는 id는 `api`, `web`, `desktop`, `storybook`이다. `storybook`을 고르면 `web`이 함께 남는다 |
+| `--display-name <이름>` | 화면에 보일 이름. 생략하면 `--name`에서 만든다 |
+| `--remove-examples` | Examples 레퍼런스 코드를 지운다. `api`를 남기지 않으면 자동으로 지운다 |
+| `--dry-run` | 아무것도 바꾸지 않고 계획만 출력한다 |
+
+주의할 점:
+
+- 커밋하지 않은 변경이 있으면 거부된다. 먼저 커밋하거나 stash 한다.
+- 이미 있는 `.env`는 그대로 두고, 없을 때만 `.env.example`을 복사한다.
+- 실행이 끝나면 `setup` 스크립트와 CLI 패키지 폴더는 프로젝트에서 사라진다. 한 번만 쓰는 도구다.
+- 실행 도중 실패하거나 결과가 마음에 들지 않으면 `git checkout . && git clean -fd`로 되돌린다. (`git clean`은 추적하지 않는 파일도 지우므로 먼저 커밋 상태를 확인한다)
+
 ## 워크스페이스 구조
 
 ```
