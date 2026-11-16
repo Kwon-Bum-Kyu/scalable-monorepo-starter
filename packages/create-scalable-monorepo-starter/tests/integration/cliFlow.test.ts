@@ -88,6 +88,42 @@ describe("CLI 비대화형 실행", () => {
     expect(result.stdout).toContain("--apps <id,...>");
   });
 
+  it("storybook만 줄 때 web을 함께 설치한다는 안내가 한 번 나온다", async () => {
+    const repoRoot = path.resolve(__dirname, "../../../..");
+
+    const result = await runCli(["demo-app", "--apps", "storybook", "--yes", "--dry-run"], {
+      cwd: makeTempDir(),
+      env: { STARTER_TEMPLATE_DIR: repoRoot },
+    });
+
+    expect(result.code).toBe(0);
+    const notice = "storybook은 web이 필요해서 web을 함께 설치합니다.";
+    expect(result.stdout.split(notice)).toHaveLength(2);
+  });
+
+  it("stdout만 터미널이고 stdin이 터미널이 아닐 때 질문 없이 비대화형 오류로 끝난다", async () => {
+    const errors: string[] = [];
+    vi.spyOn(process.stderr, "write").mockImplementation((chunk: string | Uint8Array) => {
+      errors.push(String(chunk));
+      return true;
+    });
+    const stdoutTTY = Object.getOwnPropertyDescriptor(process.stdout, "isTTY");
+    const stdinTTY = Object.getOwnPropertyDescriptor(process.stdin, "isTTY");
+    Object.defineProperty(process.stdout, "isTTY", { value: true, configurable: true });
+    Object.defineProperty(process.stdin, "isTTY", { value: false, configurable: true });
+    try {
+      const code = await main({ argv: [], env: {}, cwd: makeTempDir() });
+
+      expect(code).toBe(1);
+      expect(errors.join("")).toContain("대화형으로 실행할 수 없는 환경입니다.");
+    } finally {
+      if (stdoutTTY) Object.defineProperty(process.stdout, "isTTY", stdoutTTY);
+      else delete (process.stdout as { isTTY?: boolean }).isTTY;
+      if (stdinTTY) Object.defineProperty(process.stdin, "isTTY", stdinTTY);
+      else delete (process.stdin as { isTTY?: boolean }).isTTY;
+    }
+  });
+
   it("--version일 때 종료 코드가 0이고 버전만 나온다", async () => {
     const result = await runCli(["--version"], { cwd: makeTempDir() });
 
@@ -107,6 +143,9 @@ describe("CLI 비대화형 실행", () => {
     expect(result.code).toBe(0);
     expect(readdirSync(cwd)).toEqual([]);
     expect(result.stdout).toContain("[dry-run] 지울 경로");
+    const notice = result.stdout.indexOf("변경 계획입니다. 파일은 바꾸지 않습니다.");
+    expect(notice).toBeGreaterThan(result.stdout.indexOf("템플릿을 내려받았습니다"));
+    expect(notice).toBeLessThan(result.stdout.indexOf("[dry-run] 지울 경로"));
     expect(result.stdout).toContain("계획만 출력했습니다. demo-app 폴더는 만들지 않았습니다.");
     expect(result.stdout).not.toContain("완료했습니다.");
   });

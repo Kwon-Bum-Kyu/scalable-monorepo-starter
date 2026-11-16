@@ -8,6 +8,7 @@ import {
   FetchTemplateError,
 } from "../../src/cli/fetchTemplate.mjs";
 import { buildHelpLines } from "../../src/cli/help.mjs";
+import { DRY_RUN_TEXT } from "../../src/cli/index.mjs";
 import { parseCliArgs } from "../../src/cli/parseCliArgs.mjs";
 import { GIT_WARNING } from "../../src/cli/postSteps.mjs";
 import { parseFailureLines, preflight } from "../../src/cli/preflight.mjs";
@@ -106,6 +107,7 @@ function otherScreens(manifest: Manifest): Record<string, string[]> {
       )[0] as string,
     ],
     "진행 줄": [
+      DRY_RUN_TEXT,
       FETCH_PROGRESS.running("1.2.0"),
       FETCH_PROGRESS.done("1.2.0"),
       SETUP_PROGRESS.appsCleaned(["desktop", "storybook"]),

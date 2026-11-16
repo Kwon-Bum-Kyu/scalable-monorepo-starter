@@ -54,6 +54,14 @@ describe("preflight", () => {
     expect(run({ nodeVersion: "v23.0.0" }).ok).toBe(true);
   });
 
+  it("앱 목록이 비어 있을 때 한 줄 오류와 종료 코드 1을 돌려준다", () => {
+    expect(failure(run({}, { apps: [] }))).toEqual({
+      ok: false,
+      lines: ["앱을 하나 이상 선택해야 합니다."],
+      exitCode: 1,
+    });
+  });
+
   it("터미널이 아닌데 이름이 없을 때 두 줄 오류와 종료 코드 1을 돌려준다", () => {
     expect(failure(run({ isTTY: false }, { name: undefined }))).toEqual({
       ok: false,
