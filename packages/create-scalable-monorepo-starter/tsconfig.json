@@ -1,0 +1,10 @@
+{
+  "extends": "@repo/typescript-config/node.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "types": ["node", "vitest/globals"]
+  },
+  "include": ["src/**/*.mjs", "tests/**/*.ts"],
+  "exclude": ["node_modules", "coverage"]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "create-scalable-monorepo-starter",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "@repo/vitest-config": "*",
+    "@types/node": "^22.10.0",
+    "globals": "^17.12.0",
+    "typescript": "^6.0.3",
+    "vitest": "4.1.4"
+  }
+}
