@@ -82,3 +82,24 @@ export function preflight({ args, apps, isTTY, nodeVersion, userAgent, cwd }) {
   }
   return (args.name === undefined ? null : checkName(args.name, cwd)) ?? { ok: true };
 }
+
+/**
+ * parseCliArgs의 실패 결과를 PRD 6.2절 T3-10-1~3의 문장 줄로 바꾼다.
+ * invalid-option의 영어 원문에서 문제의 옵션만 뽑는다.
+ * @param {Exclude<import("./parseCliArgs.mjs").ParseResult, { ok: true }>} result
+ * @returns {string[]}
+ */
+export function parseFailureLines(result) {
+  if (result.reason === "too-many-positionals") {
+    return ["프로젝트 이름은 하나만 지정해 주세요."];
+  }
+  if (result.reason === "conflicting-examples") {
+    return ["--remove-examples 와 --keep-examples 는 함께 쓸 수 없습니다."];
+  }
+  const message = "message" in result ? result.message : "";
+  const option = /'(-[^'\s]+)/u.exec(message)?.[1] ?? "";
+  return [
+    `알 수 없는 옵션입니다: ${option}`,
+    "사용할 수 있는 옵션은 --help 로 확인해 주세요.",
+  ];
+}

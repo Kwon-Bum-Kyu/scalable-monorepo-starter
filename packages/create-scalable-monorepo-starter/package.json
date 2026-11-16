@@ -3,6 +3,9 @@
   "version": "1.2.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "create-scalable-monorepo-starter": "./src/cli/index.mjs"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
