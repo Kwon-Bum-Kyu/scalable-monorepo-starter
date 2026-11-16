@@ -48,14 +48,14 @@ electron.vite.config.ts  # main/preload/renderer 3영역 빌드 설정
 ## 명령어
 
 ```bash
-turbo run dev --filter=desktop        # electron-vite dev (Electron 창 기동)
+npm run dev:desktop                   # 저장소 루트에서 빌드 후 electron-vite dev 기동
 turbo run build --filter=desktop      # main/preload/renderer 번들 → out/
 turbo run lint --filter=desktop       # eslint --max-warnings 0
 turbo run typecheck --filter=desktop  # tsc (node + web 설정)
 turbo run test --filter=desktop       # vitest run
 ```
 
-루트 `npm run dev` 실행 시 web·api·storybook과 함께 desktop도 기동된다.
+desktop만 기동할 때는 루트에서 `npm run dev:desktop`을 실행한다. 루트 `npm run dev`는 web·api·storybook과 함께 desktop도 기동한다.
 
 ## 테스트 경로
 

@@ -56,7 +56,11 @@
 
 ```bash
 # 루트 (전체 워크스페이스)
-npm run dev          # web(3000) + api(4000) + storybook(6006) + desktop(3100, Electron 창) 동시 구동
+npm run dev:api      # DB 준비 후 api(4000) + Prisma Studio(5555) 구동
+npm run dev:web      # web(3000) 단독 구동
+npm run dev:desktop  # 빌드 후 desktop(3100, Electron 창) 단독 구동
+npm run dev:storybook # storybook(6006) 단독 구동
+npm run dev          # 위 앱 모두 동시 구동
 npm run build        # 전체 빌드 (의존 순서 자동)
 npm run typecheck    # 전체 타입 검사
 npm run lint         # ESLint (--max-warnings=0)

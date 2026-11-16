@@ -65,16 +65,24 @@ cp .env.example .env
 
 ### 3. 개발 서버 기동
 
+필요한 앱만 골라서 기동한다:
+
+```bash
+npm run dev:web
+npm run dev:api
+npm run dev:desktop
+npm run dev:storybook
+```
+
+모든 앱을 함께 기동하려면 다음 명령을 사용한다:
+
 ```bash
 npm run dev
 ```
 
-루트 `npm run dev`는 다음을 자동 처리한다:
+api를 기동하면 Docker Postgres 컨테이너 기동, `pg_isready` 폴링, Prisma 마이그레이션 적용, Prisma Client 생성을 먼저 실행한다. desktop을 기동하면 Electron 앱을 먼저 빌드한다.
 
-1. `predev` — Docker Postgres 컨테이너 기동 + `pg_isready` 폴링 + Prisma 마이그레이션 적용 + Prisma Client 생성 + `apps/desktop` 빌드
-2. `web`(3000) + `api`(4000) + `storybook`(6006) + `desktop`(3100, Electron 창) + Prisma Studio(5555) 동시 구동
-
-> Docker가 없거나 외부 DB(Neon 등)를 사용하려면 `SKIP_DEV_BOOTSTRAP=1 npm run dev` 로 부트스트랩을 건너뛴다.
+> Docker가 없거나 외부 DB(Neon 등)를 사용하려면 `SKIP_DEV_BOOTSTRAP=1 npm run dev:api`로 api 준비를 건너뛴다.
 
 ### 4. 접속
 
@@ -101,7 +109,7 @@ scalable-monorepo-starter/
 │   ├── typescript-config/      # 공유 tsconfig
 │   └── vitest-config/          # 공유 Vitest 설정
 ├── docs/assets/                # README 헤더·소셜 미리보기 이미지
-├── scripts/                    # 개발 부트스트랩·renderer 패리티 검사·Examples 제거 스크립트
+├── scripts/                    # renderer 패리티 검사·Examples 제거 스크립트
 └── turbo.json                  # Turborepo 파이프라인
 ```
 
@@ -110,6 +118,10 @@ scalable-monorepo-starter/
 | 명령 | 설명 |
 | ---- | ---- |
 | `npm run dev` | 전체 워크스페이스 동시 구동 (web + api + storybook + desktop) |
+| `npm run dev:api` | API + Prisma Studio 기동 (DB 준비 포함) |
+| `npm run dev:web` | Web 단독 기동 |
+| `npm run dev:desktop` | Desktop 단독 기동 (빌드 포함) |
+| `npm run dev:storybook` | Storybook 단독 기동 |
 | `npm run build` | 전체 빌드 (의존 순서 자동) |
 | `npm run typecheck` | 전체 타입 검사 |
 | `npm run lint` | 전체 ESLint (워크스페이스별) |
