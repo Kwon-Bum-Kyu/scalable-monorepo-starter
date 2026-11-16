@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { waitForPostgres } from "../../../../../scripts/lib/wait-for-postgres.mjs";
+import { waitForPostgres } from "../../../scripts/lib/wait-for-postgres.mjs";
 
 describe("waitForPostgres", () => {
   it("처음 두 번 실패하고 세 번째에 성공할 때 재시도 후 성공한다", async () => {

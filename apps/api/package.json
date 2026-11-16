@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently --kill-others-on-fail --names api,studio --prefix-colors blue,magenta \"npm run dev:server\" \"npm run studio\"",
+    "dev:prepare": "node scripts/dev-prepare.mjs",
     "dev:server": "prisma generate && tsx watch src/index.ts",
     "studio": "prisma studio --port 5555 --browser none",
     "build": "prisma generate && tsup",

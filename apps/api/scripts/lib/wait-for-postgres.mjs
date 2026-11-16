@@ -1,3 +1,5 @@
+import { setTimeout as delay } from "node:timers/promises";
+
 /**
  * @typedef {Object} ExecResult
  * @property {number} code
@@ -18,7 +20,7 @@ export async function waitForPostgres(options) {
     maxAttempts = 30,
     intervalMs = 1000,
     log = () => {},
-    sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+    sleep = delay,
   } = options;
 
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
@@ -27,10 +29,14 @@ export async function waitForPostgres(options) {
       if (result.code === 0) {
         return { attempts: attempt };
       }
-      log(`Postgres not ready (attempt ${attempt}/${maxAttempts}, exit=${result.code})`);
+      log(
+        `Postgres not ready (attempt ${attempt}/${maxAttempts}, exit=${result.code})`,
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      log(`Postgres probe error (attempt ${attempt}/${maxAttempts}): ${message}`);
+      log(
+        `Postgres probe error (attempt ${attempt}/${maxAttempts}): ${message}`,
+      );
     }
 
     if (attempt < maxAttempts) {
@@ -38,5 +44,7 @@ export async function waitForPostgres(options) {
     }
   }
 
-  throw new Error(`Postgres가 ${maxAttempts}번 시도 후에도 준비되지 않았습니다.`);
+  throw new Error(
+    `Postgres가 ${maxAttempts}번 시도 후에도 준비되지 않았습니다.`,
+  );
 }

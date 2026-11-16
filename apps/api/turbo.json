@@ -1,0 +1,7 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "dev": { "dependsOn": ["dev:prepare"] },
+    "dev:prepare": { "cache": false, "passThroughEnv": ["DOCKER_*"] }
+  }
+}

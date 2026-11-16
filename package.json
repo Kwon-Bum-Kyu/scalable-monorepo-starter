@@ -11,8 +11,11 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "predev": "node scripts/dev-bootstrap.mjs",
     "dev": "turbo run dev",
+    "dev:api": "turbo run dev --filter=api",
+    "dev:web": "turbo run dev --filter=web",
+    "dev:desktop": "turbo run dev --filter=desktop",
+    "dev:storybook": "turbo run dev --filter=storybook",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
