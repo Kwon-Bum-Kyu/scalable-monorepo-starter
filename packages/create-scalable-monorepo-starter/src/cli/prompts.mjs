@@ -7,6 +7,8 @@ import { resolveSelection } from "../setup/resolveSelection.mjs";
 import { buildSelectOptions } from "./selectOptions.mjs";
 import { checkTargetDir } from "./workDir.mjs";
 
+export const NO_APPS_TEXT = "앱을 하나 이상 선택해야 합니다.";
+
 const MESSAGES = {
   name: "프로젝트 이름을 입력해 주세요.",
   empty: "프로젝트 이름이 비어 있습니다. 이름을 입력해 주세요.",
@@ -14,7 +16,7 @@ const MESSAGES = {
     "영문 소문자, 숫자, 하이픈으로 바꿀 수 있는 이름을 입력해 주세요. 예: my-app",
   scope: "스코프(@org/)는 지원하지 않습니다. 이름만 입력해 주세요.",
   apps: "설치할 앱을 선택해 주세요. (스페이스: 선택, 엔터: 확정)",
-  noApps: "앱을 하나 이상 선택해야 합니다.",
+  noApps: NO_APPS_TEXT,
   examples: "예제 코드(Examples CRUD)를 남겨 둘까요?",
   keepExamples: "남겨 둔다 (레이어 구조를 참고할 수 있습니다)",
   removeExamples: "제거한다",
@@ -79,6 +81,22 @@ export async function askProjectName({
 }
 
 /**
+ * 자동 포함된 앱마다 안내 문장을 만든다. 대화형과 비대화형이 함께 쓴다.
+ * @param {{ apps: Array<{ id: string, requires: string[] }> }} manifest
+ * @param {string[]} selected @param {string[]} autoAdded
+ * @returns {string[]}
+ */
+export function autoAddedLines(manifest, selected, autoAdded) {
+  // ponytail: 조사는 고정이다. 영문 id 중 받침 발음이 다른 앱이 생기면 조사 선택을 더한다.
+  return autoAdded.map((id) => {
+    const requester = manifest.apps.find(
+      (app) => selected.includes(app.id) && app.requires.includes(id),
+    )?.id;
+    return `${requester}은 ${id}이 필요해서 ${id}을 함께 설치합니다.`;
+  });
+}
+
+/**
  * 빈 선택은 CLI가 직접 검사해 다시 묻는다(라이브러리 오류 문장은 영어 고정).
  * 자동 포함 안내는 확정한 뒤에만 보인다.
  * @param {{ prompts?: Prompts, manifest: { apps: Array<{ id: string, label: string, hint: string, default: boolean, requires: string[] }> } }} options
@@ -103,14 +121,8 @@ export async function askApps({ prompts = clack, manifest }) {
     }
 
     const { apps, autoAdded } = resolveSelection(manifest, selected, false);
-    for (const id of autoAdded) {
-      // ponytail: 조사는 고정이다. 영문 id 중 받침 발음이 다른 앱이 생기면 조사 선택을 더한다.
-      const requester = manifest.apps.find(
-        (app) => selected.includes(app.id) && app.requires.includes(id),
-      )?.id;
-      prompts.log.info(
-        `${requester}은 ${id}이 필요해서 ${id}을 함께 설치합니다.`,
-      );
+    for (const line of autoAddedLines(manifest, selected, autoAdded)) {
+      prompts.log.info(line);
     }
     return { cancelled: false, apps, autoAdded };
   }

@@ -21,12 +21,13 @@ import { buildHelpLines } from "./help.mjs";
 import { parseCliArgs } from "./parseCliArgs.mjs";
 import { InstallError, runPostSteps } from "./postSteps.mjs";
 import { parseFailureLines, preflight } from "./preflight.mjs";
-import { askApps, askProjectName, askRemoveExamples } from "./prompts.mjs";
+import { askApps, askProjectName, askRemoveExamples, autoAddedLines } from "./prompts.mjs";
 import { runSetup } from "./runSetup.mjs";
 import { createWorkDir } from "./workDir.mjs";
 
 const CANCEL_TEXT = "취소했습니다. 만든 파일은 없습니다.";
 const CANCEL_CODE = 130;
+export const DRY_RUN_TEXT = "변경 계획입니다. 파일은 바꾸지 않습니다.";
 const INSTALL_PROGRESS = "의존성을 설치하는 중입니다 (몇 분 걸릴 수 있습니다)";
 const NPM_ERROR_TAIL = 10;
 
@@ -109,7 +110,7 @@ function createSession(prompts) {
     signal: abort.signal,
     dispose() {
       process.off("SIGINT", onSigint);
-    process.off("SIGTERM", onSigint);
+      process.off("SIGTERM", onSigint);
       process.off("exit", onExit);
     },
   };
@@ -171,7 +172,11 @@ async function interview({ args, manifest, prompts, isTTY, cwd }) {
     if (asked.cancelled) return { cancelled: true };
     appIds = asked.apps;
   }
-  const apps = resolveSelection(manifest, appIds, false).apps;
+  const resolved = resolveSelection(manifest, appIds, false);
+  const apps = resolved.apps;
+  if (!(args.apps === undefined && canAsk)) {
+    for (const line of autoAddedLines(manifest, appIds, resolved.autoAdded)) prompts.log.info(line);
+  }
 
   let removeExamples = args.examples === "remove";
   if (!apps.includes("api") || (args.examples === undefined && canAsk)) {
@@ -214,6 +219,7 @@ async function createProject(ctx, choice) {
   if (!setup.ok) throw new CliFailure(setup.output.trimEnd().split("\n"));
 
   if (args.dryRun) {
+    prompts.log.info(DRY_RUN_TEXT);
     process.stdout.write(setup.output);
     const lines = cleanupLines(work);
     if (lines.length > 0) throw new CliFailure(lines);
@@ -306,7 +312,7 @@ export async function main({
   argv,
   env = process.env,
   cwd = process.cwd(),
-  isTTY = Boolean(process.stdout.isTTY),
+  isTTY = Boolean(process.stdout.isTTY && process.stdin.isTTY),
   prompts = clack,
   fetch = fetchTemplate,
 }) {
