@@ -15,7 +15,12 @@ import { fileURLToPath } from "node:url";
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { fetchTemplate } from "../../../src/cli/fetchTemplate.mjs";
+import {
+  FETCH_PROGRESS,
+  fetchFailureLines,
+  fetchTemplate,
+  FetchTemplateError,
+} from "../../../src/cli/fetchTemplate.mjs";
 
 const pkg = JSON.parse(
   readFileSync(
@@ -191,5 +196,30 @@ describe("fetchTemplate STARTER_TEMPLATE_DIR", () => {
 
     expect(download).not.toHaveBeenCalled();
     expect(listFiles(dest)).toEqual(["a.txt"]);
+  });
+});
+
+describe("내려받기 문안", () => {
+  it("진행 중과 끝난 문장이 버전을 담는다", () => {
+    expect(FETCH_PROGRESS.running("1.2.0")).toBe("템플릿을 내려받는 중입니다 (v1.2.0)");
+    expect(FETCH_PROGRESS.done("1.2.0")).toBe("템플릿을 내려받았습니다 (v1.2.0)");
+  });
+
+  it("네트워크 실패일 때 안내 줄과 원인 줄 두 줄을 만든다", () => {
+    const error = new FetchTemplateError("network", "v1.2.0", "fetch failed");
+
+    expect(fetchFailureLines(error)).toEqual([
+      "템플릿을 내려받지 못했습니다. 네트워크 연결을 확인한 뒤 다시 실행해 주세요.",
+      "원인: fetch failed",
+    ]);
+  });
+
+  it("태그가 없을 때 찾지 못한 ref와 다시 실행할 명령 두 줄을 만든다", () => {
+    const error = new FetchTemplateError("tag-missing", "v1.2.0", "404");
+
+    expect(fetchFailureLines(error)).toEqual([
+      "템플릿 v1.2.0 을 찾지 못했습니다.",
+      "npm create scalable-monorepo-starter@latest 로 다시 실행해 주세요.",
+    ]);
   });
 });
