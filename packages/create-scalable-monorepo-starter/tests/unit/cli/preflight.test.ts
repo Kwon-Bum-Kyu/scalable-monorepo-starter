@@ -5,7 +5,7 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { displayWidth } from "../../../src/cli/displayWidth.mjs";
-import { preflight } from "../../../src/cli/preflight.mjs";
+import { parseFailureLines, preflight } from "../../../src/cli/preflight.mjs";
 
 const APPS = [{ id: "api" }, { id: "web" }, { id: "desktop" }, { id: "storybook" }];
 
@@ -162,5 +162,37 @@ describe("preflight", () => {
         expect(displayWidth(line)).toBeLessThanOrEqual(80);
       }
     }
+  });
+});
+
+describe("parseFailureLines", () => {
+  it("알 수 없는 옵션일 때 옵션 이름을 넣은 두 줄을 만든다", () => {
+    const message =
+      "Unknown option '--foo'. To specify a positional argument starting with a '-', place it at the end of the command after '--', as in '-- \"--foo\"";
+
+    expect(parseFailureLines({ ok: false, reason: "invalid-option", message })).toEqual([
+      "알 수 없는 옵션입니다: --foo",
+      "사용할 수 있는 옵션은 --help 로 확인해 주세요.",
+    ]);
+  });
+
+  it("값이 빠진 옵션일 때 값 표시를 뺀 옵션 이름을 넣은 두 줄을 만든다", () => {
+    const message = "Option '--apps <value>' argument missing";
+
+    expect(parseFailureLines({ ok: false, reason: "invalid-option", message })[0]).toBe(
+      "알 수 없는 옵션입니다: --apps",
+    );
+  });
+
+  it("위치 인자가 둘 이상일 때 한 줄을 만든다", () => {
+    expect(parseFailureLines({ ok: false, reason: "too-many-positionals" })).toEqual([
+      "프로젝트 이름은 하나만 지정해 주세요.",
+    ]);
+  });
+
+  it("examples 플래그가 충돌할 때 한 줄을 만든다", () => {
+    expect(parseFailureLines({ ok: false, reason: "conflicting-examples" })).toEqual([
+      "--remove-examples 와 --keep-examples 는 함께 쓸 수 없습니다.",
+    ]);
   });
 });

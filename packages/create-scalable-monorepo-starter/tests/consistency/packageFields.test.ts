@@ -1,10 +1,11 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
 interface PackageJson {
+  bin?: Record<string, string>;
   files?: string[];
   engines?: { node?: string };
   license?: string;
@@ -138,6 +139,15 @@ describe("실제 패키지 필드", () => {
       url: "git+https://github.com/Kwon-Bum-Kyu/scalable-monorepo-starter.git",
       directory: "packages/create-scalable-monorepo-starter",
     });
+  });
+
+  it("bin이 진입점 파일을 가리키고 그 파일 첫 줄이 shebang일 때 검사를 통과한다", () => {
+    expect(pkg.bin).toEqual({
+      "create-scalable-monorepo-starter": "./src/cli/index.mjs",
+    });
+    const entry = path.join(CLI_DIR, pkg.bin?.["create-scalable-monorepo-starter"] ?? "");
+    expect(existsSync(entry)).toBe(true);
+    expect(checkBinShebang(readText(entry).split("\n")[0] ?? "")).toBe(true);
   });
 
   it("패키지의 LICENSE가 루트 LICENSE와 같을 때 검사를 통과한다", () => {
