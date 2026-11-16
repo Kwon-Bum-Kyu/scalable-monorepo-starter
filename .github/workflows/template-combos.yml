@@ -1,7 +1,7 @@
 name: Template combos
 
-# 앱 조합마다 setup을 실행해 생성물이 설치, 검사, 빌드를 통과하는지 확인한다.
-# CLI가 없는 단계에서는 git archive로 푼 사본에서 run.mjs를 직접 호출한다.
+# 앱 조합마다 CLI를 비대화형으로 실행해 생성물이 설치, 검사, 빌드를 통과하는지 확인한다.
+# 템플릿은 git archive로 푼 사본(STARTER_TEMPLATE_DIR)을 쓰므로 네트워크 내려받기를 거치지 않는다.
 
 on:
   pull_request:
@@ -89,21 +89,31 @@ jobs:
 
       - name: Extract tracked files like a release tarball
         run: |
+          echo "TEMPLATE_DIR=${RUNNER_TEMP}/template" >> "$GITHUB_ENV"
           echo "OUT=${RUNNER_TEMP}/smoke-app" >> "$GITHUB_ENV"
           echo "MANIFEST=${RUNNER_TEMP}/starter.manifest.json" >> "$GITHUB_ENV"
-          OUT="${RUNNER_TEMP}/smoke-app"
-          MANIFEST="${RUNNER_TEMP}/starter.manifest.json"
-          mkdir -p "$OUT"
-          git archive HEAD | tar -x -C "$OUT"
-          cp packages/create-scalable-monorepo-starter/starter.manifest.json "$MANIFEST"
+          mkdir -p "${RUNNER_TEMP}/template"
+          git archive HEAD | tar -x -C "${RUNNER_TEMP}/template"
+          cp packages/create-scalable-monorepo-starter/starter.manifest.json "${RUNNER_TEMP}/starter.manifest.json"
 
-      - name: Run setup
-        working-directory: ${{ env.OUT }}
-        run: node packages/create-scalable-monorepo-starter/src/setup/run.mjs --name smoke-app --apps "${{ matrix.apps }}" ${{ matrix.remove-examples }}
+      - name: Create project with CLI
+        working-directory: ${{ runner.temp }}
+        env:
+          STARTER_TEMPLATE_DIR: ${{ env.TEMPLATE_DIR }}
+          COMBO_APPS: ${{ matrix.apps }}
+          REMOVE_EXAMPLES: ${{ matrix.remove-examples }}
+        run: |
+          # REMOVE_EXAMPLES는 비어 있거나 --remove-examples 하나다. 따옴표 없이 펼친다.
+          # shellcheck disable=SC2086
+          node "${GITHUB_WORKSPACE}/packages/create-scalable-monorepo-starter/src/cli/index.mjs" smoke-app --apps "$COMBO_APPS" --yes --no-git $REMOVE_EXAMPLES
 
       - name: Check leftover markers and old names
         working-directory: ${{ env.OUT }}
         run: |
+          if compgen -G "${RUNNER_TEMP}/.smoke-app.tmp-*" > /dev/null; then
+            echo "::error::temporary folder left next to generated project"
+            exit 1
+          fi
           if grep -rIn --exclude-dir=node_modules "APP:" .; then
             echo "::error::APP marker left in generated project"
             exit 1
@@ -122,10 +132,6 @@ jobs:
             echo "::error::old display name left in generated project"
             exit 1
           fi
-
-      - name: Install dependencies
-        working-directory: ${{ env.OUT }}
-        run: npm install
 
       - name: Verify lock file with npm ci
         working-directory: ${{ env.OUT }}
