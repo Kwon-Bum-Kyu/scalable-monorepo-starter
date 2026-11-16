@@ -153,3 +153,4 @@ import { useApi } from "@/hooks/useApi";
 - 코드·주석·문서에 이모지 금지
 - 프로덕션 코드에 `console.log` 금지
 - 입력 검증은 Zod 사용. 단 `packages/shared-types`에는 규칙 2(런타임 코드 금지)가 우선하므로 Zod 스키마를 두지 않는다
+- 의존성 설치 전에 실행되는 setup 모듈은 Node 내장 모듈만 쓰므로 손으로 쓴 검증 함수를 허용한다
