@@ -1,6 +1,7 @@
 import path from "node:path";
 
 import { resolveProjectName } from "../setup/projectName.mjs";
+import { NO_APPS_TEXT } from "./prompts.mjs";
 import { checkTargetDir } from "./workDir.mjs";
 
 // 가정값: T3-13의 통합 테스트가 고정한다(R-23).
@@ -73,6 +74,7 @@ export function preflight({ args, apps, isTTY, nodeVersion, userAgent, cwd }) {
   if (!isTTY && (args.name === undefined || (args.apps === undefined && !args.yes))) {
     return fail(NON_INTERACTIVE_LINES);
   }
+  if (args.apps?.length === 0) return fail([NO_APPS_TEXT]);
   const known = apps.map((app) => app.id);
   const unknown = (args.apps ?? []).filter((id) => !known.includes(id));
   if (unknown.length > 0) {
