@@ -30,6 +30,28 @@ export class FetchTemplateError extends Error {
   }
 }
 
+export const FETCH_PROGRESS = {
+  running: (/** @type {string} */ version) => `템플릿을 내려받는 중입니다 (v${version})`,
+  done: (/** @type {string} */ version) => `템플릿을 내려받았습니다 (v${version})`,
+};
+
+/**
+ * 사유별 실패 문구(PRD 4.1절 5번). 문구 선택은 호출자가 하고 이 함수가 줄을 만든다.
+ * @param {FetchTemplateError} error
+ * @returns {string[]}
+ */
+export function fetchFailureLines(error) {
+  return error.reason === "tag-missing"
+    ? [
+        `템플릿 ${error.ref} 을 찾지 못했습니다.`,
+        "npm create scalable-monorepo-starter@latest 로 다시 실행해 주세요.",
+      ]
+    : [
+        "템플릿을 내려받지 못했습니다. 네트워크 연결을 확인한 뒤 다시 실행해 주세요.",
+        `원인: ${error.detail}`,
+      ];
+}
+
 /** giget 3.3.1의 오류는 code가 없어 message와 cause로 가른다(T3-2). */
 /**
  * @param {unknown} error
@@ -42,7 +64,7 @@ function classify(error) {
   return { reason: missing ? "tag-missing" : "network", detail: message };
 }
 
-async function readOwnVersion() {
+export async function readOwnVersion() {
   const path = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "package.json");
   return JSON.parse(await readFile(path, "utf8")).version;
 }
