@@ -33,14 +33,29 @@ function fakePrompts(answers: {
     multiselect: [] as Record<string, unknown>[],
   };
   const lines: string[] = [];
+  const validationErrors: string[] = [];
   const ask =
     (kind: keyof typeof queues) => async (opts: Record<string, unknown>) => {
       calls[kind].push(opts);
       return queues[kind].shift();
     };
+  // clack의 text처럼 입력을 validate에 차례로 넣고, 문자열이 나오면 기록 후 다음 입력으로 넘어간다.
+  const askText = async (opts: Record<string, unknown>) => {
+    calls.text.push(opts);
+    const validate = opts.validate as
+      | ((value: string | undefined) => string | Error | undefined)
+      | undefined;
+    for (;;) {
+      const input = queues.text.shift();
+      const error =
+        typeof input === "string" ? validate?.(input) : undefined;
+      if (error === undefined) return input;
+      validationErrors.push(String(error));
+    }
+  };
   return {
     prompts: {
-      text: ask("text"),
+      text: askText,
       select: ask("select"),
       multiselect: ask("multiselect"),
       isCancel: (value: unknown) => value === CANCEL,
@@ -51,6 +66,7 @@ function fakePrompts(answers: {
     },
     calls,
     lines,
+    validationErrors,
   };
 }
 
@@ -83,40 +99,65 @@ describe("askProjectName", () => {
     expect(calls.text[0]).not.toHaveProperty("defaultValue");
   });
 
-  it("빈 입력일 때 프로젝트 이름이 비어 있다는 오류 문구를 보이고 다시 묻는다", async () => {
-    const { prompts, lines, calls } = fakePrompts({ text: ["  ", "my-app"] });
+  it("빈 입력일 때 비어 있다는 오류 문구를 validate가 돌려주고 질문은 한 번만 한다", async () => {
+    const { prompts, lines, calls, validationErrors } = fakePrompts({
+      text: ["  ", "my-app"],
+    });
     const result = await askProjectName({ prompts, cwd });
-    expect(lines).toEqual([
-      "error:프로젝트 이름이 비어 있습니다. 이름을 입력해 주세요.",
+    expect(validationErrors).toEqual([
+      "프로젝트 이름이 비어 있습니다. 이름을 입력해 주세요.",
     ]);
-    expect(calls.text).toHaveLength(2);
+    expect(lines).toEqual([]);
+    expect(calls.text).toHaveLength(1);
     expect(result).toMatchObject({ cancelled: false, npmName: "my-app" });
   });
 
-  it("변환 결과가 비었을 때 규칙 위반 오류 문구를 보이고 다시 묻는다", async () => {
-    const { prompts, lines } = fakePrompts({ text: ["한글이름", "ok"] });
+  it("입력이 없을 때 비어 있다는 오류 문구를 validate가 돌려준다", async () => {
+    const { prompts, calls } = fakePrompts({ text: ["x"] });
     await askProjectName({ prompts, cwd });
-    expect(lines).toEqual([
-      "error:영문 소문자, 숫자, 하이픈으로 바꿀 수 있는 이름을 입력해 주세요. 예: my-app",
-    ]);
+    const validate = calls.text[0].validate as (v?: string) => unknown;
+    expect(validate(undefined)).toBe(
+      "프로젝트 이름이 비어 있습니다. 이름을 입력해 주세요.",
+    );
+    expect(validate("")).toBe(
+      "프로젝트 이름이 비어 있습니다. 이름을 입력해 주세요.",
+    );
   });
 
-  it("스코프를 입력했을 때 스코프 미지원 오류 문구를 보이고 다시 묻는다", async () => {
-    const { prompts, lines } = fakePrompts({ text: ["@org/name", "name"] });
+  it("변환 결과가 비었을 때 규칙 위반 오류 문구를 validate가 돌려준다", async () => {
+    const { prompts, validationErrors, calls } = fakePrompts({
+      text: ["한글이름", "ok"],
+    });
     await askProjectName({ prompts, cwd });
-    expect(lines).toEqual([
-      "error:스코프(@org/)는 지원하지 않습니다. 이름만 입력해 주세요.",
+    expect(validationErrors).toEqual([
+      "영문 소문자, 숫자, 하이픈으로 바꿀 수 있는 이름을 입력해 주세요. 예: my-app",
     ]);
+    expect(calls.text).toHaveLength(1);
   });
 
-  it("폴더가 이미 있을 때 다른 이름을 입력해 달라는 끝맺음으로 다시 묻는다", async () => {
+  it("스코프를 입력했을 때 스코프 미지원 오류 문구를 validate가 돌려준다", async () => {
+    const { prompts, validationErrors, calls } = fakePrompts({
+      text: ["@org/name", "name"],
+    });
+    await askProjectName({ prompts, cwd });
+    expect(validationErrors).toEqual([
+      "스코프(@org/)는 지원하지 않습니다. 이름만 입력해 주세요.",
+    ]);
+    expect(calls.text).toHaveLength(1);
+  });
+
+  it("폴더가 이미 있을 때 다른 이름을 입력해 달라는 오류 문구를 validate가 돌려준다", async () => {
     fs.mkdirSync(path.join(cwd, "my-app"));
     fs.writeFileSync(path.join(cwd, "my-app", "a.txt"), "x");
-    const { prompts, lines } = fakePrompts({ text: ["my-app", "other"] });
+    const { prompts, validationErrors, calls, lines } = fakePrompts({
+      text: ["my-app", "other"],
+    });
     const result = await askProjectName({ prompts, cwd });
-    expect(lines).toEqual([
-      'error:"my-app" 폴더가 이미 있고 비어 있지 않습니다. 다른 이름을 입력해 주세요.',
+    expect(validationErrors).toEqual([
+      '"my-app" 폴더가 이미 있고 비어 있지 않습니다. 다른 이름을 입력해 주세요.',
     ]);
+    expect(lines).toEqual([]);
+    expect(calls.text).toHaveLength(1);
     expect(result).toMatchObject({ npmName: "other" });
   });
 
