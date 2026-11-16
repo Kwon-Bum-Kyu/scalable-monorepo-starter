@@ -96,6 +96,11 @@ jobs:
           git archive HEAD | tar -x -C "${RUNNER_TEMP}/template"
           cp packages/create-scalable-monorepo-starter/starter.manifest.json "${RUNNER_TEMP}/starter.manifest.json"
 
+      # CLI는 @clack/prompts와 giget을 쓴다. npm create로 실행하면 npm이 설치해 주지만
+      # 여기서는 저장소의 소스를 직접 실행하므로 CLI 워크스페이스의 런타임 의존성만 설치한다.
+      - name: Install CLI runtime dependencies
+        run: npm ci --workspace=create-scalable-monorepo-starter --omit=dev
+
       - name: Create project with CLI
         working-directory: ${{ runner.temp }}
         env:
