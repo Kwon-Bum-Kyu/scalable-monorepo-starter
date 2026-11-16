@@ -51,7 +51,7 @@ function rejection(
 }
 
 /**
- * 이름을 받을 때까지 같은 질문을 다시 한다.
+ * 거부 사유는 text의 validate가 같은 질문 화면 안에서 보이고 다시 받는다.
  * @param {{ prompts?: Prompts, cwd?: string }} [options]
  * @returns {Promise<{ cancelled: true } |
  *   { cancelled: false, displayName: string, npmName: string }>}
@@ -60,26 +60,22 @@ export async function askProjectName({
   prompts = clack,
   cwd = process.cwd(),
 } = {}) {
-  for (;;) {
-    const input = await prompts.text({
-      message: MESSAGES.name,
-      placeholder: "my-app",
-    });
-    if (prompts.isCancel(input)) return { cancelled: true };
+  const input = await prompts.text({
+    message: MESSAGES.name,
+    placeholder: "my-app",
+    validate: (/** @type {string | undefined} */ value) =>
+      rejection(resolveProjectName(value ?? ""), cwd) ?? undefined,
+  });
+  if (prompts.isCancel(input)) return { cancelled: true };
 
-    const name = resolveProjectName(input);
-    const error = rejection(name, cwd);
-    if (error !== null) {
-      prompts.log.error(error);
-      continue;
-    }
-    const { displayName, npmName } =
-      /** @type {{ displayName: string, npmName: string }} */ (name);
-    if (npmName !== displayName) {
-      prompts.log.info(`폴더와 패키지 이름은 "${npmName}"으로 만듭니다.`);
-    }
-    return { cancelled: false, displayName, npmName };
+  const { displayName, npmName } =
+    /** @type {{ displayName: string, npmName: string }} */ (
+      resolveProjectName(input)
+    );
+  if (npmName !== displayName) {
+    prompts.log.info(`폴더와 패키지 이름은 "${npmName}"으로 만듭니다.`);
   }
+  return { cancelled: false, displayName, npmName };
 }
 
 /**
