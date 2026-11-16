@@ -5,6 +5,7 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { runSetup } from "../../../src/cli/runSetup.mjs";
+import { killQuietly, waitForPid, waitUntilDead } from "../../helpers/runCli";
 
 let workDir = "";
 
@@ -123,5 +124,30 @@ describe("runSetup", () => {
     const { lines } = await runSetup({ ...baseInput(), removedApps: [] });
 
     expect(lines[0]).toBe("프로젝트 이름을 반영했습니다 (my-app)");
+  });
+});
+
+describe("runSetup 중단", () => {
+  const pids: number[] = [];
+  afterEach(() => pids.splice(0).forEach(killQuietly));
+
+  it("실행 중 signal이 abort되면 setup 프로세스가 끝나고 ok가 false인 결과를 돌려준다", async () => {
+    const pidFile = path.join(workDir, "pid.txt");
+    writeFakeSetup(
+      `import { writeFileSync } from "node:fs";
+writeFileSync(${JSON.stringify(pidFile)}, String(process.pid));
+setInterval(() => {}, 1000);
+`,
+    );
+    const controller = new AbortController();
+
+    const pending = runSetup({ ...baseInput(), signal: controller.signal });
+    const pid = await waitForPid(pidFile);
+    pids.push(pid);
+    controller.abort();
+    const result = await pending;
+
+    expect(result.ok).toBe(false);
+    expect(await waitUntilDead(pid)).toBe(true);
   });
 });

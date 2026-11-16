@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { afterEach, describe, expect, it } from "vitest";
@@ -6,11 +6,15 @@ import { afterEach, describe, expect, it } from "vitest";
 import { cleanupFakeTemplates, createFakeTemplate } from "../helpers/fakeTemplate";
 import {
   cleanupTempDirs,
+  isAlive,
+  killQuietly,
   makeFakeBin,
   makeTempDir,
   pathWith,
   runCli,
   spawnCli,
+  waitForPid,
+  waitUntilDead,
 } from "../helpers/runCli";
 
 const CANCEL_TEXT = "취소했습니다. 만든 파일은 없습니다.";
@@ -195,26 +199,39 @@ setTimeout(() => process.exit(0), 30000);
       env: { STARTER_TEMPLATE_DIR: root, READY_FILE: ready },
     });
 
-    const setupPid = await waitForFile(ready);
+    const setupPid = await waitForPid(ready);
     child.kill("SIGINT");
     const result = await done;
-    process.kill(Number(setupPid), "SIGKILL");
+    const setupAlive = isAlive(setupPid);
+    killQuietly(setupPid);
 
+    expect(setupAlive).toBe(false);
     expect(result.code).toBe(130);
     expect(result.stdout).toContain(CANCEL_TEXT);
     expect(result.stdout).not.toContain("Canceled");
     expect(readdirSync(cwd)).toEqual([]);
   });
-});
 
-async function waitForFile(file: string): Promise<string> {
-  const deadline = Date.now() + 15000;
-  while (Date.now() < deadline) {
-    if (existsSync(file)) {
-      const text = readFileSync(file, "utf8");
-      if (text !== "") return text;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 20));
-  }
-  throw new Error("setup이 시작되지 않았습니다.");
-}
+  it("설치 중 Ctrl+C일 때 CLI가 끝난 뒤 npm 프로세스가 남아 있지 않다", async () => {
+    const { root } = createFakeTemplate();
+    const cwd = makeTempDir();
+    const ready = path.join(makeTempDir("cli-ready-"), "npm-pid.txt");
+    const bin = makeFakeBin({
+      npm: 'echo $$ > "$READY_FILE"; exec sleep 30',
+    });
+    const { child, done } = spawnCli(["demo", "--apps", "web", "--yes", "--no-git"], {
+      cwd,
+      env: { STARTER_TEMPLATE_DIR: root, PATH: pathWith(bin), READY_FILE: ready },
+    });
+
+    const npmPid = await waitForPid(ready);
+    child.kill("SIGINT");
+    const result = await done;
+    const dead = await waitUntilDead(npmPid);
+    killQuietly(npmPid);
+
+    expect(dead).toBe(true);
+    expect(result.code).toBe(1);
+    expect(existsSync(path.join(cwd, "demo/package.json"))).toBe(true);
+  });
+});
