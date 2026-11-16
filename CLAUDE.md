@@ -22,10 +22,10 @@
 
 | Workspace | Description | Port |
 | --------- | ----------- | ---- |
-| `apps/web` | React 19 + Vite 8 frontend | 3000 |
-| `apps/api` | Express + Prisma + PostgreSQL backend | 4000 |
-| `apps/storybook` | Storybook 10 component docs | 6006 |
-| `apps/desktop` | Electron 데스크톱 앱 (electron-vite, renderer는 apps/web과 동일 환경) | 3100 |
+| `apps/web` | React 19 + Vite 8 frontend | 3000 | <!-- APP:web -->
+| `apps/api` | Express + Prisma + PostgreSQL backend | 4000 | <!-- APP:api -->
+| `apps/storybook` | Storybook 10 component docs | 6006 | <!-- APP:storybook -->
+| `apps/desktop` | Electron 데스크톱 앱 (electron-vite, renderer는 apps/web과 동일 환경) | 3100 | <!-- APP:desktop -->
 | `packages/shared-types` | FE/BE 공유 TypeScript 타입 (런타임 코드 금지) | — |
 | `packages/ui` | 공유 UI 컴포넌트 라이브러리 (shadcn/ui) | — |
 | `packages/eslint-config` | 공유 ESLint 설정 | — |
@@ -82,11 +82,11 @@ npx shadcn add <component>   # 추가 후 src/index.ts에 수동 re-export
 
 작업 중인 디렉터리에 따라 아래 파일들이 자동 로드된다.
 
-- [apps/web/CLAUDE.md](./apps/web/CLAUDE.md) — 디렉터리 역할, `@/` 별칭, `useApi`/`useMutation`
-- [apps/api/CLAUDE.md](./apps/api/CLAUDE.md) — 레이어드 아키텍처, `sendSuccess`/`AppError`, 마이그레이션
-  - [apps/api/src/services/CLAUDE.md](./apps/api/src/services/CLAUDE.md) — 비즈니스 로직 규칙
-  - [apps/api/src/repositories/CLAUDE.md](./apps/api/src/repositories/CLAUDE.md) — SQL 격리 규칙
-- [apps/desktop/CLAUDE.md](./apps/desktop/CLAUDE.md) — Electron main/preload/renderer 구조, apps/web과의 차이, 테스트 경로
+- [apps/web/CLAUDE.md](./apps/web/CLAUDE.md) — 디렉터리 역할, `@/` 별칭, `useApi`/`useMutation` <!-- APP:web -->
+- [apps/api/CLAUDE.md](./apps/api/CLAUDE.md) — 레이어드 아키텍처, `sendSuccess`/`AppError`, 마이그레이션 <!-- APP:api -->
+  - [apps/api/src/services/CLAUDE.md](./apps/api/src/services/CLAUDE.md) — 비즈니스 로직 규칙 <!-- APP:api -->
+  - [apps/api/src/repositories/CLAUDE.md](./apps/api/src/repositories/CLAUDE.md) — SQL 격리 규칙 <!-- APP:api -->
+- [apps/desktop/CLAUDE.md](./apps/desktop/CLAUDE.md) — Electron main/preload/renderer 구조, apps/web과의 차이, 테스트 경로 <!-- APP:desktop -->
 - [packages/ui/CLAUDE.md](./packages/ui/CLAUDE.md) — 컴포넌트 추가·배럴 export·Tailwind
 - [packages/shared-types/CLAUDE.md](./packages/shared-types/CLAUDE.md) — 런타임 코드 금지
 
@@ -117,4 +117,4 @@ NODE_ENV=development
 ## 라이선스 / 기여
 
 - 라이선스: [MIT](./LICENSE)
-- 기여 가이드: [CONTRIBUTING.md](./CONTRIBUTING.md)
+- 기여 가이드: [CONTRIBUTING.md](./CONTRIBUTING.md) <!-- APP:template -->
