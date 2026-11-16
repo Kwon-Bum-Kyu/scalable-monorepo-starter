@@ -79,6 +79,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       timeout: 180_000,
     },
+    // >>> APP:api
     {
       command: "npm run dev:server --workspace=api",
       cwd: "../..",
@@ -86,5 +87,6 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       timeout: 180_000,
     },
+    // <<< APP:api
   ],
 });

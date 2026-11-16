@@ -32,7 +32,7 @@ npm run dev
 
 - [ ] `npm run typecheck` 통과
 - [ ] `npm run lint` (`--max-warnings=0`) 통과
-- [ ] `npm run check:parity` 통과 (web 화면 코드를 바꿨다면 desktop renderer 사본에도 반영)
+- [ ] `npm run check:parity` 통과 (web 화면 코드를 바꿨다면 desktop renderer 사본에도 반영) <!-- APP:web+desktop -->
 - [ ] `npm run test` 통과
 - [ ] `npm run build` 통과
 - [ ] (해당 시) Playwright E2E 통과
@@ -46,12 +46,12 @@ npm run dev
 
 ## 영향 범위
 
-- [ ] FE (`apps/web`)
-- [ ] Desktop (`apps/desktop`)
-- [ ] BE (`apps/api`)
+- [ ] FE (`apps/web`) <!-- APP:web -->
+- [ ] Desktop (`apps/desktop`) <!-- APP:desktop -->
+- [ ] BE (`apps/api`) <!-- APP:api -->
 - [ ] 공유 패키지 (`packages/*`)
 - [ ] 인프라·CI
-- [ ] 마이그레이션 (`apps/api/prisma/migrations/`)
+- [ ] 마이그레이션 (`apps/api/prisma/migrations/`) <!-- APP:api -->
 
 ## 추가 메모
 

@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
+    # >>> APP:api
     services:
       postgres:
         image: postgres:18
@@ -36,9 +37,12 @@ jobs:
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
+    # <<< APP:api
 
+    # >>> APP:api
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/myapp
+    # <<< APP:api
 
     steps:
       - name: Checkout repository
@@ -53,6 +57,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # >>> APP:api
       - name: Apply Prisma migrations
         run: npx prisma migrate deploy
         working-directory: apps/api
@@ -60,6 +65,7 @@ jobs:
       - name: Generate Prisma Client
         run: npx prisma generate
         working-directory: apps/api
+      # <<< APP:api
 
       - name: Typecheck
         run: npm run typecheck
@@ -67,8 +73,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # >>> APP:web+desktop
       - name: Renderer parity
         run: npm run check:parity
+      # <<< APP:web+desktop
 
       - name: Test
         run: npm run test:coverage
