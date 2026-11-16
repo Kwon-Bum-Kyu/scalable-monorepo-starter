@@ -1,0 +1,178 @@
+{
+  "apps": [
+    {
+      "id": "api",
+      "label": "api",
+      "hint": "Express + Prisma + PostgreSQL (Docker 필요)",
+      "dir": "apps/api",
+      "default": true,
+      "requires": [],
+      "packages": [
+        "shared-types",
+        "eslint-config",
+        "typescript-config",
+        "vitest-config"
+      ],
+      "rootScripts": ["dev:api", "test:api"],
+      "paths": [".claude/skills/be-implementation"],
+      "dev": {
+        "script": "dev:api",
+        "url": "http://localhost:4000",
+        "note": null,
+        "prerequisite": "Docker가 실행 중이어야 합니다"
+      }
+    },
+    {
+      "id": "web",
+      "label": "web",
+      "hint": "React 19 + Vite",
+      "dir": "apps/web",
+      "default": true,
+      "requires": [],
+      "packages": [
+        "shared-types",
+        "ui",
+        "eslint-config",
+        "typescript-config",
+        "vitest-config"
+      ],
+      "rootScripts": ["dev:web", "test:web"],
+      "paths": [],
+      "dev": {
+        "script": "dev:web",
+        "url": "http://localhost:3000",
+        "note": null,
+        "prerequisite": null
+      }
+    },
+    {
+      "id": "desktop",
+      "label": "desktop",
+      "hint": "Electron (web 화면의 사본을 사용)",
+      "dir": "apps/desktop",
+      "default": false,
+      "requires": [],
+      "packages": [
+        "shared-types",
+        "ui",
+        "eslint-config",
+        "typescript-config",
+        "vitest-config"
+      ],
+      "rootScripts": ["dev:desktop"],
+      "paths": [],
+      "dev": {
+        "script": "dev:desktop",
+        "url": null,
+        "note": "Electron 창으로 열립니다",
+        "prerequisite": null
+      }
+    },
+    {
+      "id": "storybook",
+      "label": "storybook",
+      "hint": "Storybook 10 (web 필요)",
+      "dir": "apps/storybook",
+      "default": false,
+      "requires": ["web"],
+      "packages": ["ui", "eslint-config", "typescript-config"],
+      "rootScripts": ["dev:storybook", "storybook", "build-storybook"],
+      "paths": [],
+      "dev": {
+        "script": "dev:storybook",
+        "url": "http://localhost:6006",
+        "note": null,
+        "prerequisite": null
+      }
+    }
+  ],
+  "packages": [
+    {
+      "id": "eslint-config",
+      "dir": "packages/eslint-config",
+      "always": true,
+      "paths": []
+    },
+    {
+      "id": "typescript-config",
+      "dir": "packages/typescript-config",
+      "always": true,
+      "paths": []
+    },
+    {
+      "id": "vitest-config",
+      "dir": "packages/vitest-config",
+      "always": true,
+      "paths": []
+    },
+    {
+      "id": "shared-types",
+      "dir": "packages/shared-types",
+      "always": false,
+      "paths": []
+    },
+    {
+      "id": "ui",
+      "dir": "packages/ui",
+      "always": false,
+      "paths": [
+        "DESIGN.md",
+        "PRODUCT.md",
+        ".impeccable",
+        ".claude/rules/tailwind-v4.md",
+        ".claude/skills/fe-implementation"
+      ]
+    }
+  ],
+  "conditionalPaths": [
+    {
+      "path": "scripts/check-renderer-parity.mjs",
+      "keepWhen": { "apps": ["web", "desktop"] },
+      "rootScripts": ["check:parity"]
+    },
+    {
+      "path": ".github/workflows/e2e.yml",
+      "keepWhen": { "apps": ["web", "api"], "examples": true },
+      "rootScripts": []
+    }
+  ],
+  "templateOnly": [
+    "packages/create-scalable-monorepo-starter",
+    ".github/ISSUE_TEMPLATE",
+    ".github/workflows/template-combos.yml",
+    ".claude/settings.json",
+    "docs/assets",
+    "CONTRIBUTING.md",
+    "LICENSE"
+  ],
+  "markerFiles": [
+    ".github/workflows/ci.yml",
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    ".env.example",
+    "CLAUDE.md",
+    "apps/web/playwright.config.ts",
+    "apps/desktop/CLAUDE.md"
+  ],
+  "rename": {
+    "from": "scalable-monorepo-starter",
+    "displayFrom": "Scalable Monorepo Starter",
+    "npmNameFiles": [
+      "CLAUDE.md",
+      ".claude/rules",
+      ".claude/skills",
+      ".claude/agents",
+      "apps/desktop/electron-builder.yml"
+    ],
+    "displayNameFiles": [
+      "apps/web/index.html",
+      "apps/desktop/src/renderer/index.html"
+    ],
+    "replacements": [
+      {
+        "file": "apps/api/docker-compose.yml",
+        "from": "container_name: monorepo-postgres",
+        "to": "container_name: {{npmName}}-postgres"
+      }
+    ]
+  }
+}
