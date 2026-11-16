@@ -26,6 +26,10 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(__dirname, "..");
 const dryRun = process.argv.includes("--dry-run");
+const MIGRATION_NOTICE = [
+  "예제 테이블을 지우는 마이그레이션이 필요합니다. 다음 명령을 실행해 주세요.",
+  "  cd apps/api && npm run migrate -- --name drop_examples_table",
+];
 
 const targets = {
   paths: [
@@ -184,7 +188,15 @@ for (const r of results) {
 }
 
 if (!dryRun) {
-  process.stdout.write(
-    "\n다음 단계: prisma migrate (drop_examples_table) 생성 후 npm run check:parity, npm run typecheck, npm run test 실행을 권장합니다.\n",
-  );
+  const lines = [""];
+  if (existsSync(path.join(repoRoot, "apps/api"))) {
+    lines.push(...MIGRATION_NOTICE);
+  }
+  const checks = existsSync(
+    path.join(repoRoot, "scripts/check-renderer-parity.mjs"),
+  )
+    ? "npm run check:parity, npm run typecheck, npm run test"
+    : "npm run typecheck, npm run test";
+  lines.push(`검증: ${checks} 실행을 권장합니다.`);
+  process.stdout.write(`${lines.join("\n")}\n`);
 }
