@@ -1,11 +1,17 @@
-import { describe, expect, it } from "vitest";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+
+import { afterEach, describe, expect, it } from "vitest";
 
 import {
   extractNpmErrorLines,
   GIT_WARNING,
+  InstallError,
   runCommand,
   runPostSteps,
 } from "../../../src/cli/postSteps.mjs";
+import { killQuietly, waitForPid, waitUntilDead } from "../../helpers/runCli";
 
 type Call = { command: string; args: string[]; cwd: string };
 type Result = { code: number | null; output: string };
@@ -122,5 +128,51 @@ describe("runCommand", () => {
   it("명령이 없을 때 종료 코드 null을 돌려준다", async () => {
     const result = await runCommand("zz-no-such-command-93817", [], process.cwd());
     expect(result.code).toBeNull();
+  });
+});
+
+describe("runCommand 중단", () => {
+  const dirs: string[] = [];
+  const pids: number[] = [];
+  afterEach(() => {
+    pids.splice(0).forEach(killQuietly);
+    dirs.splice(0).forEach((dir) => rmSync(dir, { recursive: true, force: true }));
+  });
+
+  it("실행 중 signal이 abort되면 자식 프로세스가 끝나고 code가 null인 결과를 돌려준다", async () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "run-command-"));
+    dirs.push(dir);
+    const pidFile = path.join(dir, "pid.txt");
+    const script = path.join(dir, "long.mjs");
+    writeFileSync(
+      script,
+      `import { writeFileSync } from "node:fs";
+writeFileSync(${JSON.stringify(pidFile)}, String(process.pid));
+setInterval(() => {}, 1000);
+`,
+    );
+    const controller = new AbortController();
+
+    const pending = runCommand(process.execPath, [script], dir, controller.signal);
+    const pid = await waitForPid(pidFile);
+    pids.push(pid);
+    controller.abort();
+    const result = await pending;
+
+    expect(result.code).toBeNull();
+    expect(await waitUntilDead(pid)).toBe(true);
+  });
+
+  it("설치 중 signal이 abort되면 runPostSteps가 InstallError로 끝난다", async () => {
+    const controller = new AbortController();
+    const run = async (_c: string, _a: string[], _d: string, signal?: AbortSignal) => {
+      controller.abort();
+      expect(signal).toBe(controller.signal);
+      return { code: null, output: "" };
+    };
+
+    await expect(
+      runPostSteps({ cwd: "/x", install: true, git: false, run, signal: controller.signal }),
+    ).rejects.toBeInstanceOf(InstallError);
   });
 });

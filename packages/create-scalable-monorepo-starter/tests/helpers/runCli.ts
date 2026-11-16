@@ -1,8 +1,10 @@
 import { type ChildProcess,spawn } from "node:child_process";
 import {
   chmodSync,
+  existsSync,
   mkdirSync,
   mkdtempSync,
+  readFileSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -78,4 +80,45 @@ export function runCli(
 export function pathWith(bin: string): string {
   // eslint-disable-next-line turbo/no-undeclared-env-vars -- 테스트가 자식 프로세스의 PATH 앞에 가짜 실행 파일을 둔다
   return `${bin}${path.delimiter}${process.env.PATH}`;
+}
+
+/** pid 파일이 채워질 때까지 짧은 간격으로 확인한다(전체 시간 제한 있음). */
+export async function waitForPid(file: string, timeoutMs = 15000): Promise<number> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (existsSync(file)) {
+      const text = readFileSync(file, "utf8").trim();
+      if (text !== "") return Number(text);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 20));
+  }
+  throw new Error(`pid 파일이 생기지 않았습니다: ${file}`);
+}
+
+export function isAlive(pid: number): boolean {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** 프로세스가 끝날 때까지 기다린다. 시간 안에 안 끝나면 false. */
+export async function waitUntilDead(pid: number, timeoutMs = 5000): Promise<boolean> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (!isAlive(pid)) return true;
+    await new Promise((resolve) => setTimeout(resolve, 20));
+  }
+  return false;
+}
+
+/** 테스트가 끝나도 남은 프로세스를 정리한다. */
+export function killQuietly(pid: number): void {
+  try {
+    process.kill(pid, "SIGKILL");
+  } catch {
+    // 이미 끝났다.
+  }
 }
