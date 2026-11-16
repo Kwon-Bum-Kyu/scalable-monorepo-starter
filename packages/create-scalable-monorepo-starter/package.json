@@ -3,11 +3,28 @@
   "version": "1.2.0",
   "private": true,
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kwon-Bum-Kyu/scalable-monorepo-starter.git",
+    "directory": "packages/create-scalable-monorepo-starter"
+  },
+  "files": [
+    "src",
+    "starter.manifest.json"
+  ],
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@clack/prompts": "1.9.0",
+    "giget": "3.3.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
