@@ -13,7 +13,7 @@ const GIT_COMMANDS = [
 
 /**
  * @typedef {{ code: number | null, output: string }} CommandResult
- * @typedef {(command: string, args: string[], cwd: string) => Promise<CommandResult>} CommandRunner
+ * @typedef {(command: string, args: string[], cwd: string, signal?: AbortSignal) => Promise<CommandResult>} CommandRunner
  */
 
 export class InstallError extends Error {
@@ -35,12 +35,12 @@ export function extractNpmErrorLines(output) {
 }
 
 /**
- * 자식 프로세스를 실행해 종료 코드와 출력을 모은다. 실행 파일이 없으면 code가 null이다.
+ * 자식 프로세스를 실행해 종료 코드와 출력을 모은다. 실행 파일이 없거나 signal로 중단되면 code가 null이다.
  * @type {CommandRunner}
  */
-export function runCommand(command, args, cwd) {
+export function runCommand(command, args, cwd, signal) {
   return new Promise((resolve) => {
-    const child = spawn(command, args, { cwd, stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn(command, args, { cwd, stdio: ["ignore", "pipe", "pipe"], signal });
     let output = "";
     /** @param {Buffer} chunk */
     const collect = (chunk) => {
@@ -55,19 +55,19 @@ export function runCommand(command, args, cwd) {
 
 /**
  * 설치 실패는 InstallError로 던지고, git 실패는 경고로 돌려준다.
- * @param {{ cwd: string, install: boolean, git: boolean, run?: CommandRunner }} options
+ * @param {{ cwd: string, install: boolean, git: boolean, run?: CommandRunner, signal?: AbortSignal }} options
  * @returns {Promise<{ warnings: string[] }>}
  */
-export async function runPostSteps({ cwd, install, git, run = runCommand }) {
+export async function runPostSteps({ cwd, install, git, run = runCommand, signal }) {
   if (install) {
-    const result = await run("npm", ["install"], cwd);
+    const result = await run("npm", ["install"], cwd, signal);
     if (result.code !== 0) {
       throw new InstallError(extractNpmErrorLines(result.output));
     }
   }
   if (git) {
     for (const args of GIT_COMMANDS) {
-      const result = await run("git", args, cwd);
+      const result = await run("git", args, cwd, signal);
       if (result.code !== 0) {
         return { warnings: [GIT_WARNING] };
       }

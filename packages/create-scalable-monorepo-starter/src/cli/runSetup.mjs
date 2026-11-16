@@ -19,6 +19,7 @@ const SETUP_ENTRY =
  * @param {{
  *   workDir: string, npmName: string, displayName: string, apps: string[],
  *   removedApps: string[], removeExamples: boolean, dryRun: boolean,
+ *   signal?: AbortSignal,
  * }} input
  * @returns {Promise<{ ok: boolean, output: string, lines: string[] }>}
  */
@@ -38,7 +39,7 @@ export function runSetup(input) {
     execFile(
       process.execPath,
       args,
-      { cwd: input.workDir, encoding: "utf8" },
+      { cwd: input.workDir, encoding: "utf8", signal: input.signal },
       (error, stdout, stderr) => {
         const output = `${stdout}${stderr}`;
         if (error) {

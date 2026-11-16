@@ -87,23 +87,29 @@ function createSession(prompts) {
     /** @type {{ path: string, cleanup: () => void, promote: () => void } | null} */
     workDir: null,
   };
+  const abort = new AbortController();
   const onSigint = () => {
+    abort.abort();
     if (state.spinner) state.spinner.cancel(state.message);
     else prompts.cancel(state.message);
     process.exit(state.code);
   };
   /** @param {number} code */
   const onExit = (code) => {
+    abort.abort();
     if (state.spinner && code === 0) process.exitCode = state.code;
     const lines = cleanupLines(state.workDir);
     if (lines.length > 0) writeErr(lines);
   };
   process.once("SIGINT", onSigint);
+  process.once("SIGTERM", onSigint);
   process.on("exit", onExit);
   return {
     state,
+    signal: abort.signal,
     dispose() {
       process.off("SIGINT", onSigint);
+    process.off("SIGTERM", onSigint);
       process.off("exit", onExit);
     },
   };
@@ -203,6 +209,7 @@ async function createProject(ctx, choice) {
     removedApps,
     removeExamples: choice.removeExamples,
     dryRun: args.dryRun,
+    signal: session.signal,
   });
   if (!setup.ok) throw new CliFailure(setup.output.trimEnd().split("\n"));
 
@@ -237,11 +244,11 @@ async function finishProject(ctx, choice) {
   session.state.code = 1;
   if (args.install) {
     await withProgress(ui, { start: INSTALL_PROGRESS, done: "의존성을 설치했습니다" }, () =>
-      runPostSteps({ cwd, install: true, git: false }),
+      runPostSteps({ cwd, install: true, git: false, signal: session.signal }),
     );
   }
   if (args.git) {
-    const { warnings } = await runPostSteps({ cwd, install: false, git: true });
+    const { warnings } = await runPostSteps({ cwd, install: false, git: true, signal: session.signal });
     if (warnings.length > 0) prompts.log.warn(warnings[0]);
     else stepLine(prompts, isTTY, "git 저장소를 만들었습니다");
   }
