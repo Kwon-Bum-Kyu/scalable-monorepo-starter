@@ -41,6 +41,10 @@ describe("CLI 입력 오류 (종료 코드 1, 첫 줄 없음)", () => {
     expect(readdirSync(cwd).filter((name) => name.includes(".tmp-"))).toEqual([]);
   }
 
+  it("--apps 값이 비어 있을 때 첫 줄 없이 앱 선택 오류와 종료 코드 1로 끝난다", async () => {
+    await expectInputError(["x", "--apps", ""], "앱을 하나 이상 선택해야 합니다.");
+  });
+
   it("알 수 없는 앱 id일 때 선택할 수 있는 앱을 알리고 종료 코드 1로 끝난다", async () => {
     await expectInputError(
       ["demo", "--apps", "mobile", "--yes"],
