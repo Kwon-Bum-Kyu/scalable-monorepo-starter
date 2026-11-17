@@ -3,18 +3,32 @@ export interface CodeSegment {
   isVariable?: boolean;
 }
 
+interface CommandBlock {
+  code: ReadonlyArray<CodeSegment>;
+  help: ReadonlyArray<string>;
+}
+
 export type QuickstartStep =
   | {
-      number: "01" | "02" | "03";
+      number: "01";
       title: string;
-      blocks: ReadonlyArray<{
-        subtitle?: string;
-        code: ReadonlyArray<CodeSegment>;
-        help: string;
-      }>;
+      create: CommandBlock;
+      version: CommandBlock & {
+        subtitle: string;
+        findHelp: { before: string; linkLabel: string; after: string };
+        releasesUrl: string;
+      };
     }
   | {
-      number: "04";
+      number: "02";
+      title: string;
+      code: ReadonlyArray<CodeSegment>;
+      help: string;
+      commands: ReadonlyArray<{ command: string; apps: string; precondition: string }>;
+      note: string;
+    }
+  | {
+      number: "03";
       title: string;
       services: ReadonlyArray<{ name: string; url: string }>;
       help: string;
@@ -83,49 +97,57 @@ export const ROOT_KEYS = [
 export const QUICKSTART_STEPS: ReadonlyArray<QuickstartStep> = [
   {
     number: "01",
-    title: "템플릿 가져오기",
-    blocks: [
-      {
-        code: [
-          { text: "npx degit " },
-          { text: "<your-org>", isVariable: true },
-          { text: "/scalable-monorepo-starter my-project" },
-        ],
-        help: "`<your-org>`를 템플릿을 올린 GitHub 조직 이름으로 바꿉니다.",
+    title: "프로젝트 만들기",
+    create: {
+      code: [{ text: "npm create scalable-monorepo-starter@latest" }],
+      help: [
+        "프로젝트 이름과 설치할 앱(api, web, desktop, storybook)을 고르면 템플릿 내려받기, 의존성 설치, `.env` 생성, git 저장소 만들기까지 한 번에 끝납니다.",
+        "Node.js 22.13 이상이 필요합니다.",
+      ],
+    },
+    version: {
+      subtitle: "다른 버전으로 만들기",
+      code: [
+        { text: "npm create scalable-monorepo-starter@" },
+        { text: "1.2.0", isVariable: true },
+      ],
+      help: [
+        "`@latest` 자리에 버전 번호를 씁니다. CLI와 템플릿은 같은 번호로 함께 릴리스되므로 이 번호가 곧 템플릿 버전입니다.",
+      ],
+      findHelp: {
+        before:
+          "고를 수 있는 버전은 `npm view create-scalable-monorepo-starter versions`나 저장소의 ",
+        linkLabel: "Releases",
+        after: "에서 확인합니다.",
       },
-    ],
+      releasesUrl:
+        "https://github.com/Kwon-Bum-Kyu/scalable-monorepo-starter/releases",
+    },
   },
   {
     number: "02",
-    title: "설치와 환경 변수",
-    blocks: [
-      {
-        code: [{ text: "npm install\ncp .env.example .env" }],
-        help: "`.env`의 `DATABASE_URL`을 설정합니다.",
-      },
+    title: "필요한 앱 띄우기",
+    code: [
+      { text: "cd " },
+      { text: "my-app", isVariable: true },
+      { text: "\nnpm run dev:web" },
     ],
+    help: "`my-app` 자리에는 01에서 입력한 프로젝트 이름이 들어갑니다. 아래 명령 중 필요한 것만 실행합니다.",
+    commands: [
+      { command: "npm run dev:api", apps: "api, Prisma Studio", precondition: "Docker 실행 중" },
+      { command: "npm run dev:web", apps: "web", precondition: "없음" },
+      {
+        command: "npm run dev:desktop",
+        apps: "desktop(Electron 창)",
+        precondition: "없음. 기동 전에 자동으로 빌드합니다.",
+      },
+      { command: "npm run dev:storybook", apps: "storybook", precondition: "없음" },
+      { command: "npm run dev", apps: "설치한 앱 모두", precondition: "api가 있으면 Docker" },
+    ],
+    note: "설치하지 않은 앱의 명령은 프로젝트에 없습니다. 외부 DB(Neon 등)를 쓸 때는 `.env`의 `DATABASE_URL`을 바꾸고 `SKIP_DEV_BOOTSTRAP=1`을 설정합니다.",
   },
   {
     number: "03",
-    title: "개발 서버 기동",
-    blocks: [
-      {
-        subtitle: "전체 기동",
-        code: [{ text: "npm run dev" }],
-        help: "Docker Postgres를 기동하고 Prisma 마이그레이션을 적용한 뒤 web · api · storybook · desktop · Prisma Studio를 함께 띄웁니다.",
-      },
-      {
-        subtitle: "앱별 기동",
-        code: [
-          { text: "turbo run dev --filter=" },
-          { text: "<web|api|storybook|desktop>", isVariable: true },
-        ],
-        help: "필요한 앱 하나만 띄웁니다. `--filter` 뒤에 앱 이름을 넣습니다.",
-      },
-    ],
-  },
-  {
-    number: "04",
     title: "접속",
     services: [
       { name: "Web", url: "http://localhost:3000" },
@@ -133,7 +155,7 @@ export const QUICKSTART_STEPS: ReadonlyArray<QuickstartStep> = [
       { name: "Storybook", url: "http://localhost:6006" },
       { name: "Prisma Studio", url: "http://localhost:5555" },
     ],
-    help: "desktop은 브라우저 주소가 아니라 Electron 창으로 열립니다.",
+    help: "설치하고 띄운 앱의 주소만 열립니다. desktop은 브라우저 주소가 아니라 Electron 창으로 열립니다.",
   },
 ] as const satisfies ReadonlyArray<QuickstartStep>;
 
