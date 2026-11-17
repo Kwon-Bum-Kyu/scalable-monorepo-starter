@@ -7,7 +7,7 @@ import Home from "@/view/Home";
 const sectionContracts = [
   ["hero", "2시간 안에 셋업하고 1주 안에 배포하는 풀스택 모노레포 스타터."],
   ["structure", "공유 루트"],
-  ["quickstart", "네 단계로 로컬 개발 환경을 띄웁니다."],
+  ["quickstart", "세 단계로 프로젝트를 만들고 필요한 앱만 띄웁니다."],
   ["rules", "바꾸지 않는 규칙 아홉 가지."],
   [
     "design-system",
