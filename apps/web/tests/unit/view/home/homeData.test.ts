@@ -10,37 +10,41 @@ import {
 } from "@/view/home/homeData";
 
 describe("homeData", () => {
-  it("시작하기가 01부터 04까지 네 단계일 때 번호가 순서대로 이어진다", () => {
-    expect(QUICKSTART_STEPS.map((step) => step.number)).toEqual([
-      "01",
-      "02",
-      "03",
-      "04",
-    ]);
+  it("시작하기가 01부터 03까지 세 단계일 때 번호가 순서대로 이어진다", () => {
+    expect(QUICKSTART_STEPS.map((step) => step.number)).toEqual(["01", "02", "03"]);
   });
 
-  it("2단계의 코드가 설치와 환경 변수 복사 두 줄일 때 줄바꿈으로 이어진다", () => {
-    const step = QUICKSTART_STEPS[1];
-    if (!("blocks" in step)) throw new Error("blocks 단계가 아니다");
-    expect(step.blocks[0].code.map((s) => s.text).join("")).toBe(
-      "npm install\ncp .env.example .env",
+  it("1단계가 만들기 명령과 버전 지정 명령을 가질 때 버전 자리가 변수 조각이다", () => {
+    const step = QUICKSTART_STEPS[0];
+    if (step.number !== "01") throw new Error("1단계가 아니다");
+    expect(step.create.code).toEqual([
+      { text: "npm create scalable-monorepo-starter@latest" },
+    ]);
+    expect(step.version.code).toEqual([
+      { text: "npm create scalable-monorepo-starter@" },
+      { text: "1.2.0", isVariable: true },
+    ]);
+    expect(step.version.releasesUrl).toBe(
+      "https://github.com/Kwon-Bum-Kyu/scalable-monorepo-starter/releases",
     );
   });
 
-  it("3단계가 전체 기동을 먼저 둘 때 앱별 기동의 앱 이름이 변수 조각이다", () => {
-    const step = QUICKSTART_STEPS[2];
-    if (!("blocks" in step)) throw new Error("blocks 단계가 아니다");
-    expect(step.blocks.map((b) => b.subtitle)).toEqual(["전체 기동", "앱별 기동"]);
-    expect(step.blocks[0].code).toEqual([{ text: "npm run dev" }]);
-    expect(step.blocks[1].code).toEqual([
-      { text: "turbo run dev --filter=" },
-      { text: "<web|api|storybook|desktop>", isVariable: true },
+  it("2단계가 앱 띄우기일 때 명령 표가 앱별 명령 뒤에 전체 기동을 둔다", () => {
+    const step = QUICKSTART_STEPS[1];
+    if (step.number !== "02") throw new Error("2단계가 아니다");
+    expect(step.code.map((s) => s.text).join("")).toBe("cd my-app\nnpm run dev:web");
+    expect(step.commands.map((c) => c.command)).toEqual([
+      "npm run dev:api",
+      "npm run dev:web",
+      "npm run dev:desktop",
+      "npm run dev:storybook",
+      "npm run dev",
     ]);
   });
 
-  it("4단계가 접속 안내일 때 서비스 네 개와 주소를 가진다", () => {
-    const step = QUICKSTART_STEPS[3];
-    if (!("services" in step)) throw new Error("services 단계가 아니다");
+  it("3단계가 접속 안내일 때 서비스 네 개와 주소를 가진다", () => {
+    const step = QUICKSTART_STEPS[2];
+    if (step.number !== "03") throw new Error("3단계가 아니다");
     expect(step.services).toHaveLength(4);
     expect(step.services[3]).toEqual({
       name: "Prisma Studio",
