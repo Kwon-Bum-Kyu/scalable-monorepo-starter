@@ -5,7 +5,7 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import { runSetup } from "../../../src/cli/runSetup.mjs";
-import { killQuietly, waitForPid, waitUntilDead } from "../../helpers/runCli";
+import { isAlive, killQuietly, waitForPid } from "../../helpers/runCli";
 
 let workDir = "";
 
@@ -136,6 +136,7 @@ describe("runSetup 중단", () => {
     writeFakeSetup(
       `import { writeFileSync } from "node:fs";
 writeFileSync(${JSON.stringify(pidFile)}, String(process.pid));
+process.on("SIGTERM", () => setTimeout(() => process.exit(0), 1000));
 setInterval(() => {}, 1000);
 `,
     );
@@ -148,6 +149,6 @@ setInterval(() => {}, 1000);
     const result = await pending;
 
     expect(result.ok).toBe(false);
-    expect(await waitUntilDead(pid)).toBe(true);
+    expect(isAlive(pid)).toBe(false);
   });
 });

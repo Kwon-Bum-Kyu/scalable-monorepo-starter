@@ -30,6 +30,8 @@ const CANCEL_CODE = 130;
 export const DRY_RUN_TEXT = "변경 계획입니다. 파일은 바꾸지 않습니다.";
 const INSTALL_PROGRESS = "의존성을 설치하는 중입니다 (몇 분 걸릴 수 있습니다)";
 const NPM_ERROR_TAIL = 10;
+// ponytail: 5초 뒤에는 자식이 남아 있어도 CLI를 끝낸다. 실제 종료가 더 느려지면 늘린다.
+const CHILD_EXIT_TIMEOUT_MS = 5000;
 
 /**
  * 프롬프트 묶음은 테스트가 가짜를 주입하므로 형태만 느슨하게 둔다.
@@ -87,12 +89,23 @@ function createSession(prompts) {
     spinner: null,
     /** @type {{ path: string, cleanup: () => void, promote: () => void } | null} */
     workDir: null,
+    /** @type {Promise<unknown> | null} */
+    pending: null,
   };
   const abort = new AbortController();
-  const onSigint = () => {
+  let stopping = false;
+  const onSigint = async () => {
+    if (stopping) return;
+    stopping = true;
     abort.abort();
     if (state.spinner) state.spinner.cancel(state.message);
     else prompts.cancel(state.message);
+    if (state.pending) {
+      await Promise.race([
+        state.pending.catch(() => undefined),
+        new Promise((resolve) => setTimeout(resolve, CHILD_EXIT_TIMEOUT_MS)),
+      ]);
+    }
     process.exit(state.code);
   };
   /** @param {number} code */
@@ -102,12 +115,20 @@ function createSession(prompts) {
     const lines = cleanupLines(state.workDir);
     if (lines.length > 0) writeErr(lines);
   };
-  process.once("SIGINT", onSigint);
-  process.once("SIGTERM", onSigint);
+  process.on("SIGINT", onSigint);
+  process.on("SIGTERM", onSigint);
   process.on("exit", onExit);
+  /** @template T @param {Promise<T>} promise @returns {Promise<T>} */
+  const track = (promise) => {
+    state.pending = promise;
+    return promise.finally(() => {
+      if (state.pending === promise) state.pending = null;
+    });
+  };
   return {
     state,
     signal: abort.signal,
+    track,
     dispose() {
       process.off("SIGINT", onSigint);
       process.off("SIGTERM", onSigint);
@@ -206,16 +227,18 @@ async function createProject(ctx, choice) {
     () => fetch({ destDir: work.path, env }),
   );
   const removedApps = manifest.apps.map((app) => app.id).filter((id) => !choice.apps.includes(id));
-  const setup = await runSetup({
-    workDir: work.path,
-    npmName: choice.npmName,
-    displayName: choice.displayName,
-    apps: choice.apps,
-    removedApps,
-    removeExamples: choice.removeExamples,
-    dryRun: args.dryRun,
-    signal: session.signal,
-  });
+  const setup = await session.track(
+    runSetup({
+      workDir: work.path,
+      npmName: choice.npmName,
+      displayName: choice.displayName,
+      apps: choice.apps,
+      removedApps,
+      removeExamples: choice.removeExamples,
+      dryRun: args.dryRun,
+      signal: session.signal,
+    }),
+  );
   if (!setup.ok) throw new CliFailure(setup.output.trimEnd().split("\n"));
 
   if (args.dryRun) {
@@ -250,11 +273,13 @@ async function finishProject(ctx, choice) {
   session.state.code = 1;
   if (args.install) {
     await withProgress(ui, { start: INSTALL_PROGRESS, done: "의존성을 설치했습니다" }, () =>
-      runPostSteps({ cwd, install: true, git: false, signal: session.signal }),
+      session.track(runPostSteps({ cwd, install: true, git: false, signal: session.signal })),
     );
   }
   if (args.git) {
-    const { warnings } = await runPostSteps({ cwd, install: false, git: true, signal: session.signal });
+    const { warnings } = await session.track(
+      runPostSteps({ cwd, install: false, git: true, signal: session.signal }),
+    );
     if (warnings.length > 0) prompts.log.warn(warnings[0]);
     else stepLine(prompts, isTTY, "git 저장소를 만들었습니다");
   }

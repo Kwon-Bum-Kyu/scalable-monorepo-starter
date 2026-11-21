@@ -36,21 +36,32 @@ export function runSetup(input) {
     ...(input.dryRun ? ["--dry-run"] : []),
   ];
   return new Promise((resolve) => {
-    execFile(
+    let closed = false;
+    /** @type {{ ok: boolean, output: string, lines: string[] } | undefined} */
+    let result;
+    const finish = () => {
+      if (closed && result) resolve(result);
+    };
+    const child = execFile(
       process.execPath,
       args,
       { cwd: input.workDir, encoding: "utf8", signal: input.signal },
       (error, stdout, stderr) => {
         const output = `${stdout}${stderr}`;
         if (error) {
-          resolve({ ok: false, output, lines: [] });
+          result = { ok: false, output, lines: [] };
         } else if (input.dryRun) {
-          resolve({ ok: true, output, lines: [] });
+          result = { ok: true, output, lines: [] };
         } else {
-          resolve({ ok: true, output: "", lines: progressLines(input) });
+          result = { ok: true, output: "", lines: progressLines(input) };
         }
+        finish();
       },
     );
+    child.on("close", () => {
+      closed = true;
+      finish();
+    });
   });
 }
 

@@ -14,7 +14,6 @@ import {
   runCli,
   spawnCli,
   waitForPid,
-  waitUntilDead,
 } from "../helpers/runCli";
 
 const CANCEL_TEXT = "취소했습니다. 만든 파일은 없습니다.";
@@ -216,12 +215,14 @@ setTimeout(() => process.exit(0), 30000);
     expect(readdirSync(cwd)).toEqual([]);
   });
 
-  it("설치 중 Ctrl+C일 때 CLI가 끝난 뒤 npm 프로세스가 남아 있지 않다", async () => {
+  it("설치 중 Ctrl+C일 때 CLI가 끝난 시점에 npm 프로세스가 이미 종료되어 있다", async () => {
     const { root } = createFakeTemplate();
     const cwd = makeTempDir();
     const ready = path.join(makeTempDir("cli-ready-"), "npm-pid.txt");
     const bin = makeFakeBin({
-      npm: 'echo $$ > "$READY_FILE"; exec sleep 30',
+      npm: `trap 'sleep 1; exit 0' TERM
+echo $$ > "$READY_FILE"
+while :; do sleep 0.1; done`,
     });
     const { child, done } = spawnCli(["demo", "--apps", "web", "--yes", "--no-git"], {
       cwd,
@@ -231,10 +232,10 @@ setTimeout(() => process.exit(0), 30000);
     const npmPid = await waitForPid(ready);
     child.kill("SIGINT");
     const result = await done;
-    const dead = await waitUntilDead(npmPid);
+    const npmAlive = isAlive(npmPid);
     killQuietly(npmPid);
 
-    expect(dead).toBe(true);
+    expect(npmAlive).toBe(false);
     expect(result.code).toBe(1);
     expect(existsSync(path.join(cwd, "demo/package.json"))).toBe(true);
   });

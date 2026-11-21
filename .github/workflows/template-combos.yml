@@ -21,11 +21,26 @@ on:
       - "CLAUDE.md"
       - "apps/web/playwright.config.ts"
       - "apps/desktop/CLAUDE.md"
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_call:
+    inputs:
+      full:
+        description: 전체 17개 조합을 실행한다.
+        required: false
+        type: boolean
+        default: false
   workflow_dispatch:
+    inputs:
+      full:
+        description: 전체 17개 조합을 실행한다.
+        required: false
+        type: boolean
+        default: false
 
 concurrency:
   group: template-combos-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
 
 permissions:
   contents: read
@@ -36,22 +51,56 @@ env:
   SKIP_DEV_BOOTSTRAP: "1"
 
 jobs:
+  prepare:
+    name: Prepare matrix
+    if: github.event_name != 'schedule' || github.repository == 'Kwon-Bum-Kyu/scalable-monorepo-starter'
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Select combinations
+        id: matrix
+        env:
+          FULL_MATRIX: ${{ github.event_name == 'schedule' || inputs.full }}
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync } from "node:fs";
+
+          const combinations = [
+            { name: "api", apps: "api", "remove-examples": "", "has-api": "true", smoke: true },
+            { name: "api-without-examples", apps: "api", "remove-examples": "--remove-examples", "has-api": "true" },
+            { name: "web", apps: "web", "remove-examples": "", "has-api": "false", smoke: true },
+            { name: "desktop", apps: "desktop", "remove-examples": "", "has-api": "false", smoke: true },
+            { name: "api+web", apps: "api,web", "remove-examples": "", "has-api": "true", smoke: true },
+            { name: "api+web-without-examples", apps: "api,web", "remove-examples": "--remove-examples", "has-api": "true" },
+            { name: "api+desktop", apps: "api,desktop", "remove-examples": "", "has-api": "true" },
+            { name: "api+desktop-without-examples", apps: "api,desktop", "remove-examples": "--remove-examples", "has-api": "true" },
+            { name: "web+desktop", apps: "web,desktop", "remove-examples": "", "has-api": "false", smoke: true },
+            { name: "web+storybook", apps: "web,storybook", "remove-examples": "", "has-api": "false", smoke: true },
+            { name: "api+web+desktop", apps: "api,web,desktop", "remove-examples": "", "has-api": "true" },
+            { name: "api+web+desktop-without-examples", apps: "api,web,desktop", "remove-examples": "--remove-examples", "has-api": "true" },
+            { name: "api+web+storybook", apps: "api,web,storybook", "remove-examples": "", "has-api": "true" },
+            { name: "api+web+storybook-without-examples", apps: "api,web,storybook", "remove-examples": "--remove-examples", "has-api": "true" },
+            { name: "web+desktop+storybook", apps: "web,desktop,storybook", "remove-examples": "", "has-api": "false" },
+            { name: "all-with-examples", apps: "api,web,desktop,storybook", "remove-examples": "", "has-api": "true" },
+            { name: "all-without-examples", apps: "api,web,desktop,storybook", "remove-examples": "--remove-examples", "has-api": "true", smoke: true },
+          ];
+          const full = process.env.FULL_MATRIX === "true";
+          const include = combinations
+            .filter((combination) => full || combination.smoke)
+            .map(({ smoke, ...combination }) => combination);
+          appendFileSync(process.env.GITHUB_OUTPUT, `matrix=${JSON.stringify({ include })}\n`);
+          NODE
+
   combo:
     name: ${{ matrix.name }}
+    needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - { name: api, apps: api, remove-examples: "", has-api: "true" }
-          - { name: web, apps: web, remove-examples: "", has-api: "false" }
-          - { name: desktop, apps: desktop, remove-examples: "", has-api: "false" }
-          - { name: api+web, apps: "api,web", remove-examples: "", has-api: "true" }
-          - { name: web+desktop, apps: "web,desktop", remove-examples: "", has-api: "false" }
-          - { name: web+storybook, apps: "web,storybook", remove-examples: "", has-api: "false" }
-          - { name: all-without-examples, apps: "api,web,desktop,storybook", remove-examples: "--remove-examples", has-api: "true" }
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
 
     # 조합과 무관하게 모든 job에 둔다. api가 없는 조합에서는 쓰이지 않는다.
     services:

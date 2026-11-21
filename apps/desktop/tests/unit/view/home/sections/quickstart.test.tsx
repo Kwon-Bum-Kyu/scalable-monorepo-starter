@@ -35,7 +35,7 @@ describe("QuickstartSection", () => {
     const codes = [...container.querySelectorAll("pre")].map((pre) => pre.textContent);
     expect(codes).toEqual([
       "npm create scalable-monorepo-starter@latest",
-      "npm create scalable-monorepo-starter@1.2.0",
+      "npm create scalable-monorepo-starter@1.3.0",
       "cd my-app\nnpm run dev:web",
     ]);
   });

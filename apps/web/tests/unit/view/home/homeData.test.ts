@@ -22,7 +22,7 @@ describe("homeData", () => {
     ]);
     expect(step.version.code).toEqual([
       { text: "npm create scalable-monorepo-starter@" },
-      { text: "1.2.0", isVariable: true },
+      { text: "1.3.0", isVariable: true },
     ]);
     expect(step.version.releasesUrl).toBe(
       "https://github.com/Kwon-Bum-Kyu/scalable-monorepo-starter/releases",

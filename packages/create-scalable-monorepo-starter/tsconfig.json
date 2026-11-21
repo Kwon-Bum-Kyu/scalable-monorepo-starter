@@ -5,6 +5,6 @@
     "checkJs": true,
     "types": ["node", "vitest/globals"]
   },
-  "include": ["src/**/*.mjs", "tests/**/*.ts"],
+  "include": ["src/**/*.mjs", "scripts/**/*.mjs", "tests/**/*.ts"],
   "exclude": ["node_modules", "coverage"]
 }
