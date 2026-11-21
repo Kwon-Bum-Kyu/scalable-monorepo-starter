@@ -1,6 +1,6 @@
 {
   "name": "create-scalable-monorepo-starter",
-  "version": "1.3.0-rc.1",
+  "version": "1.3.0",
   "type": "module",
   "bin": {
     "create-scalable-monorepo-starter": "./src/cli/index.mjs"
