@@ -39,33 +39,67 @@
 
 ## Quickstart
 
-### 1. 템플릿 가져오기
+### 1. 프로젝트 만들기
 
 ```bash
-# degit (권장 — 히스토리 없이 깔끔하게)
-npx degit <your-org>/scalable-monorepo-starter my-project
-cd my-project
-
-# 또는 git clone
-git clone <repo-url> my-project
-cd my-project
+npm create scalable-monorepo-starter@latest
 ```
 
-### 2. 의존성 설치 + 환경 변수
+처음 실행할 때 npm이 패키지 설치를 물으면 y를 누릅니다.
+
+터미널에서 질문에 답하면 CLI가 다음 일을 순서대로 한다. 설치할 앱을 고르고, 템플릿을 내려받고, 선택하지 않은 앱을 정리하고, 프로젝트 이름을 반영하고, `.env`를 만들고, 의존성을 설치하고, git 저장소를 만든다. 의존성 설치는 몇 분 걸릴 수 있다.
+
+이름을 미리 정하면 이름 질문을 건너뛴다.
 
 ```bash
-npm install
-cp .env.example .env
+npm create scalable-monorepo-starter@latest my-app
 ```
 
-`.env`에서 `DATABASE_URL`을 실제 환경에 맞게 설정한다.
+질문 없이 플래그로 끝까지 실행할 수도 있다. `npm create`로 플래그를 넘길 때는 이름 뒤에 `--`가 필요하다.
+
+```bash
+npm create scalable-monorepo-starter@latest my-app -- --apps api,web --yes
+```
+
+#### 버전 고르기
+
+CLI의 버전이 곧 내려받는 템플릿의 버전이다.
+
+| 하고 싶은 일              | 명령                                                 |
+| ------------------------- | ---------------------------------------------------- |
+| 가장 최근 버전으로 만들기 | `npm create scalable-monorepo-starter@latest`        |
+| 특정 버전으로 만들기      | `npm create scalable-monorepo-starter@1.3.0`         |
+| 고를 수 있는 버전 보기    | `npm view create-scalable-monorepo-starter versions` |
+
+- npm에 없는 버전을 지정하면 npm이 오류를 내고 CLI는 실행되지 않는다.
+- CLI가 처음 npm에 배포된 `1.3.0-rc.1`보다 앞선 템플릿 버전(`v1.2.0` 이하)은 CLI로 고를 수 없다.
+
+#### 플래그
+
+| 인자와 플래그                          | 의미                      | 기본값                    |
+| -------------------------------------- | ------------------------- | ------------------------- |
+| `[이름]`                               | 프로젝트 이름             | 없음. 비대화형에서는 필수 |
+| `--apps <id,...>`                      | 설치할 앱 id 목록         | `api,web`                 |
+| `--remove-examples`, `--keep-examples` | examples 처리             | 남겨 둔다                 |
+| `--yes`                                | 묻지 않고 기본값으로 진행 | 꺼짐                      |
+| `--no-install`                         | `npm install` 생략        | 설치한다                  |
+| `--no-git`                             | `git init` 생략           | 만든다                    |
+| `--dry-run`                            | 변경 계획만 출력          | 꺼짐                      |
+| `--help`, `--version`                  | 도움말, 버전              | 없음                      |
+
+- 선택할 수 있는 앱 id는 `api`, `web`, `desktop`, `storybook`이다. `storybook`을 고르면 `web`이 함께 설치된다.
+- 터미널이 아닌 환경(CI 등)에서는 프로젝트 이름이 필요하고, `--apps` 또는 `--yes` 중 하나도 있어야 한다.
+
+### 2. 환경 변수
+
+프로젝트 폴더로 이동해 `.env`의 `DATABASE_URL`을 실제 환경에 맞게 설정한다. CLI가 `.env.example`을 복사해 `.env`를 이미 만들어 둔다.
 
 - 로컬(Docker): `postgresql://postgres:postgres@localhost:5432/myapp` (기본값)
 - Neon: `postgresql://<user>:<password>@<host>.neon.tech/<dbname>?sslmode=require`
 
 ### 3. 개발 서버 기동
 
-필요한 앱만 골라서 기동한다:
+필요한 앱만 골라서 기동한다. 만든 프로젝트에는 설치한 앱의 명령만 있다.
 
 ```bash
 npm run dev:web
@@ -96,6 +130,22 @@ api를 기동하면 Docker Postgres 컨테이너 기동, `pg_isready` 폴링, Pr
 ## 필요한 앱만 남기기
 
 clone한 저장소에서 쓸 앱만 남기고 프로젝트 이름을 바꿀 수 있다. 앱 폴더와 그 앱 전용 설정, 스크립트, CI 단계가 함께 정리된다.
+
+먼저 저장소를 가져온다.
+
+```bash
+# degit (히스토리 없이 가져오기)
+npx degit <your-org>/scalable-monorepo-starter my-project
+cd my-project
+
+# 또는 git clone
+git clone <repo-url> my-project
+cd my-project
+```
+
+앱을 줄이지 않고 모두 쓰려면 `npm install`과 `cp .env.example .env`를 실행한 뒤 Quickstart 2단계부터 따른다.
+
+앱을 줄이려면 다음 순서로 `setup`을 실행한다.
 
 ```bash
 # 1. 먼저 --dry-run으로 지울 경로와 고칠 파일을 확인한다 (파일은 바뀌지 않는다)
