@@ -140,6 +140,88 @@ npx playwright test --project=chromium
 - **버그 리포트**: 재현 단계 / 기대 동작 / 실제 동작 / 환경 정보
 - **기능 제안**: 목표 / 제안 / 대안 / 영향 범위 (FE/BE/shared)
 
+## 릴리스
+
+첫 배포 이후에는 버전을 올린 PR을 병합하고 그 커밋에 태그를 푸시하면 자동 배포가 진행된다. `<v>`에는 앞에 `v`를 붙이지 않은 버전 번호를 넣는다.
+
+### 버전 정책
+
+| 변경 종류                                                                 | 올리는 자리 |
+| ------------------------------------------------------------------------- | ----------- |
+| 버그 수정, 문서 수정, 의존성 갱신, CLI 문구 수정                          | 수(patch)   |
+| 앱 추가, 플래그 추가, 템플릿의 기능 추가                                  | 부(minor)   |
+| 플래그 삭제나 의미 변경, 요구 Node 버전 상향, 생성물의 구조를 바꾸는 변경 | 주(major)   |
+
+프리릴리스는 `1.3.0-rc.1`처럼 하이픈을 넣는다. 자동 배포는 프리릴리스에 `next` 태그를 붙이고 정식 버전에 `latest`를 사용한다.
+
+### 두 번째 배포부터
+
+1. 저장소 루트에서 버전을 올리고 릴리스 PR을 만든다. 이 명령은 루트와 CLI 패키지의 `version`, `package-lock.json`을 함께 바꾼다.
+
+   ```bash
+   npm version <v> --no-git-tag-version --workspace=create-scalable-monorepo-starter --include-workspace-root
+   git checkout -b chore/release-<v>
+   git commit -am "chore: v<v> 릴리스 준비"
+   ```
+
+2. PR의 CI가 통과하면 main에 병합한다. 버전이 한쪽만 바뀌면 자기 일관성 테스트가 실패한다.
+3. 병합된 main 커밋에 태그를 붙여 푸시한다.
+
+   ```bash
+   git checkout main && git pull
+   git tag v<v> && git push origin v<v>
+   ```
+
+4. GitHub Actions에서 `Release` 실행이 끝까지 성공했는지 확인한다. 워크플로는 다음 단계를 순서대로 실행한다.
+
+| 순서 | 단계                   | 실패하면                               |
+| ---- | ---------------------- | -------------------------------------- |
+| 1    | 1. 버전 검사           | 아무것도 배포되지 않는다               |
+| 2    | 2. 전체 검증           | 아무것도 배포되지 않는다               |
+| 3    | 3. 패키지 내용 검사    | 아무것도 배포되지 않는다               |
+| 4    | 4. 배포 전 종단 시험   | 아무것도 배포되지 않는다               |
+| 5    | 5. npm 배포            | npm에는 올라가지 않고 태그만 남는다    |
+| 6    | 6. 배포 직후 연기 시험 | npm에는 올라가고 GitHub Release는 없다 |
+| 7    | 7. GitHub Release 생성 | npm 패키지는 정상이고 Release만 없다   |
+
+### trusted publisher 설정
+
+npmjs.com의 패키지 설정에서 GitHub Actions trusted publisher를 등록한다. 소유자는 `Kwon-Bum-Kyu`, 저장소는 `scalable-monorepo-starter`, 워크플로 파일 이름은 확장자를 포함한 `release.yml`이고 환경 이름은 비워 둔다. 값은 대소문자까지 정확해야 하며 CLI 패키지 `package.json`의 `repository.url`도 같은 저장소를 가리켜야 한다. 등록 뒤 2일 안에 첫 자동 배포를 성공해야 하므로 다음 릴리스 PR을 준비한 뒤 등록한다.
+
+배포 job은 Node 24와 npm 11.5.1 이상에서 `id-token: write` 권한으로 실행한다. trusted publishing이 출처 증명을 자동으로 붙이므로 npm 토큰 비밀 값과 `--provenance`는 사용하지 않는다.
+
+자동 배포가 막히면 해당 태그의 커밋을 체크아웃하고 다음 명령으로 손 배포한 뒤 실패한 job을 다시 실행한다.
+
+```bash
+npm publish --workspace=create-scalable-monorepo-starter --access public --otp=<코드>
+```
+
+프리릴리스 태그를 손 배포할 때는 `--tag next`를 붙인다. 빼면 `latest`가 프리릴리스로 옮겨간다.
+
+### 배포 직후 확인
+
+저장소 루트의 `.npmrc`가 캐시를 우선하므로 저장소 밖의 빈 폴더에서 `--prefer-online`으로 확인한다.
+
+```bash
+cd "$(mktemp -d)"
+npm view create-scalable-monorepo-starter@<v> version --prefer-online
+npx --prefer-online create-scalable-monorepo-starter@<v> smoke-app --apps api --no-install --no-git --yes
+test -f smoke-app/apps/api/package.json
+```
+
+### 한쪽만 성공했을 때의 복구
+
+| 상태                                                                | 사용자에게 보이는 것                                 | 복구                                                                                                                                                                                                                                             |
+| ------------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 태그는 있는데 1. 버전 검사에서 멈췄다                               | 변화 없음. `@latest`는 이전 버전이다                 | 태그를 지우고 버전을 맞추는 PR을 병합한 뒤 태그를 다시 붙인다. `git push --delete origin v<v>`와 `git tag -d v<v>`를 사용한다                                                                                                                    |
+| 태그는 있는데 2. 전체 검증부터 4. 배포 전 종단 시험 사이에서 멈췄다 | 변화 없음                                            | 일시적 실패면 실패한 job을 다시 실행한다. 코드 문제면 태그를 지우고 고친 커밋에 같은 번호로 다시 붙인다                                                                                                                                          |
+| 태그는 있는데 5. npm 배포가 실패했다                                | 변화 없음. 그 버전은 npm에서 실행할 수 없다          | 레지스트리, trusted publisher, npm 버전 문제를 고치고 실패한 job을 다시 실행한다. 바로 고칠 수 없으면 위 손 배포 명령을 실행한 뒤 워크플로를 다시 실행한다                                                                                       |
+| npm에 올라갔는데 6. 배포 직후 연기 시험이 실패했다                  | 그 버전이 정식이면 `@latest`로 나가 있다             | 먼저 job을 다시 실행한다. 실제 결함이면 `npm deprecate create-scalable-monorepo-starter@<v> "다음 수정 버전을 사용해 주세요"`로 표시하고 `npm dist-tag add create-scalable-monorepo-starter@<이전 버전> latest`로 되돌린 뒤 새 버전을 릴리스한다 |
+| npm에 올라갔는데 7. GitHub Release 생성이 실패했다                  | CLI는 정상 동작하고 Releases 화면에만 그 버전이 없다 | 실패한 job을 다시 실행하거나 `gh release create v<v> --verify-tag --generate-notes`를 직접 실행한다                                                                                                                                              |
+| npm에는 있는데 태그가 없다                                          | CLI가 해당 버전의 템플릿을 찾지 못하고 끝난다        | 배포에 쓴 바로 그 커밋에 태그를 붙여 푸시한다                                                                                                                                                                                                    |
+
+npm에 올라가기 전의 태그는 지우고 다시 붙여도 되고 올라간 뒤의 태그는 손대지 않는다.
+
 ## 행동 강령
 
 기여자·메인테이너 모두 서로 존중하며 기술적 토론에 집중한다. 인신공격·차별 발언은 금지.
