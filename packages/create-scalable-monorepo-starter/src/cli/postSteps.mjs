@@ -42,14 +42,17 @@ export function runCommand(command, args, cwd, signal) {
   return new Promise((resolve) => {
     const child = spawn(command, args, { cwd, stdio: ["ignore", "pipe", "pipe"], signal });
     let output = "";
+    let failed = false;
     /** @param {Buffer} chunk */
     const collect = (chunk) => {
       output += chunk.toString();
     };
     child.stdout.on("data", collect);
     child.stderr.on("data", collect);
-    child.on("error", () => resolve({ code: null, output }));
-    child.on("close", (code) => resolve({ code, output }));
+    child.on("error", () => {
+      failed = true;
+    });
+    child.on("close", (code) => resolve({ code: failed ? null : code, output }));
   });
 }
 

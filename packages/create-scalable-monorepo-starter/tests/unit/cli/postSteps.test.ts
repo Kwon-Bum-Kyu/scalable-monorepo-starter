@@ -11,7 +11,7 @@ import {
   runCommand,
   runPostSteps,
 } from "../../../src/cli/postSteps.mjs";
-import { killQuietly, waitForPid, waitUntilDead } from "../../helpers/runCli";
+import { isAlive, killQuietly, waitForPid } from "../../helpers/runCli";
 
 type Call = { command: string; args: string[]; cwd: string };
 type Result = { code: number | null; output: string };
@@ -148,6 +148,7 @@ describe("runCommand 중단", () => {
       script,
       `import { writeFileSync } from "node:fs";
 writeFileSync(${JSON.stringify(pidFile)}, String(process.pid));
+process.on("SIGTERM", () => setTimeout(() => process.exit(0), 1000));
 setInterval(() => {}, 1000);
 `,
     );
@@ -160,7 +161,7 @@ setInterval(() => {}, 1000);
     const result = await pending;
 
     expect(result.code).toBeNull();
-    expect(await waitUntilDead(pid)).toBe(true);
+    expect(isAlive(pid)).toBe(false);
   });
 
   it("설치 중 signal이 abort되면 runPostSteps가 InstallError로 끝난다", async () => {
