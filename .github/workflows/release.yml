@@ -1,0 +1,278 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  NODE_VERSION: 22.13.0
+  SKIP_DEV_BOOTSTRAP: "1"
+
+permissions: {}
+
+jobs:
+  version:
+    name: 1. 버전 검사
+    if: github.repository == 'Kwon-Bum-Kyu/scalable-monorepo-starter'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      prerelease: ${{ steps.versions.outputs.prerelease }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Fetch main branch
+        run: git fetch origin main:refs/remotes/origin/main
+
+      - name: Check release versions
+        id: versions
+        run: node packages/create-scalable-monorepo-starter/scripts/checkReleaseVersions.mjs "$GITHUB_REF_NAME" "$GITHUB_REPOSITORY"
+
+  quality:
+    name: 2. 전체 검증
+    if: github.repository == 'Kwon-Bum-Kyu/scalable-monorepo-starter'
+    needs: version
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: myapp
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/myapp
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Apply Prisma migrations
+        run: npx prisma migrate deploy
+        working-directory: apps/api
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: apps/api
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Renderer parity
+        run: npm run check:parity
+
+      - name: Test
+        run: npm run test:coverage
+
+      - name: Build
+        run: npm run build
+
+  template-combos:
+    name: 2. 전체 검증
+    if: github.repository == 'Kwon-Bum-Kyu/scalable-monorepo-starter'
+    needs: version
+    permissions:
+      contents: read
+    uses: ./.github/workflows/template-combos.yml
+    with:
+      full: true
+
+  package-contents:
+    name: 3. 패키지 내용 검사
+    if: github.repository == 'Kwon-Bum-Kyu/scalable-monorepo-starter'
+    needs:
+      - quality
+      - template-combos
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Check package contents
+        run: npm pack --dry-run --json --workspace=create-scalable-monorepo-starter | node packages/create-scalable-monorepo-starter/scripts/checkPackFiles.mjs
+
+  prepublish-smoke:
+    name: 4. 배포 전 종단 시험
+    if: github.repository == 'Kwon-Bum-Kyu/scalable-monorepo-starter'
+    needs: package-contents
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Pack package
+        run: |
+          mkdir -p "$RUNNER_TEMP/package"
+          npm pack --workspace=create-scalable-monorepo-starter --pack-destination "$RUNNER_TEMP/package"
+
+      - name: Run packed CLI
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir prepublish-smoke
+          cd prepublish-smoke
+          tgz="$(realpath ../package/*.tgz)"
+          npx --package="$tgz" create-scalable-monorepo-starter smoke-app --apps api --no-install --no-git --yes
+          test -f smoke-app/apps/api/package.json
+
+  publish:
+    name: 5. npm 배포
+    if: github.repository == 'Kwon-Bum-Kyu/scalable-monorepo-starter'
+    needs:
+      - version
+      - prepublish-smoke
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Require npm 11.5.1 or later
+        run: |
+          npm_version="$(npm --version)"
+          IFS=. read -r major minor patch <<< "${npm_version%%-*}"
+          if (( major < 11 || (major == 11 && minor < 5) || (major == 11 && minor == 5 && patch < 1) )); then
+            npm install -g npm@latest
+          fi
+          npm --version
+
+      - name: Check existing package
+        id: registry
+        working-directory: ${{ runner.temp }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          if published="$(npm view "create-scalable-monorepo-starter@$version" version --prefer-online 2>view-error.log)"; then
+            if [[ "$published" != "$version" ]]; then
+              echo "::error::npm version mismatch: expected $version, actual $published"
+              exit 1
+            fi
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          elif grep -q "E404" view-error.log; then
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          else
+            cat view-error.log >&2
+            exit 1
+          fi
+
+      - name: Publish package
+        if: steps.registry.outputs.published == 'false'
+        run: |
+          if [[ "${{ needs.version.outputs.prerelease }}" == "true" ]]; then
+            npm publish --workspace=create-scalable-monorepo-starter --access public --tag next
+          else
+            npm publish --workspace=create-scalable-monorepo-starter --access public
+          fi
+
+  postpublish-smoke:
+    name: 6. 배포 직후 연기 시험
+    if: github.repository == 'Kwon-Bum-Kyu/scalable-monorepo-starter'
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Run published CLI
+        working-directory: ${{ runner.temp }}
+        run: |
+          mkdir postpublish-smoke
+          cd postpublish-smoke
+          version="${GITHUB_REF_NAME#v}"
+          for attempt in $(seq 1 20); do
+            rm -rf smoke-app
+            if npx --prefer-online "create-scalable-monorepo-starter@$version" smoke-app --apps api --no-install --no-git --yes \
+              && test -f smoke-app/apps/api/package.json; then
+              exit 0
+            fi
+            if [[ "$attempt" -lt 20 ]]; then
+              sleep 30
+            fi
+          done
+          exit 1
+
+  release:
+    name: 7. GitHub Release 생성
+    if: github.repository == 'Kwon-Bum-Kyu/scalable-monorepo-starter'
+    needs:
+      - version
+      - postpublish-smoke
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            exit 0
+          fi
+          args=(release create "$GITHUB_REF_NAME" --verify-tag --generate-notes)
+          if [[ "${{ needs.version.outputs.prerelease }}" == "true" ]]; then
+            args+=(--prerelease)
+          fi
+          gh "${args[@]}"
