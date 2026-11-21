@@ -139,6 +139,7 @@
   "templateOnly": [
     "packages/create-scalable-monorepo-starter",
     ".github/ISSUE_TEMPLATE",
+    ".github/workflows/release.yml",
     ".github/workflows/template-combos.yml",
     ".claude/settings.json",
     "docs/assets",
