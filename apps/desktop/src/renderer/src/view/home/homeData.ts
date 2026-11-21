@@ -109,7 +109,7 @@ export const QUICKSTART_STEPS: ReadonlyArray<QuickstartStep> = [
       subtitle: "다른 버전으로 만들기",
       code: [
         { text: "npm create scalable-monorepo-starter@" },
-        { text: "1.2.0", isVariable: true },
+        { text: "1.3.0", isVariable: true },
       ],
       help: [
         "`@latest` 자리에 버전 번호를 씁니다. CLI와 템플릿은 같은 번호로 함께 릴리스되므로 이 번호가 곧 템플릿 버전입니다.",
