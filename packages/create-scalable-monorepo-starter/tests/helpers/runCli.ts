@@ -104,16 +104,6 @@ export function isAlive(pid: number): boolean {
   }
 }
 
-/** 프로세스가 끝날 때까지 기다린다. 시간 안에 안 끝나면 false. */
-export async function waitUntilDead(pid: number, timeoutMs = 5000): Promise<boolean> {
-  const deadline = Date.now() + timeoutMs;
-  while (Date.now() < deadline) {
-    if (!isAlive(pid)) return true;
-    await new Promise((resolve) => setTimeout(resolve, 20));
-  }
-  return false;
-}
-
 /** 테스트가 끝나도 남은 프로세스를 정리한다. */
 export function killQuietly(pid: number): void {
   try {
